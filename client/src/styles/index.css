@@ -1,0 +1,15 @@
+@import 'tailwindcss/tailwind.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+h1{
+    @apply text-4xl font-bold mb-4 text-center italic text-gray-300;
+}
+
+.navbar {
+    /* @apply bg-gray-800 text-white p-4 mb-6  fixed top-0 w-full z-10 shadow-lg ; */
+}
+
