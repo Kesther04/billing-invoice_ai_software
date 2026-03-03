@@ -1,0 +1,18 @@
+<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Rounded square background -->
+  <rect width="36" height="36" rx="8" fill="#047857"/>
+
+  <!-- BarChart2 icon (lucide), centered at 18,18, scaled to 20x20 -->
+  <!-- Lucide BarChart2: three bars with the middle one tallest -->
+  <!-- Original lucide viewBox is 24x24, we translate to center in 36x36 -->
+  <g transform="translate(8, 8)" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- bar 1: x=18, full height -->
+    <line x1="18" y1="20" x2="18" y2="4"/>
+    <!-- bar 2: x=12, mid height -->
+    <line x1="12" y1="20" x2="12" y2="10"/>
+    <!-- bar 3: x=6, short height -->
+    <line x1="6"  y1="20" x2="6"  y2="14"/>
+    <!-- baseline -->
+    <path d="M2 20h20"/>
+  </g>
+</svg>

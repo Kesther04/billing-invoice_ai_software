@@ -1,3 +1,5 @@
+Product Name: RevPilot
+
 FRONTEND STRUCTURE
 ```client/
 └── src/
