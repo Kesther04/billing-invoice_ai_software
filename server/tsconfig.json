@@ -10,5 +10,14 @@
     "esModuleInterop": true,
 
     "skipLibCheck": true
-  }
+  },
+  "include": [
+    "src/**/*"          // ← only compile files inside src/
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "prisma.config.ts"  // ← ignore this file
+    // "prisma"         // ← optional: ignore whole prisma folder if you want
+  ]
 }

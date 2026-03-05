@@ -245,3 +245,9 @@ infrastructure/
   ├── jobs/          # background processors
   └── events/        # event-driven billing updates
 ```
+
+
+```
+PostgreSQl commands
+- \l, \dt \c -dbname, \d -tablenameWithQuotes,  SELECT tablename FROM pg_tables WHERE schemaname = 'public';, CREATE DATABASE ai_billing_invoice_db OWNER main;,  DROP DATABASE IF EXISTS ai_billing_invoice_db;
+```

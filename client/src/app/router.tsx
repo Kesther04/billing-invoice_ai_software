@@ -1,12 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "./layout";
 import RevPilotLandingPage from "../pages/Home";
-import { Login } from "../pages/auth/Login";
-import { SignUp } from "../pages/auth/SignUp";
-import { ForgotPassword } from "../pages/auth/ForgotPassword";
-// import { useTheme } from "../shared/themes/ThemeContext";
-
-
+import { ForgotPassword, Login, ResetPassword, SignUp } from "../modules/auth";
 
 export const router = createBrowserRouter([
   {
@@ -26,15 +21,18 @@ export const router = createBrowserRouter([
       },
       {
         path: "/auth/forgot-password",
-        element: <ForgotPassword/>
+        element: <ForgotPassword />,
       },
-    ]
+      {
+        path: "/auth/reset-password",
+        element: <ResetPassword />,
+      }
+    ],
   },
 
   {
-    element: <MainLayout/>,
+    element: <MainLayout />,
     children: [
-      
       {
         path: "/dashboard",
         element: <h1>Dashboard Overview</h1>,
@@ -58,7 +56,7 @@ export const router = createBrowserRouter([
       {
         path: "/settings",
         element: <h1>Settings</h1>,
-      }
+      },
     ],
   },
 ]);

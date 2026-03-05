@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum OrganizationType {
+  ORGANIZATION
+  INDIVIDUAL
+}
+
+enum UserRole {
+  OWNER     // Individual account owner
+  ADMIN     // Creator of an organization
+  MEMBER    // Invited team member
+}
+
+model Organization {
+  id        String           @id @default(uuid())
+  name      String
+  email     String           @unique
+  type      OrganizationType
+  inviteCode String?          @unique
+  createdAt DateTime         @default(now())
+
+  clients   Client[]
+  invoices  Invoice[]
+  users     User[]
+  // ← Add this back-relation (optional since organizationId? in token)
+  passwordResetTokens PasswordResetToken[]
+}
+
+model User {
+  id             String       @id @default(uuid())
+  name           String
+  email          String       @unique
+  password       String
+  role           UserRole
+  organizationId String
+  createdAt      DateTime     @default(now())
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  // ← Add this back-relation
+  passwordResetTokens PasswordResetToken[]
+}
+
+model Client {
+  id             String       @id @default(uuid())
+  name           String
+  email          String
+  organizationId String
+  createdAt      DateTime     @default(now())
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  invoices       Invoice[]
+}
+
+model PasswordResetToken {
+  id             String       @id @default(uuid())
+  token          String       @unique
+  userId         String
+  organizationId String?
+  expiresAt      DateTime
+  usedAt         DateTime?
+  createdAt      DateTime     @default(now())
+
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("password_reset_tokens")
+}
+
+model Invoice {
+  id             String       @id @default(uuid())
+  invoiceNumber  String       @unique
+  amount         Float
+  status         String
+  dueDate        DateTime
+  organizationId String
+  clientId       String
+  createdAt      DateTime     @default(now())
+  client         Client       @relation(fields: [clientId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id])
+}
+
+
