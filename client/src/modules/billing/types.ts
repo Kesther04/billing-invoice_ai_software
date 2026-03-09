@@ -1,48 +1,55 @@
-export interface InvoiceParty {
-  name: string;
-  email?: string;
-  phone?: string;
-  address?: string;
-  companyName?: string;
-  taxId?: string; // VAT, TIN, EIN, etc.
-}
+export type InvoiceStatus = "draft" | "pending" | "paid" | "overdue" | "cancelled";
 
-export interface InvoiceItem {
+export interface LineItem {
+  id: string;
   description: string;
   quantity: number;
   unitPrice: number;
+  total: number;
 }
 
-export type CurrencyCode =
-  | "USD"
-  | "EUR"
-  | "GBP"
-  | "NGN"
-  | "CAD"
-  | "AUD";
-
-export interface AIInvoiceRequest {
-  prompt: string;
-  file?: File | null;
+export interface InvoiceParty {
+  name?: string;
+  email?: string;
+  address?: string;
+  phone?: string;
+  company?: string;
 }
 
-export interface InvoiceData {
-  invoiceNumber?: string;
-
-  issuer: InvoiceParty;   // freelancer, agency, business
-  client: InvoiceParty;   // who receives invoice
-
-  items: InvoiceItem[];
-
-  currency: CurrencyCode; // ✅ use the strict type instead of string
-  
+export interface Invoice {
+  id: string;
+  invoiceNumber: string;
+  status: InvoiceStatus;
+  from: InvoiceParty;
+  to: InvoiceParty;
   issueDate: string;
-  dueDate?: string;
-
-  taxRate?: number;       // percentage (e.g. 7.5)
-  discount?: number;      // percentage or flat (your logic decides)
+  dueDate: string;
+  lineItems: LineItem[];
+  subtotal: number;
+  taxRate: number;
+  taxAmount: number;
+  discountAmount: number;
+  total: number;
   notes?: string;
+  currency: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
-  subtotal?: number;      // calculated
-  total?: number;         // calculated
+export interface AIInvoicePrompt {
+  prompt: string;
+}
+
+export interface AIInvoiceResponse {
+  invoice: Partial<Invoice>;
+  confidence: number;
+  suggestions?: string[];
+}
+
+export interface CreateInvoiceState {
+  step: "prompt" | "preview" | "edit";
+  prompt: string;
+  invoice: Partial<Invoice> | null;
+  isGenerating: boolean;
+  error: string | null;
 }

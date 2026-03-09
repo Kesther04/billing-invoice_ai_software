@@ -62,7 +62,7 @@ function FormStep({
   onSuccess: (email: string) => void;
 }) {
   const [email, setEmail] = useState("");
-  const { forgotPassword, isLoading } = useForgetPassword();
+  const { forgotPassword, isLoading, error } = useForgetPassword();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await forgotPassword(email).then((message) => {
@@ -99,6 +99,12 @@ function FormStep({
         className="space-y-4"
         onSubmit={handleSubmit}
       >
+        {/* Error message */}
+        {error && (
+          <p className={`text-sm ${t.textDanger(dark)}`}>
+            {error}
+          </p>
+        )}
         <Input
           label="Email"
           type="email"

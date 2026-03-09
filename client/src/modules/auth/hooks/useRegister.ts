@@ -12,9 +12,10 @@ export const useIndividualRegister = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const data = await authService.registerIndividual(userData);
-      // Save token to localStorage, redirect user, etc.
-      localStorage.setItem("token", data.token);
+      const result = await authService.registerIndividual(userData);
+      // Save token and user data to localStorage, redirect user, etc.
+      localStorage.setItem("token", JSON.stringify(result.data.tokens));
+      localStorage.setItem("user", JSON.stringify(result.data.user));
       console.log("Individual Registration successful, redirecting...");
       return navigate("/dashboard"); // Adjust the path as needed
     
@@ -39,9 +40,10 @@ export const useCreateOrg = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const data = await authService.createOrg(userData);
+      const result = await authService.createOrg(userData);
       // Save token to localStorage, redirect user, etc.
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("token", JSON.stringify(result.data.tokens));
+      localStorage.setItem("user", JSON.stringify(result.data.user));
       console.log("Organization creation successful, redirecting...");
       return navigate("/dashboard"); // Adjust the path as needed
     
@@ -66,10 +68,11 @@ export const useJoinOrg = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const data = await authService.joinOrg(userData);
+      const result = await authService.joinOrg(userData);
       // Save token to localStorage, redirect user, etc.
-      localStorage.setItem("token", data.token);
-      console.log(`registration with ${data.org} successful, redirecting...`);
+      localStorage.setItem("token", JSON.stringify(result.data.tokens));
+      localStorage.setItem("user", JSON.stringify(result.data.user));
+      console.log(`registration with ${result.data.organization.name} successful, redirecting...`);
       return navigate("/dashboard"); // Adjust the path as needed
     
     } catch (err: any) {

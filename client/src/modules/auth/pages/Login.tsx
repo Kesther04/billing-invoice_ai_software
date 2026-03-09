@@ -13,7 +13,7 @@ import { useLogin } from "../hooks/useLogin";
 ══════════════════════════════════════════ */
 export const Login: React.FC = () => {
   const { dark } = useTheme();
-  const { login, isLoading } = useLogin();
+  const { login, isLoading, error } = useLogin();
   const [form,setForm] = useState({ email: "", password: "" });
   const { email, password } = form;
   const handleSubmit = async (e: React.FormEvent) => {
@@ -61,6 +61,12 @@ export const Login: React.FC = () => {
 
               <form className="space-y-4" onSubmit={handleSubmit}>
                 <>
+                    {/* Error message */}
+                    {error && (
+                      <p className={`text-sm ${t.textDanger(dark)}`}>
+                        {error}
+                      </p>
+                    )}
                   <Input
                     label="Email"
                     type="email"

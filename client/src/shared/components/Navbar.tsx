@@ -37,10 +37,10 @@ interface NavItem {
 ══════════════════════════════════════════ */
 const primaryNav: NavItem[] = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
-  { label: "Invoices", icon: FileText, href: "/invoices", badge: "3" },
+  { label: "Invoices", icon: FileText, href: "/billing/invoices", badge: "6" },
   { label: "Clients", icon: Users, href: "/clients" },
   { label: "Revenue", icon: TrendingUp, href: "/revenue" },
-  { label: "AI Billing", icon: Zap, href: "/create-invoice", badge: "New" },
+  { label: "AI Billing", icon: Zap, href: "/billing/create", badge: "New" },
 ];
 
 const secondaryNav: NavItem[] = [
@@ -220,14 +220,16 @@ export function Topbar({
   dark,
   toggleTheme,
   sidebarCollapsed,
-  onMobileMenuToggle,
+  name,
+  onMobileMenuToggle
 }: {
   dark: boolean;
   toggleTheme: () => void;
   sidebarCollapsed: boolean;
+  name: string | null;
   onMobileMenuToggle: () => void;
 }) {
-  const [notifications] = useState(3);
+  const [notifications] = useState(primaryNav[1].badge ? parseInt(primaryNav[1].badge) : 0);
 
   return (
     <header
@@ -285,7 +287,7 @@ export function Topbar({
           />
           <div className="hidden md:block">
             <div className={`text-xs font-semibold leading-tight ${t.text(dark)}`}>
-              Alex Carter
+              {name}
             </div>
             <div className={`text-[10px] ${t.textMuted(dark)}`}>Pro Plan</div>
           </div>
@@ -295,6 +297,10 @@ export function Topbar({
         <Link to="/">
         <button
           className={`hidden md:flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-medium transition-colors ${t.notifBtn(dark)}`}
+          onClick={() => {
+            localStorage.removeItem("user");
+            localStorage.removeItem("token"); 
+          }}
         >
           <LogOut className="h-3.5 w-3.5" />
           <span>Sign out</span>

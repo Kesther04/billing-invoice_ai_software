@@ -13,7 +13,7 @@ import { useResetPassword } from "../hooks/useReset";
 ══════════════════════════════════════════ */
 export const ResetPassword: React.FC = () => {
   const { dark } = useTheme();
-  const { resetPassword, isLoading } = useResetPassword();
+  const { resetPassword, isLoading, error } = useResetPassword();
   const [form,setForm] = useState({ token: "", newPassword: "" });
   const { token, newPassword } = form;
   const handleSubmit = async (e: React.FormEvent) => {
@@ -60,6 +60,12 @@ export const ResetPassword: React.FC = () => {
 
               <form className="space-y-4" onSubmit={handleSubmit}>
                 <>
+                    {/* Error message */}
+                    {error && (
+                      <p className={`text-sm ${t.textDanger(dark)}`}>
+                        {error}
+                      </p>
+                    )}
                   <Input
                     label="Token"
                     type="text"

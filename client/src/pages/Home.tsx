@@ -17,10 +17,6 @@ import { SoftButton } from "../shared/components/Button";
 import { t } from "../shared/utils/themeClasses";
 import { Link } from "react-router-dom";
 
-/* ─── Design tokens ─── */
-const FONT_URL =
-  "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap";
-
 interface StatProps {
   label: string;
   value: string;
@@ -425,10 +421,7 @@ export default function RevPilotLandingPage(): React.ReactElement {
       animate={{ backgroundColor: dark ? "#0F1117" : "#F3F5F7" }}
       transition={{ duration: 0.3 }}
     >
-      <style>{`
-        @import url('${FONT_URL}');
-        * { font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif; }
-      `}</style>
+      
 
       {/* ── NAV ── */}
       <nav className="fixed top-0 inset-x-0 z-50  backdrop-blur">
@@ -474,7 +467,7 @@ export default function RevPilotLandingPage(): React.ReactElement {
                 Login
               </button>
               </Link>
-              <Link to="/create-invoice"><SoftButton dark={dark}>Start Free</SoftButton></Link>
+              <Link to="/billing/create"><SoftButton dark={dark}>Start Free</SoftButton></Link>
             </div>
           </div>
         </div>
@@ -527,7 +520,7 @@ export default function RevPilotLandingPage(): React.ReactElement {
             className="flex items-center gap-3"
           >
             <SoftButton variant="accent">
-              <Link to="/create-invoice">
+              <Link to="/billing/create">
                 Try the Prompt
                 <ArrowUpRight className="ml-1 inline h-4 w-4" />
               </Link>
@@ -730,7 +723,7 @@ export default function RevPilotLandingPage(): React.ReactElement {
                   No credit card required.
                 </div>
               </div>
-              <Link to="/create-invoice">
+              <Link to="/billing/create">
               <SoftButton variant="accent">
                 Start Free <ArrowUpRight className="ml-1 inline h-4 w-4" />
               </SoftButton>

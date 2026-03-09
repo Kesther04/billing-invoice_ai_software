@@ -119,6 +119,19 @@ BACKEND STRUCTURE
     ├── server.ts                     # bootstrap only (listen)
     ├── app.ts                        # express setup
     │
+    ├── generated/
+    │   ├── Internal/     # Core Feature 3
+    │   │   ├
+    │   │   ├
+    │   │   ├
+    │   │   ├── prismaNamespaceBrowser.ts
+    │   │   ├── prismaNamespace.ts
+    │   │   └── class.ts
+    │   │   
+    │   │-- models/
+    |   |   
+    |   |-- browser.ts               # etc
+    |
     ├── modules/
     │
     │   ├── billing/                  # Core Feature 1: AI + Invoice Domain
@@ -250,4 +263,40 @@ infrastructure/
 ```
 PostgreSQl commands
 - \l, \dt \c -dbname, \d -tablenameWithQuotes,  SELECT tablename FROM pg_tables WHERE schemaname = 'public';, CREATE DATABASE ai_billing_invoice_db OWNER main;,  DROP DATABASE IF EXISTS ai_billing_invoice_db;
+```
+
+
+```
+/**
+ * RevPilot — Route Registration
+ * Add these routes inside your MainLayout <Route> wrapper.
+ *
+ * Install one extra peer dep if not already present:
+ *   npm i nanoid recharts
+ */
+
+import { DashboardPage } from "./features/revenue-intelligence";
+import { AutomationSettingsPage } from "./features/revenue-automation";
+import { ClientsPage } from "./features/clients";
+import { CreateInvoicePage, InvoiceDetailsPage } from "./features/billing";
+
+/*
+  Example router structure (React Router v6):
+
+  <Routes>
+    <Route element={<MainLayout />}>
+      <Route index element={<Navigate to="/dashboard" replace />} />
+      <Route path="dashboard"          element={<DashboardPage />} />
+      <Route path="billing/create"     element={<CreateInvoicePage />} />
+      <Route path="billing/:id"        element={<InvoiceDetailsPage />} />
+      <Route path="automation"         element={<AutomationSettingsPage />} />
+      <Route path="clients"            element={<ClientsPage />} />
+    </Route>
+    <Route path="auth/login"    element={<LoginPage />} />
+    <Route path="auth/signup"   element={<SignupPage />} />
+  </Routes>
+
+  Landing page lives outside MainLayout (no sidebar/topbar):
+  <Route path="/" element={<RevPilotLandingPage />} />
+*/
 ```

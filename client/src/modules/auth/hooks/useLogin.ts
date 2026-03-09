@@ -11,9 +11,10 @@ export const useLogin = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const data = await authService.login(email, pass);
+      const result = await authService.login(email, pass);
       // Save token to localStorage, redirect user, etc.
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("token", JSON.stringify(result.data.tokens));
+      localStorage.setItem("user", JSON.stringify(result.data.user));
       console.log("Login successful, redirecting...");
       return navigate("/dashboard"); // Adjust the path as needed
     

@@ -4,6 +4,9 @@ import "../styles/index.css";
 import App from "./App.tsx";
 import { ThemeProvider } from "../shared/themes/ThemeContext.tsx";
 
+
+
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider>

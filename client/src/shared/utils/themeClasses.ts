@@ -4,6 +4,7 @@ export const t = {
     d ? "bg-[#1A1D27] ring-white/10" : "bg-white ring-slate-200",
   text: (d: boolean) => (d ? "text-white" : "text-slate-900"),
   textMuted: (d: boolean) => (d ? "text-slate-400" : "text-slate-500"),
+  textDanger: (d: boolean) => (d ? "text-red-400" : "text-red-600"),
   textSub: (d: boolean) => (d ? "text-slate-300" : "text-slate-600"),
   border: (d: boolean) => (d ? "border-white/10" : "border-slate-100"),
   navHover: (d: boolean) => (d ? "hover:text-white" : "hover:text-slate-900"),

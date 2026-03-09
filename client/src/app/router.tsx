@@ -2,6 +2,10 @@ import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "./layout";
 import RevPilotLandingPage from "../pages/Home";
 import { ForgotPassword, Login, ResetPassword, SignUp } from "../modules/auth";
+import { CreateInvoicePage, InvoiceDetailsPage, InvoiceListPage } from "../modules/billing";
+import { DashboardPage } from "../modules/revenue-intelligence";
+import { AutomationSettingsPage } from "../modules/revenue-automation";
+import { ClientsPage } from "../modules/clients";
 
 export const router = createBrowserRouter([
   {
@@ -35,23 +39,27 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/dashboard",
-        element: <h1>Dashboard Overview</h1>,
+        element: <DashboardPage />,
       },
       {
-        path: "/invoices",
-        element: <h1>Invoice Management</h1>,
+        path: "/billing/invoices",
+        element: <InvoiceListPage />,
+      },
+      {
+        path: "/billing/invoices/:id",
+        element: <InvoiceDetailsPage />,
       },
       {
         path: "/clients",
-        element: <h1>Client Management</h1>,
+        element: <ClientsPage />,
       },
       {
         path: "/revenue",
-        element: <h1>Revenue Analytics</h1>,
+        element: <AutomationSettingsPage />,
       },
       {
-        path: "/create-invoice",
-        element: <h1>Create your invoice here..</h1>,
+        path: "/billing/create",
+        element: <CreateInvoicePage />,
       },
       {
         path: "/settings",

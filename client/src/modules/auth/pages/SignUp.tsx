@@ -5,7 +5,7 @@ import { t } from "../../../shared/utils/themeClasses";
 import { Input } from "../../../shared/components/Input";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Users, Building2, User, ArrowLeft, Check } from "lucide-react";
+import { Users, Building2, User, ArrowLeft } from "lucide-react";
 import { useCreateOrg, useIndividualRegister, useJoinOrg } from "../hooks/useRegister";
 
 /* ══════════════════════════════════════════
@@ -205,7 +205,7 @@ function TypeSelector({
 function JoinOrgForm({ dark }: { dark: boolean }) {
   const [form, setForm] = useState({name:"", email: "", password: "", inviteCode: "" });
   const { name, email, password, inviteCode } = form;
-  const {register, isLoading } = useJoinOrg();
+  const {register, isLoading, error } = useJoinOrg();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await register(form);
@@ -213,6 +213,10 @@ function JoinOrgForm({ dark }: { dark: boolean }) {
   
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
+      {/* error */}
+      <p className={`text-sm ${t.textDanger(dark)}`}>
+        {error || ""}
+      </p>
       <Input
         label="Full Name"
         type="text"
@@ -264,7 +268,7 @@ function JoinOrgForm({ dark }: { dark: boolean }) {
 function CreateOrgForm({ dark }: { dark: boolean }) {
   const [form, setForm] = useState({name:"", email: "", password: "", orgName: "" });
   const { name, email, password, orgName } = form;
-  const {register, isLoading } = useCreateOrg();
+  const {register, isLoading, error } = useCreateOrg();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await register(form);
@@ -272,6 +276,10 @@ function CreateOrgForm({ dark }: { dark: boolean }) {
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
+      {/* error */}
+      <p className={`text-sm ${t.textDanger(dark)}`}>
+        {error || ""}
+      </p>
       <Input
         label="Your Full Name"
         type="text"
@@ -319,7 +327,7 @@ function CreateOrgForm({ dark }: { dark: boolean }) {
 function IndividualForm({ dark }: { dark: boolean }) {
   const [form, setForm] = useState({name:"", email: "", password: "" });
   const { name, email, password } = form;
-  const {register, isLoading } = useIndividualRegister();
+  const {register, isLoading, error } = useIndividualRegister();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await register(form);
@@ -328,6 +336,11 @@ function IndividualForm({ dark }: { dark: boolean }) {
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
+      {/* error */}
+      <p className={`text-sm ${t.textDanger(dark)}`}>
+        {error || ""}
+      </p>
+
       <Input
         label="Full Name"
         type="text"

@@ -1,16 +1,22 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { useLocation } from "react-router-dom";
 import { t } from "../shared/utils/themeClasses";
 import { useTheme } from "../shared/themes/ThemeContext";
 import { MobileSidebar, Sidebar, Topbar } from "../shared/components/Navbar";
 
-/* ══════════════════════════════════════════
-   FONT
-══════════════════════════════════════════ */
-const FONT_URL = "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap";
 
+// check if user is logged in, if not redirect to login page
+const useRequireAuth = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      navigate("/auth/login");
+    }
+  }, [navigate]);
+};
 
 /* ══════════════════════════════════════════
    MAIN LAYOUT
@@ -18,9 +24,12 @@ const FONT_URL = "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wgh
 export default function MainLayout(): React.ReactElement {
   const location = useLocation();
   const currentPath = location.pathname;
-
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
+  const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!) : null;
+  
+  useRequireAuth();
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -33,10 +42,7 @@ export default function MainLayout(): React.ReactElement {
     <div
       className={`min-h-screen ${t.bg(dark)} transition-colors duration-300`}
     >
-      <style>{`
-        @import url('${FONT_URL}');
-        * { font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif; }
-      `}</style>
+      
 
       {/* Desktop Sidebar */}
       <div className="hidden md:block">
@@ -66,6 +72,7 @@ export default function MainLayout(): React.ReactElement {
           dark={dark}
           toggleTheme={toggleTheme}
           sidebarCollapsed={sidebarCollapsed}
+          name ={user?.name}
           onMobileMenuToggle={() => setMobileMenuOpen(true)}
         />
       </motion.div>
@@ -76,6 +83,7 @@ export default function MainLayout(): React.ReactElement {
           dark={dark}
           toggleTheme={toggleTheme}
           sidebarCollapsed={false}
+          name={user?.name}
           onMobileMenuToggle={() => setMobileMenuOpen(true)}
         />
       </div>

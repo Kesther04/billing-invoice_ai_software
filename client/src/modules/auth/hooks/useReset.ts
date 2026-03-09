@@ -10,10 +10,10 @@ export const useForgetPassword = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const data = await authService.forgotPassword(email);
+      const result = await authService.forgotPassword(email);
       // Save token to localStorage, redirect user, etc.
       console.log("Password reset email sent, redirecting...");
-      return data.message; // Return the success message instead of navigating
+      return result.data.message; // Return the success message instead of navigating
     
     } catch (err: any) {
       setError(err.response?.data?.message || "Failed to send password reset email");
@@ -34,9 +34,9 @@ export const useResetPassword = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const data = await authService.resetPassword(token, newPassword);
+      const result = await authService.resetPassword(token, newPassword);
       
-      console.log(`${data.message}, redirecting to login...`);
+      console.log(`${result.message}, redirecting to login...`);
       return navigate("/auth/login"); // Redirect to login after successful password reset
     
     } catch (err: any) {
