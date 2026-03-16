@@ -1,4 +1,3 @@
-import React from "react";
 import { motion } from "framer-motion";
 import { BarChart2, RefreshCw } from "lucide-react";
 import { useTheme } from "../../../shared/themes/ThemeContext";

@@ -1,4 +1,3 @@
-import React from "react";
 import { motion } from "framer-motion";
 import { TrendingUp, TrendingDown, DollarSign, Clock, AlertTriangle, CheckCircle2 } from "lucide-react";
 import type { RevenueOverview } from "../types";

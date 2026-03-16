@@ -1,4 +1,3 @@
-import React from "react";
 import { motion } from "framer-motion";
 import { AlertTriangle, Clock, CalendarCheck } from "lucide-react";
 import type { PendingPayment } from "../types";

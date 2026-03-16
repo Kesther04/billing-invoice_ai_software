@@ -395,20 +395,6 @@ export type OrganizationUpdateOneRequiredWithoutUsersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutUsersInput, Prisma.OrganizationUpdateWithoutUsersInput>, Prisma.OrganizationUncheckedUpdateWithoutUsersInput>
 }
 
-export type OrganizationCreateNestedOneWithoutClientsInput = {
-  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutClientsInput, Prisma.OrganizationUncheckedCreateWithoutClientsInput>
-  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutClientsInput
-  connect?: Prisma.OrganizationWhereUniqueInput
-}
-
-export type OrganizationUpdateOneRequiredWithoutClientsNestedInput = {
-  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutClientsInput, Prisma.OrganizationUncheckedCreateWithoutClientsInput>
-  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutClientsInput
-  upsert?: Prisma.OrganizationUpsertWithoutClientsInput
-  connect?: Prisma.OrganizationWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutClientsInput, Prisma.OrganizationUpdateWithoutClientsInput>, Prisma.OrganizationUncheckedUpdateWithoutClientsInput>
-}
-
 export type OrganizationCreateNestedOneWithoutPasswordResetTokensInput = {
   create?: Prisma.XOR<Prisma.OrganizationCreateWithoutPasswordResetTokensInput, Prisma.OrganizationUncheckedCreateWithoutPasswordResetTokensInput>
   connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutPasswordResetTokensInput
@@ -423,6 +409,20 @@ export type OrganizationUpdateOneWithoutPasswordResetTokensNestedInput = {
   delete?: Prisma.OrganizationWhereInput | boolean
   connect?: Prisma.OrganizationWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutPasswordResetTokensInput, Prisma.OrganizationUpdateWithoutPasswordResetTokensInput>, Prisma.OrganizationUncheckedUpdateWithoutPasswordResetTokensInput>
+}
+
+export type OrganizationCreateNestedOneWithoutClientsInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutClientsInput, Prisma.OrganizationUncheckedCreateWithoutClientsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutClientsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutClientsNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutClientsInput, Prisma.OrganizationUncheckedCreateWithoutClientsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutClientsInput
+  upsert?: Prisma.OrganizationUpsertWithoutClientsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutClientsInput, Prisma.OrganizationUpdateWithoutClientsInput>, Prisma.OrganizationUncheckedUpdateWithoutClientsInput>
 }
 
 export type OrganizationCreateNestedOneWithoutInvoicesInput = {
@@ -503,70 +503,6 @@ export type OrganizationUncheckedUpdateWithoutUsersInput = {
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
-export type OrganizationCreateWithoutClientsInput = {
-  id?: string
-  name: string
-  email: string
-  type: $Enums.OrganizationType
-  inviteCode?: string | null
-  createdAt?: Date | string
-  invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
-  users?: Prisma.UserCreateNestedManyWithoutOrganizationInput
-  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutOrganizationInput
-}
-
-export type OrganizationUncheckedCreateWithoutClientsInput = {
-  id?: string
-  name: string
-  email: string
-  type: $Enums.OrganizationType
-  inviteCode?: string | null
-  createdAt?: Date | string
-  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
-  users?: Prisma.UserUncheckedCreateNestedManyWithoutOrganizationInput
-  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutOrganizationInput
-}
-
-export type OrganizationCreateOrConnectWithoutClientsInput = {
-  where: Prisma.OrganizationWhereUniqueInput
-  create: Prisma.XOR<Prisma.OrganizationCreateWithoutClientsInput, Prisma.OrganizationUncheckedCreateWithoutClientsInput>
-}
-
-export type OrganizationUpsertWithoutClientsInput = {
-  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutClientsInput, Prisma.OrganizationUncheckedUpdateWithoutClientsInput>
-  create: Prisma.XOR<Prisma.OrganizationCreateWithoutClientsInput, Prisma.OrganizationUncheckedCreateWithoutClientsInput>
-  where?: Prisma.OrganizationWhereInput
-}
-
-export type OrganizationUpdateToOneWithWhereWithoutClientsInput = {
-  where?: Prisma.OrganizationWhereInput
-  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutClientsInput, Prisma.OrganizationUncheckedUpdateWithoutClientsInput>
-}
-
-export type OrganizationUpdateWithoutClientsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
-  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
-  users?: Prisma.UserUpdateManyWithoutOrganizationNestedInput
-  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutOrganizationNestedInput
-}
-
-export type OrganizationUncheckedUpdateWithoutClientsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
-  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
-  users?: Prisma.UserUncheckedUpdateManyWithoutOrganizationNestedInput
-  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutOrganizationNestedInput
-}
-
 export type OrganizationCreateWithoutPasswordResetTokensInput = {
   id?: string
   name: string
@@ -629,6 +565,70 @@ export type OrganizationUncheckedUpdateWithoutPasswordResetTokensInput = {
   clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationCreateWithoutClientsInput = {
+  id?: string
+  name: string
+  email: string
+  type: $Enums.OrganizationType
+  inviteCode?: string | null
+  createdAt?: Date | string
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
+  users?: Prisma.UserCreateNestedManyWithoutOrganizationInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutClientsInput = {
+  id?: string
+  name: string
+  email: string
+  type: $Enums.OrganizationType
+  inviteCode?: string | null
+  createdAt?: Date | string
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutOrganizationInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutClientsInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutClientsInput, Prisma.OrganizationUncheckedCreateWithoutClientsInput>
+}
+
+export type OrganizationUpsertWithoutClientsInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutClientsInput, Prisma.OrganizationUncheckedUpdateWithoutClientsInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutClientsInput, Prisma.OrganizationUncheckedCreateWithoutClientsInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutClientsInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutClientsInput, Prisma.OrganizationUncheckedUpdateWithoutClientsInput>
+}
+
+export type OrganizationUpdateWithoutClientsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
+  users?: Prisma.UserUpdateManyWithoutOrganizationNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutClientsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutOrganizationNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutInvoicesInput = {

@@ -9,6 +9,25 @@
 * 🟢 You can import this file directly.
 */
 
+export const InvoiceStatus = {
+  draft: 'draft',
+  pending: 'pending',
+  paid: 'paid',
+  overdue: 'overdue',
+  cancelled: 'cancelled'
+} as const
+
+export type InvoiceStatus = (typeof InvoiceStatus)[keyof typeof InvoiceStatus]
+
+
+export const InvoiceSource = {
+  manual: 'manual',
+  ai: 'ai'
+} as const
+
+export type InvoiceSource = (typeof InvoiceSource)[keyof typeof InvoiceSource]
+
+
 export const OrganizationType = {
   ORGANIZATION: 'ORGANIZATION',
   INDIVIDUAL: 'INDIVIDUAL'

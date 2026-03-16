@@ -131,12 +131,12 @@ function recalc(inv: Invoice): Invoice {
 }
 
 /* Step indicator labels — same visual pattern as CreateInvoicePage */
-const STEP_MAP: Record<ViewName, string> = {
-  list:    "All Invoices",
-  preview: "Preview",
-  edit:    "Edit",
-  create:  "New Invoice",
-};
+// const STEP_MAP: Record<ViewName, string> = {
+//   list:    "All Invoices",
+//   preview: "Preview",
+//   edit:    "Edit",
+//   create:  "New Invoice",
+// };
 
 const FILTER_TABS: { value: InvoiceStatus | "all"; label: string }[] = [
   { value: "all",       label: "All" },

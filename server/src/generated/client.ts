@@ -50,17 +50,22 @@ export type Organization = Prisma.OrganizationModel
  */
 export type User = Prisma.UserModel
 /**
- * Model Client
- * 
- */
-export type Client = Prisma.ClientModel
-/**
  * Model PasswordResetToken
  * 
  */
 export type PasswordResetToken = Prisma.PasswordResetTokenModel
 /**
+ * Model Client
+ * 
+ */
+export type Client = Prisma.ClientModel
+/**
  * Model Invoice
  * 
  */
 export type Invoice = Prisma.InvoiceModel
+/**
+ * Model LineItem
+ * 
+ */
+export type LineItem = Prisma.LineItemModel

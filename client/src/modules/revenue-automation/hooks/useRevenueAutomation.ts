@@ -69,7 +69,7 @@ export function useRevenueAutomation() {
   });
   const [links, setLinks] = useState<PaymentLink[]>(MOCK_LINKS);
   const [log, setLog] = useState<ReminderLogEntry[]>(MOCK_LOG);
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
   const [generatingLink, setGeneratingLink] = useState(false);
   const [editingTemplate, setEditingTemplate] = useState<ReminderTemplate | null>(null);
 

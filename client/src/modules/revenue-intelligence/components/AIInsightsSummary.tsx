@@ -1,4 +1,3 @@
-import React from "react";
 import { motion } from "framer-motion";
 import { AlertTriangle, Sparkles, TrendingUp, Info } from "lucide-react";
 import type { AIInsight } from "../types";

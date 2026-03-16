@@ -219,7 +219,7 @@ export function Sidebar({
 export function Topbar({
   dark,
   toggleTheme,
-  sidebarCollapsed,
+  // sidebarCollapsed,
   name,
   onMobileMenuToggle
 }: {

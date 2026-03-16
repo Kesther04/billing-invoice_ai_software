@@ -16,7 +16,7 @@ app.get("/", (_, res) => {
 
 // module routers mounted
 app.use("/auth", authRouter); // Mount all auth routes under /auth
-
+// app.use()
 // error handling
 
 // rate limiting
