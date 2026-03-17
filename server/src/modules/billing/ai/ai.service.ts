@@ -51,8 +51,12 @@ export const aiService = {
 
     const toolCall = completion.choices[0]?.message?.tool_calls?.[0];
 
-    if (!toolCall || toolCall.function.name !== "extract_invoice_data") {
+    if (!toolCall || toolCall.type !== "function") {
       throw new Error("AI did not return expected function call");
+    }
+
+    if (toolCall.function.name !== "extract_invoice_data") {
+      throw new Error("Unexpected function call from AI");
     }
 
     let rawPayload: RawAIInvoicePayload;
@@ -98,20 +102,30 @@ export const aiService = {
       suggestions,
       organizationId,
       createdById,
-      fromParty,
     } = params;
+
+    const { to, from, issueDate, dueDate, lineItems, ...rest } = parsed;
+
+    // Ensure required fields exist
+    if (!to) throw new Error("AI response missing recipient (to)");
+    if (!from) throw new Error("AI response missing sender (from)");
+    if (!issueDate) throw new Error("AI response missing issue date");
+    if (!dueDate) throw new Error("AI response missing due date");
 
     return invoiceService.create({
       organizationId,
       createdById,
       input: {
-        ...parsed,
-        source:       "ai",
-        from:         fromParty,
-        aiPrompt:     prompt,
+        ...rest,
+        from,
+        to,
+        issueDate,
+        dueDate,
+        lineItems,
+        source: "ai",
+        aiPrompt: prompt,
         aiConfidence: confidence,
         aiSuggestions: suggestions,
-        // issueDate / dueDate / lineItems / taxRate / currency all come from parsed
       },
     });
   },

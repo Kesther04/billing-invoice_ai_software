@@ -6,7 +6,7 @@ const envSchema = z.object({
   NODE_ENV:     z.enum(["development", "test", "production"]).default("development"),
   PORT:         z.string().default("3000"),
   DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
-  JWT_SECRET:   z.string().min(32, "JWT_SECRET must be at least 32 characters"),
+  JWT_ACCESS_SECRET:   z.string().min(28, "JWT_ACCESS_SECRET must be at least 28 characters"),
 
   // OpenAI
   OPENAI_API_KEY: z.string().min(1, "OPENAI_API_KEY is required"),

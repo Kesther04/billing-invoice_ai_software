@@ -17,7 +17,7 @@ export function authMiddleware(
 
   const token = header.slice(7);
   try {
-    const payload = jwt.verify(token, env.JWT_SECRET) as {
+    const payload = jwt.verify(token, env.JWT_ACCESS_SECRET) as {
       sub:              string;
       organizationId:   string;
       email:            string;

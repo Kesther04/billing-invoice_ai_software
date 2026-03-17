@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { authRouter } from "./modules/users";
+import  billRouter  from "./modules/billing";
 
 // express configuration
 const app = express();
@@ -16,7 +17,8 @@ app.get("/", (_, res) => {
 
 // module routers mounted
 app.use("/auth", authRouter); // Mount all auth routes under /auth
-// app.use()
+app.use("/billing", billRouter ); // Mount all invoice and AI routes under /billing
+
 // error handling
 
 // rate limiting
