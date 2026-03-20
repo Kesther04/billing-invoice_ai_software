@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { useState} from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  BarChart2,
   FileText,
   Users,
   Settings,
@@ -20,6 +19,7 @@ import {
 } from "lucide-react";
 import { t } from "../../shared/utils/themeClasses";
 import ThemeToggle from "../themes/ThemeToggle";
+import Logo from "./Logo";
 
 /* ══════════════════════════════════════════
    TYPES
@@ -55,11 +55,13 @@ export function SideNavItem({
   active,
   dark,
   collapsed,
+  indicatorStart
 }: {
   item: NavItem;
   active: boolean;
   dark: boolean;
   collapsed: boolean;
+  indicatorStart: string;
 }) {
   const Icon = item.icon;
 
@@ -72,7 +74,7 @@ export function SideNavItem({
         {active && (
           <motion.div
             layoutId="activeNavIndicator"
-            className="absolute left-0 top-1/0 -translate-y-1/2 h-6 w-0.5 rounded-full bg-emerald-500"
+            className={`absolute left-0 -translate-y-1/2 h-6 w-0.5 rounded-full bg-emerald-500 ${indicatorStart}`}
             transition={{ type: "spring", stiffness: 500, damping: 35 }}
           />
         )}
@@ -146,22 +148,7 @@ export function Sidebar({
     >
       {/* Logo */}
       <div className={`flex items-center gap-3 px-4 py-5 border-b ${t.divider(dark)}`}>
-        <div className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-emerald-700 text-white shadow">
-          <BarChart2 className="h-4 w-4" />
-        </div>
-        <AnimatePresence initial={false}>
-          {!collapsed && (
-            <motion.span
-              initial={{ opacity: 0, x: -8 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -8 }}
-              transition={{ duration: 0.18 }}
-              className={`text-lg font-bold tracking-tight whitespace-nowrap ${t.text(dark)}`}
-            >
-              RevPilot
-            </motion.span>
-          )}
-        </AnimatePresence>
+        <Logo collapsed={collapsed} />
       </div>
 
       {/* Primary nav */}
@@ -173,6 +160,7 @@ export function Sidebar({
             active={currentPath === item.href || currentPath.startsWith(item.href + "/")}
             dark={dark}
             collapsed={collapsed}
+            indicatorStart="top-1/0"
           />
         ))}
       </nav>
@@ -189,6 +177,7 @@ export function Sidebar({
             active={currentPath === item.href}
             dark={dark}
             collapsed={collapsed}
+            indicatorStart="top-1/0"
           />
         ))}
       </div>
@@ -347,12 +336,7 @@ export function MobileSidebar({
           >
             <div className={`flex items-center justify-between px-4 py-5 border-b ${t.divider(dark)}`}>
               <div className="flex items-center gap-3">
-                <div className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-emerald-700 text-white shadow">
-                  <BarChart2 className="h-4 w-4" />
-                </div>
-                <span className={`text-lg font-bold tracking-tight ${t.text(dark)}`}>
-                  RevPilot
-                </span>
+                <Logo collapsed={false} />
               </div>
               <button onClick={onClose} className={`rounded-lg p-1.5 ${t.notifBtn(dark)}`}>
                 <X className="h-4 w-4" />
@@ -366,6 +350,7 @@ export function MobileSidebar({
                     active={currentPath === item.href}
                     dark={dark}
                     collapsed={false}
+                    indicatorStart="top-1/2"
                   />
                 </div>
               ))}
@@ -379,6 +364,7 @@ export function MobileSidebar({
                     active={currentPath === item.href}
                     dark={dark}
                     collapsed={false}
+                    indicatorStart="top-1/2"
                   />
                 </div>
               ))}

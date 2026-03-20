@@ -16,6 +16,7 @@ import { useTheme } from "../shared/themes/ThemeContext";
 import { SoftButton } from "../shared/components/Button";
 import { t } from "../shared/utils/themeClasses";
 import { Link } from "react-router-dom";
+import Logo from "../shared/components/Logo";
 
 interface StatProps {
   label: string;
@@ -363,7 +364,7 @@ const compareRows: CompareRowData[] = [
 /* ══════════════════════════════════════════════
    MAIN PAGE
 ══════════════════════════════════════════════ */
-export default function RevPilotLandingPage(): React.ReactElement {
+export default function HomeLandingPage(): React.ReactElement {
   const { dark, toggleTheme } = useTheme();
   const [currentSection, setCurrentSection] = useState<string>("hero");
 
@@ -427,14 +428,7 @@ export default function RevPilotLandingPage(): React.ReactElement {
       <nav className="fixed top-0 inset-x-0 z-50  backdrop-blur">
         <div className="mx-auto flex w-full max-w-[1180px] items-center justify-between px-4 py-4 md:px-0">
           <div className="flex items-center gap-3">
-            <div className="grid h-9 w-9 place-items-center rounded-lg bg-emerald-700 text-white shadow">
-              <BarChart2 className="h-5 w-5" />
-            </div>
-            <span
-              className={`text-xl font-semibold tracking-tight ${t.text(dark)}`}
-            >
-              RevPilot
-            </span>
+           <Logo collapsed={false} />
           </div>
 
           <div className="hidden items-center gap-8 md:flex">
@@ -507,7 +501,7 @@ export default function RevPilotLandingPage(): React.ReactElement {
               <br />
               Revenue.
             </h1>
-            <p className={`mt-5 max-w-md leading-relaxed ${t.textSub(dark)}`}>
+            <p className={`mt-5 max-w-md leading-relaxed text-center md:text-left ${t.textSub(dark)}`}>
               Generate invoices with a prompt, automate payment reminders and
               see exactly how your money flows. All in one simple dashboard.
             </p>

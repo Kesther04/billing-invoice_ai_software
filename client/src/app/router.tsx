@@ -1,16 +1,16 @@
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "./layout";
-import RevPilotLandingPage from "../pages/Home";
 import { ForgotPassword, Login, ResetPassword, SignUp } from "../modules/auth";
 import { CreateInvoicePage, InvoiceDetailsPage, InvoiceListPage } from "../modules/billing";
 import { DashboardPage } from "../modules/revenue-intelligence";
 import { AutomationSettingsPage } from "../modules/revenue-automation";
 import { ClientsPage } from "../modules/clients";
+import HomeLandingPage from "../pages/Home";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <RevPilotLandingPage />,
+    element: <HomeLandingPage />,
   },
   {
     path: "/auth",

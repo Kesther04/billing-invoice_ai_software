@@ -12,7 +12,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (_, res) => {
-  res.json({message: "Welcome to the Billing / Invoice AI server!"});
+  res.json({message: "Welcome to the TraqBill AI server!"});
 });
 
 // module routers mounted
