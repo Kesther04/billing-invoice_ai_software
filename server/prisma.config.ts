@@ -2,13 +2,11 @@ import "dotenv/config";
 import { defineConfig, env } from "prisma/config";
 
 export default defineConfig({
-  schema: "prisma/schema.prisma",  // path to your schema
+  schema: "prisma/schema.prisma",
   migrations: {
-    path: "prisma/migrations",      // default – adjust if needed
-    // seed: "ts-node prisma/seed.ts",   // optional – if you have a seed script
+    path: "prisma/migrations",
   },
-
   datasource: {
-    url: env("DATABASE_URL"),       // ← connection string used by migrate / introspect    
+    url: env("DIRECT_URL"),        // direct connection for migrations
   },
 });
