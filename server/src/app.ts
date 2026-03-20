@@ -9,6 +9,7 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:5173",                // local dev
   "https://traqbill.vercel.app",         // production frontend
+  "https://traqbill.vercel.app/",         // production frontend
 ];
 
 app.use(cors({
