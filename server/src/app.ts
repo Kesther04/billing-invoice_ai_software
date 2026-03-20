@@ -6,7 +6,25 @@ import  billRouter  from "./modules/billing";
 // express configuration
 const app = express();
 
-app.use(cors());
+const allowedOrigins = [
+  "http://localhost:5173",                // local dev
+  "https://traqbill.vercel.app",         // production frontend
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // allow requests with no origin (mobile apps, curl, Postman)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`CORS blocked: ${origin}`));
+    }
+  },
+  credentials: true,                     // needed if you send cookies/auth headers
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
+
 
 // JSON middleware
 app.use(express.json());
