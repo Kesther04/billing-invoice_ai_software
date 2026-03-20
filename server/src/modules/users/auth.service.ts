@@ -4,6 +4,7 @@
 import bcrypt    from "bcryptjs";
 import crypto    from "crypto";
 import nodemailer from "nodemailer";
+import { env } from "../../config/env";
 
 import {
   RegisterIndividualDto,
@@ -50,7 +51,7 @@ const mailer = nodemailer.createTransport({
 });
 
 async function sendResetEmail(toEmail: string, token: string): Promise<void> {
-  const url = `${process.env.CLIENT_URL}/auth/reset-password?token=${token}`;
+  const url = `${env.FRONTEND_URL.replace(/\/+$/, "")}/auth/reset-password?token=${token}`;
 
   await mailer.sendMail({
     from:    `"RevPilot" <${process.env.SMTP_FROM ?? process.env.SMTP_USER}>`,

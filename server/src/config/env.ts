@@ -4,7 +4,7 @@ import { z } from "zod";
 
 const envSchema = z.object({
   NODE_ENV:     z.enum(["development", "test", "production"]).default("development"),
-  PORT:         z.string().default("3000"),
+  PORT:         z.string().default("5000"),
   DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
   JWT_ACCESS_SECRET:   z.string().min(28, "JWT_ACCESS_SECRET must be at least 28 characters"),
 
@@ -13,7 +13,7 @@ const envSchema = z.object({
   OPENAI_MODEL:   z.string().default("gpt-4o-mini"),
 
   // Optional
-  FRONTEND_URL: z.string().default("http://localhost:5173"),
+  FRONTEND_URL: z.string().default("https://traqbill.vercel.app").describe("The URL of the frontend application, used for CORS and reset links"),
 });
 
 function loadEnv() {

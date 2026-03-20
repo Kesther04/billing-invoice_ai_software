@@ -1,21 +1,23 @@
 import express from "express";
 import cors from "cors";
+import { env } from "./config/env";
 import { authRouter } from "./modules/users";
 import  billRouter  from "./modules/billing";
 
 // express configuration
 const app = express();
 
-const allowedOrigins = [
-  "http://localhost:5173",                // local dev
-  "https://traqbill.vercel.app",         // production frontend
-  "https://traqbill.vercel.app/",         // production frontend
-];
+const normalizeOrigin = (value: string) => value.replace(/\/+$/, "");
+
+const allowedOrigins = Array.from(new Set([
+  "http://localhost:5173",
+  normalizeOrigin(env.FRONTEND_URL),
+]));
 
 app.use(cors({
   origin: (origin, callback) => {
     // allow requests with no origin (mobile apps, curl, Postman)
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin || allowedOrigins.includes(normalizeOrigin(origin))) {
       callback(null, true);
     } else {
       callback(new Error(`CORS blocked: ${origin}`));
