@@ -582,7 +582,7 @@ export default function HomeLandingPage(): React.ReactElement {
                 4.2 days
               </div>
               <div className="mt-1 text-xs text-emerald-500">
-                ↓ was 11 days before RevPilot
+                ↓ was 11 days before TraqBill
               </div>
             </div>
           </motion.div>
@@ -646,7 +646,7 @@ export default function HomeLandingPage(): React.ReactElement {
                 className={`mb-3 inline-flex items-center gap-2 rounded-full px-3 py-1.5 ring-1 ${t.badgeBg(dark)}`}
               >
                 <span className={`text-xs font-medium ${t.badgeText(dark)}`}>
-                  Why RevPilot
+                  Why TraqBill
                 </span>
               </div>
               <h2
@@ -692,7 +692,7 @@ export default function HomeLandingPage(): React.ReactElement {
             >
               <span>Workflow</span>
               <span>Traditional Tools</span>
-              <span className="text-emerald-500">RevPilot</span>
+              <span className="text-emerald-500">TraqBill</span>
             </div>
             <div className="px-6 py-2">
               {compareRows.map((row, i) => (
@@ -730,7 +730,7 @@ export default function HomeLandingPage(): React.ReactElement {
       {/* ── FOOTER ── */}
       <footer className="mx-auto w-full max-w-[1180px] px-4 pb-10 text-center text-xs md:px-0">
         <span className={t.footerText(dark)}>
-          &copy; {new Date().getFullYear()} RevPilot, Inc. All rights reserved.
+          &copy; {new Date().getFullYear()} TraqBill, Inc. All rights reserved.
         </span>
       </footer>
     </motion.div>
