@@ -14,19 +14,21 @@ const allowedOrigins = Array.from(new Set([
   normalizeOrigin(env.FRONTEND_URL),
 ]));
 
-app.use(cors({
-  origin: (origin, callback) => {
-    // allow requests with no origin (mobile apps, curl, Postman)
+const corsOptions = {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
     if (!origin || allowedOrigins.includes(normalizeOrigin(origin))) {
       callback(null, true);
     } else {
       callback(new Error(`CORS blocked: ${origin}`));
     }
   },
-  credentials: true,                     // needed if you send cookies/auth headers
+  credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
-}));
+};
+
+app.use(cors(corsOptions));       // handles all requests
+app.options("/{*path}", cors(corsOptions)); // handles preflight
 
 
 // JSON middleware

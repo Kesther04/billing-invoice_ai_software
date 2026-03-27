@@ -1,6 +1,4 @@
-// src/shared/middlewares/rate-limit.middleware.ts
-
-import rateLimit from "express-rate-limit";
+import rateLimit, { ipKeyGenerator } from "express-rate-limit";
 
 export function rateLimitMiddleware(options: {
   windowMs: number;
@@ -13,7 +11,6 @@ export function rateLimitMiddleware(options: {
     message:  options.message ?? "Too many requests, please try again later",
     standardHeaders: true,
     legacyHeaders:   false,
-    // Key by user ID when available, otherwise IP
-    keyGenerator: (req) => (req as any).user?.id ?? req.ip ?? "unknown",
+    keyGenerator: (req) => (req as any).user?.id ?? ipKeyGenerator(req.ip ?? "unknown"),
   });
 }
