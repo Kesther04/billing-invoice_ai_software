@@ -14,8 +14,8 @@ const allowedOrigins = Array.from(new Set([
   normalizeOrigin(env.FRONTEND_URL),
 ]));
 
-const corsOptions = {
-  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+app.use(cors({
+  origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(normalizeOrigin(origin))) {
       callback(null, true);
     } else {
@@ -25,11 +25,9 @@ const corsOptions = {
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
-};
-
-app.use(cors(corsOptions));       // handles all requests
-app.options("/{*path}", cors(corsOptions)); // handles preflight
-
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+}));
 
 // JSON middleware
 app.use(express.json());
