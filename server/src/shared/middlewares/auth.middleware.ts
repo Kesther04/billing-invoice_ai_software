@@ -31,7 +31,8 @@ export function authMiddleware(
       organizationName: payload.organizationName,
     };
     next();
-  } catch {
+  } catch (error) {
+    console.error("Authentication error:", error);
     res.status(401).json({ message: "Invalid or expired token" });
   }
 }

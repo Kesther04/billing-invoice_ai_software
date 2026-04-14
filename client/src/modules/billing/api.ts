@@ -3,12 +3,12 @@ import type { AIInvoicePrompt, AIInvoiceResponse, Invoice } from "./types";
 
 export const aiBillingService = {
   generateInvoiceFromPrompt: async (payload: AIInvoicePrompt): Promise<AIInvoiceResponse> => {
-    const response = await apiClient.post("/invoices/generate", payload);
+    const response = await apiClient.post("/billing/ai/generate", payload);
     return response.data;
   },
 
   createInvoice: async (invoice: Partial<Invoice>): Promise<Invoice> => {
-    const response = await apiClient.post("/invoices", invoice);
+    const response = await apiClient.post("/billing/invoices", invoice);
     return response.data;
   },
 

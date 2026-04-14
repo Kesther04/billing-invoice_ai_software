@@ -84,9 +84,14 @@ export function useInvoiceAI() {
       let invoice: Partial<Invoice>;
       try {
         const res = await aiBillingService.generateInvoiceFromPrompt({ prompt });
+        // res.invoice.total = res.invoice
         invoice = res.invoice;
-      } catch {
+
+        console.log(res);
+      } catch (err) {
         // Simulate network latency for the mock
+        console.error(err);
+        console.error("AI generation failed, using mock data");
         await new Promise((r) => setTimeout(r, 1400));
         invoice = mockGenerateInvoice(prompt);
       }

@@ -117,7 +117,7 @@ export default function InvoiceLineItems({
               )}
             </div>
             <div className={`col-span-2 text-right font-medium ${valueCls}`}>
-              {fmt(item.total)}
+              { !item.total ? fmt(item.unitPrice * item.quantity) :   fmt(item.total) }
             </div>
           </motion.div>
         ))}

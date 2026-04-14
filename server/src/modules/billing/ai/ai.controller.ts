@@ -23,7 +23,7 @@ export const aiController = {
         return;
       }
 
-      const result = await aiService.generateFromPrompt({ prompt: prompt.trim() });
+      const result = await aiService.generateFromPrompt({ prompt: prompt });
 
       res.status(200).json(result);
     } catch (err) {

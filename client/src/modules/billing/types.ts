@@ -53,3 +53,13 @@ export interface CreateInvoiceState {
   isGenerating: boolean;
   error: string | null;
 }
+
+
+export interface Attachment {
+  id: string;
+  type: 'image' | 'file' | 'voice';
+  url: string;
+  file: File;
+  name: string;
+}
+

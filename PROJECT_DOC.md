@@ -1,4 +1,4 @@
-Product Name: RevPilot
+Product Name: TraqBill
 
 FRONTEND STRUCTURE
 ```client/
@@ -268,7 +268,7 @@ PostgreSQl commands
 
 ```
 /**
- * RevPilot — Route Registration
+ * TraqBill — Route Registration
  * Add these routes inside your MainLayout <Route> wrapper.
  *
  * Install one extra peer dep if not already present:

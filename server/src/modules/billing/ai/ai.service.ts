@@ -1,112 +1,80 @@
-// src/modules/billing/ai/ai.service.ts
-
-import OpenAI from "openai";
+import Groq from "groq-sdk";
 import { env } from "../../../config/env";
-import { INVOICE_SYSTEM_PROMPT, EXTRACT_INVOICE_FUNCTION } from "./ai.prompt";
+import { INVOICE_SYSTEM_PROMPT } from "./ai.prompt";
 import { parseAIPayload } from "./ai.parser";
 import type { GenerateInvoiceRequest, GenerateInvoiceResponse, RawAIInvoicePayload } from "./ai.types";
 import type { ParsedInvoiceFromAI } from "./ai.types";
 import type { InvoiceDTO } from "../invoices/invoice.types.ts";
 import { invoiceService } from "../invoices/invoice.service";
 
-// ─── OpenAI client (lazy singleton) ──────────────────────────────────────────
+// ─── Groq client (lazy singleton) ─────────────────────────────────────────────
 
-let _openai: OpenAI | null = null;
+let _groq: Groq | null = null;
 
-function getOpenAI(): OpenAI {
-  if (!_openai) {
-    _openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
+function getGroq(): Groq {
+  if (!_groq) {
+    _groq = new Groq({ apiKey: env.GROQ_API_KEY.trim() });
   }
-  return _openai;
+  return _groq;
 }
 
-// ─── Service ──────────────────────────────────────────────────────────────────
-
 export const aiService = {
-  /**
-   * Generate invoice data from a natural-language prompt.
-   * Returns the parsed data WITHOUT persisting it — the frontend
-   * previews the result and decides when to call saveGeneratedInvoice.
-   */
-  async generateFromPrompt(
-    req: GenerateInvoiceRequest
-  ): Promise<GenerateInvoiceResponse> {
+  async generateFromPrompt(req: GenerateInvoiceRequest): Promise<GenerateInvoiceResponse> {
     const sanitizedPrompt = sanitizePrompt(req.prompt);
 
-    const completion = await getOpenAI().chat.completions.create({
-      model:      env.OPENAI_MODEL ?? "gpt-4o-mini",
-      max_tokens: 800,
-      messages: [
-        { role: "system",  content: INVOICE_SYSTEM_PROMPT },
-        { role: "user",    content: sanitizedPrompt },
-      ],
-      tools: [
-        {
-          type:     "function",
-          function: EXTRACT_INVOICE_FUNCTION,
-        },
-      ],
-      tool_choice: { type: "function", function: { name: "extract_invoice_data" } },
-    });
-
-    const toolCall = completion.choices[0]?.message?.tool_calls?.[0];
-
-    if (!toolCall || toolCall.type !== "function") {
-      throw new Error("AI did not return expected function call");
-    }
-
-    if (toolCall.function.name !== "extract_invoice_data") {
-      throw new Error("Unexpected function call from AI");
-    }
-
-    let rawPayload: RawAIInvoicePayload;
     try {
-      rawPayload = JSON.parse(toolCall.function.arguments) as RawAIInvoicePayload;
-    } catch {
-      throw new Error("Failed to parse AI response JSON");
+      const completion = await withRetry(() =>
+        getGroq().chat.completions.create({
+          model: env.GROQ_MODEL ?? "llama-3.3-70b-versatile",
+          temperature: 0.1,
+          response_format: { type: "json_object" },
+          messages: [
+            { role: "system", content: INVOICE_SYSTEM_PROMPT },
+            {
+              role: "user",
+              content: `Extract invoice data from this request: "${sanitizedPrompt}". Return a single JSON object.`,
+            },
+          ],
+        })
+      );
+
+      const text = completion.choices[0]?.message?.content ?? "";
+      if (!text) throw new Error("Groq returned an empty response.");
+
+      const cleanJson = extractJSON(text);
+
+      let rawPayload: RawAIInvoicePayload;
+      try {
+        rawPayload = JSON.parse(cleanJson) as RawAIInvoicePayload;
+      } catch (e) {
+        console.error("Failed to parse Groq JSON. Raw text was:", text);
+        throw new Error("AI returned a format that couldn't be parsed as JSON.");
+      }
+
+      const { parsed, confidence, suggestions } = parseAIPayload(rawPayload);
+      return { invoice: parsed, confidence, suggestions };
+    } catch (error: any) {
+      console.error("Groq Error Detail:", error);
+      throw new Error(`AI Generation Failed: ${error.message}`);
     }
-
-    const { parsed, confidence, suggestions } = parseAIPayload(rawPayload);
-
-    return {
-      invoice:     parsed,
-      confidence,
-      suggestions,
-    };
   },
 
-  /**
-   * Persist an AI-generated invoice into the database.
-   * Called after the user confirms/edits the preview.
-   *
-   * Merges the AI result with persisted org/user sender details,
-   * attaches AI metadata, then delegates to invoice.service.create.
-   */
   async saveGeneratedInvoice(params: {
-    parsed:        ParsedInvoiceFromAI;
-    prompt:        string;
-    confidence:    number;
-    suggestions:   string[];
+    parsed: ParsedInvoiceFromAI;
+    prompt: string;
+    confidence: number;
+    suggestions: string[];
     organizationId: string;
-    createdById:   string;
+    createdById: string;
     fromParty: {
-      name:    string;
-      email:   string;
+      name: string;
+      email: string;
       address?: string;
     };
   }): Promise<InvoiceDTO> {
-    const {
-      parsed,
-      prompt,
-      confidence,
-      suggestions,
-      organizationId,
-      createdById,
-    } = params;
-
+    const { parsed, prompt, confidence, suggestions, organizationId, createdById } = params;
     const { to, from, issueDate, dueDate, lineItems, ...rest } = parsed;
 
-    // Ensure required fields exist
     if (!to) throw new Error("AI response missing recipient (to)");
     if (!from) throw new Error("AI response missing sender (from)");
     if (!issueDate) throw new Error("AI response missing issue date");
@@ -133,14 +101,44 @@ export const aiService = {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-/**
- * Basic prompt sanitisation — strips control characters and limits length
- * to protect against prompt injection and runaway costs.
- */
+function extractJSON(content: string): string {
+  const match = content.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+  if (match && match[1]) return match[1].trim();
+  return content.trim();
+}
+
 function sanitizePrompt(input: string): string {
   return input
-    .replace(/[\u0000-\u001F\u007F]/g, " ") // strip control chars
+    .replace(/[\u0000-\u001F\u007F]/g, " ")
     .replace(/\s+/g, " ")
     .trim()
     .slice(0, 1000);
+}
+
+// ─── Retry helper ─────────────────────────────────────────────────────────────
+
+const RETRYABLE_CODES = ["503", "429", "500"];
+const MAX_RETRIES = 3;
+
+async function withRetry<T>(fn: () => Promise<T>): Promise<T> {
+  for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+    try {
+      return await fn();
+    } catch (error: any) {
+      const msg: string = error?.message ?? "";
+      const isRetryable = RETRYABLE_CODES.some((code) => msg.includes(code));
+
+      if (isRetryable && attempt < MAX_RETRIES - 1) {
+        const delay = 1000 * Math.pow(2, attempt);
+        console.warn(
+          `Groq ${msg.match(/\d{3}/)?.[0] ?? "error"} — retrying in ${delay}ms (attempt ${attempt + 1}/${MAX_RETRIES})`
+        );
+        await new Promise((res) => setTimeout(res, delay));
+        continue;
+      }
+
+      throw error;
+    }
+  }
+  throw new Error("Unreachable");
 }

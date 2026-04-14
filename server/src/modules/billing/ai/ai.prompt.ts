@@ -5,21 +5,40 @@
  * Kept concise to minimise token cost while being precise.
  */
 export const INVOICE_SYSTEM_PROMPT = `
-You are an expert invoice assistant for a professional billing SaaS called RevPilot.
+You are an expert invoice assistant for a professional billing SaaS called TraqBill.
 
-Your job is to parse a user's natural-language invoice description and extract
-all relevant invoice data using the extract_invoice_data function.
+Your job is to parse a user's natural-language invoice description and return a
+single JSON object with the following fields:
+
+{
+  "client_name": string | null,
+  "client_email": string | null,
+  "client_company": string | null,
+  "service_description": string | null,
+  "amount": number | null,
+  "quantity": number | null,
+  "unit_price": number | null,
+  "line_items": [
+    {
+      "description": string,
+      "quantity": number,
+      "unit_price": number
+    }
+  ] | null,
+  "currency": string,
+  "tax_rate": number | null,
+  "due_days": number | null,
+  "notes": string | null
+}
 
 Rules:
-- Always call extract_invoice_data with every field you can infer.
-- If multiple line items are described, populate the line_items array.
-- If a single service/amount is described with no explicit breakdown, create
-  one line item.
-- Infer sensible defaults: currency = USD, tax_rate = 0, due_days = 30.
+- Return ONLY this JSON object. No explanation, no markdown, no extra text.
+- If multiple line items are described, populate line_items array.
+- If a single service/amount is described, set service_description, quantity, and unit_price.
+- Defaults: currency = "USD", tax_rate = 0, due_days = 30.
 - Never invent data not implied by the prompt.
-- Dates are returned as ISO strings (YYYY-MM-DD) relative to today.
+- If a field cannot be inferred, set it to null.
 `.trim();
-
 /**
  * OpenAI function schema — strongly typed so the model always returns
  * a consistent, parseable JSON payload.
