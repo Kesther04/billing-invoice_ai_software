@@ -14,6 +14,8 @@ single JSON object with the following fields:
   "client_name": string | null,
   "client_email": string | null,
   "client_company": string | null,
+  "client_address": string | null,
+  "client_phone": string | null,
   "service_description": string | null,
   "amount": number | null,
   "quantity": number | null,
@@ -33,7 +35,7 @@ single JSON object with the following fields:
 
 Rules:
 - Return ONLY this JSON object. No explanation, no markdown, no extra text.
-- If multiple line items are described, populate line_items array.
+- If multiple line items are described, populate the line_items array.
 - If a single service/amount is described, set service_description, quantity, and unit_price.
 - Defaults: currency = "USD", tax_rate = 0, due_days = 30.
 - Never invent data not implied by the prompt.

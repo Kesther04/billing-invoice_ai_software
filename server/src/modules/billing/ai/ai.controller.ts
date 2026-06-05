@@ -17,13 +17,21 @@ export const aiController = {
   async generate(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { prompt } = req.body as GenerateInvoiceRequest;
+      const user = (req as any).user;  // set by authMiddleware
 
       if (!prompt || typeof prompt !== "string" || !prompt.trim()) {
         res.status(400).json({ message: "prompt is required" });
         return;
       }
 
-      const result = await aiService.generateFromPrompt({ prompt: prompt });
+      const result = await aiService.generateFromPrompt({
+        prompt: prompt.trim(),
+        fromParty: {                          // ← populated from JWT payload
+          name:             user.id,          // swap for user.name if you store it
+          email:            user.email,
+          organizationName: user.organizationName,
+        },
+      });
 
       res.status(200).json(result);
     } catch (err) {

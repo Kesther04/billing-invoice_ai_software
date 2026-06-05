@@ -6,7 +6,7 @@ import { t } from "../utils/themeClasses";
 export default function Logo({ collapsed }: { collapsed: boolean }): React.ReactElement {
     const { dark } = useTheme();
     return (
-        <>
+        <div className='flex items-center gap-2'>
             <div className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-emerald-700 text-white shadow">
                 <BarChart2 className="h-4 w-4" />
             </div>
@@ -23,6 +23,6 @@ export default function Logo({ collapsed }: { collapsed: boolean }): React.React
                 </motion.span>
                 )}
             </AnimatePresence>
-        </>
+        </div>
     );
 }

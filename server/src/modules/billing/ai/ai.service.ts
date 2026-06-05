@@ -21,7 +21,8 @@ function getGroq(): Groq {
 export const aiService = {
   async generateFromPrompt(req: GenerateInvoiceRequest): Promise<GenerateInvoiceResponse> {
     const sanitizedPrompt = sanitizePrompt(req.prompt);
-
+    const { fromParty } = req;  // ← destructure
+    
     try {
       const completion = await withRetry(() =>
         getGroq().chat.completions.create({
@@ -51,7 +52,7 @@ export const aiService = {
         throw new Error("AI returned a format that couldn't be parsed as JSON.");
       }
 
-      const { parsed, confidence, suggestions } = parseAIPayload(rawPayload);
+      const { parsed, confidence, suggestions } = parseAIPayload(rawPayload, fromParty);
       return { invoice: parsed, confidence, suggestions };
     } catch (error: any) {
       console.error("Groq Error Detail:", error);

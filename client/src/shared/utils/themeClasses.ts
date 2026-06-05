@@ -7,6 +7,7 @@ export const t = {
   textDanger: (d: boolean) => (d ? "text-red-400" : "text-red-600"),
   textSub: (d: boolean) => (d ? "text-slate-300" : "text-slate-600"),
   border: (d: boolean) => (d ? "border-white/10" : "border-slate-100"),
+  borderBottom: (d: boolean) => (d ? "border-gray-800/30" : "border-gray-300/30"),
   navHover: (d: boolean) => (d ? "hover:text-white" : "hover:text-slate-900"),
   inputBg: (d: boolean) =>
     d

@@ -6,6 +6,11 @@ import type { InvoiceParty, LineItemInput } from "../invoices/invoice.types";
 
 export interface GenerateInvoiceRequest {
   prompt: string;
+  fromParty: {          // ← add — populated from auth middleware
+    name: string;
+    email: string;
+    organizationName: string;
+  };
 }
 
 export interface GenerateInvoiceResponse {
@@ -30,22 +35,19 @@ export interface ParsedInvoiceFromAI {
 }
 
 // ─── Raw OpenAI function-call result (before validation) ─────────────────────
-
 export interface RawAIInvoicePayload {
-  client_name?: string;
-  client_email?: string;
-  client_company?: string;
-  service_description?: string;
-  amount?: number;
-  quantity?: number;
-  unit_price?: number;
-  currency?: string;
-  tax_rate?: number;
-  due_days?: number;
-  notes?: string;
-  line_items?: Array<{
-    description: string;
-    quantity: number;
-    unit_price: number;
-  }>;
+  client_name?:        string | null;
+  client_email?:       string | null;
+  client_company?:     string | null;
+  client_address?:     string | null;  // ← add
+  client_phone?:       string | null;  // ← add
+  service_description?: string | null;
+  amount?:             number | null;
+  quantity?:           number | null;
+  unit_price?:         number | null;
+  line_items?:         { description: string; quantity: number; unit_price: number }[] | null;
+  currency?:           string | null;
+  tax_rate?:           number | null;
+  due_days?:           number | null;
+  notes?:              string | null;
 }
