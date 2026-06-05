@@ -517,7 +517,7 @@ export default function HomeLandingPage(): React.ReactElement {
         className="relative overflow-hidden min-h-screen flex items-center pt-20"
       >
         {/* Base dark overlay */}
-        <div className={`absolute inset-0 bg-black/90  pointer-events-none`} />
+        <div className={`absolute inset-0 bg-black/85  pointer-events-none`} />
 
         {/* Bottom vignette — kills the client data bleed specifically */}
         <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/80 via-black/30 to-transparent pointer-events-none" />
