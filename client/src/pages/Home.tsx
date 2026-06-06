@@ -562,14 +562,16 @@ export default function HomeLandingPage(): React.ReactElement {
                     Payments.
                   </span>
                   <br />
-                  Start Tracking
+                  Start Getting
                   <br />
-                  Revenue.
+                  Paid.
                 </h1>
 
                 <p className="mt-5 max-w-md text-sm leading-relaxed text-white/60">
-                  Generate invoices with a prompt, automate payment reminders and see exactly how your
-                  money flows — all in one simple dashboard.
+                  {/* Generate invoices with a prompt, automate payment reminders and see exactly how your */}
+                  {/* money flows — all in one simple dashboard. */}
+                  TraqBill invoices your clients, follows up when they go quiet and tells you exactly what's coming in, 
+                  so you stop losing money to slow payers and guesswork.
                 </p>
               </motion.div>
 
@@ -580,13 +582,15 @@ export default function HomeLandingPage(): React.ReactElement {
                 transition={{ delay: 0.2 }}
                 className="flex flex-wrap items-center gap-3"
               >
-                <Link to="/billing/create">
+                <Link to="/auth/signup">
                   <SoftButton variant="accent">
-                    Try the Prompt <ArrowUpRight className="ml-1 inline h-4 w-4" />
+                    Sign Up <ArrowUpRight className="ml-1 inline h-4 w-4" />
                   </SoftButton>
                 </Link>
-                <Link to="/auth/signup">
-                  <SoftButton variant="ghost">Sign Up</SoftButton>
+                <Link to="/billing/create">
+                  <SoftButton variant="ghost">
+                    Try the Prompt <ArrowUpRight className="ml-1 inline h-4 w-4" />
+                  </SoftButton>
                 </Link>
               </motion.div>
 
@@ -595,12 +599,12 @@ export default function HomeLandingPage(): React.ReactElement {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.35 }}
-                className="grid grid-cols-3 gap-5 max-w-xs"
+                className="grid grid-cols-3 gap-5 max-w-sm"
               >
                 {[
                   { value: "50K+",   label: "Invoices Sent"   },
-                  { value: "$8.4M",  label: "Revenue Tracked" },
-                  { value: "12h/mo", label: "Time Saved"      },
+                  { value: "$8.4M",  label: "Recovered via AI" },
+                  { value: "11 days", label: "Payment time cut"   },
                 ].map((s) => (
                   <div key={s.label}>
                     <div className="text-2xl font-bold text-white">{s.value}</div>
@@ -616,11 +620,12 @@ export default function HomeLandingPage(): React.ReactElement {
                 transition={{ delay: 0.5 }}
                 className="flex items-center gap-5 opacity-50"
               >
-                <span className="text-xs text-white/50 tracking-widest uppercase">Trusted By</span>
+                <span className="text-xs text-white/50 tracking-widest uppercase">Used by</span>
                 <div className="flex gap-4 text-sm font-semibold text-white/40">
-                  <span>Contra</span>
-                  <span>Indiehackers</span>
-                  <span>Toptal</span>
+                  {/* <span>freelancers and agencies across 12+ countries</span> */}
+                  <span>Freelancers</span>
+                  <span>Agencies</span>
+                  <span>Developers</span>
                 </div>
               </motion.div>
             </div>

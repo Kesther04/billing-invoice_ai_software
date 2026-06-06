@@ -12,62 +12,92 @@ FRONTEND STRUCTURE
     │
     ├── modules/
     │
-    │   ├── billing/                     # Core Feature 1: Prompt-to-Invoice
+    │   ├── auth/                            # Auth module (was missing)
+    │   │   ├── components/
+    │   │   │   ├── LoginForm.tsx
+    │   │   │   └── RegisterForm.tsx
+    │   │   │
+    │   │   ├── pages/
+    │   │   │   ├── LoginPage.tsx
+    │   │   │   └── RegisterPage.tsx
+    │   │   │
+    │   │   ├── hooks/
+    │   │   │   └── useAuth.ts
+    │   │   │
+    │   │   ├── api.ts
+    │   │   ├── types.ts
+    │   │   └── index.ts
+    │   │
+    │   ├── billing/                         # Core Feature 1: Smart Invoicing
     │   │   ├── components/
     │   │   │   ├── InvoicePromptInput.tsx
     │   │   │   ├── InvoicePreview.tsx
     │   │   │   ├── InvoiceEditor.tsx
     │   │   │   ├── InvoiceLineItems.tsx
-    │   │   │   └── InvoiceStatusBadge.tsx
+    │   │   │   ├── InvoiceStatusBadge.tsx
+    │   │   │   ├── InvoiceViewReceipt.tsx   # tracks when client opens invoice
+    │   │   │   ├── RecurringInvoiceForm.tsx # recurring invoice setup UI
+    │   │   │   └── PartialPaymentBadge.tsx  # partial/deposit invoice indicator
     │   │   │
     │   │   ├── pages/
     │   │   │   ├── CreateInvoicePage.tsx
-    │   │   │   └── InvoiceDetailsPage.tsx
+    │   │   │   ├── InvoiceDetailsPage.tsx
+    │   │   │   └── InvoiceListPage.tsx
     │   │   │
     │   │   ├── hooks/
-    │   │   │   └── useInvoiceAI.ts
+    │   │   │   ├── useInvoiceAI.ts
+    │   │   │   └── useInvoiceTracking.ts    # view receipt hook
     │   │   │
     │   │   ├── api.ts
     │   │   ├── types.ts
     │   │   └── index.ts
     │   │
-    │   ├── revenue-automation/          # Core Feature 2: Payments + Reminders
+    │   ├── revenue-automation/              # Core Feature 2: AI Collection Engine
     │   │   ├── components/
     │   │   │   ├── PaymentLinkGenerator.tsx
     │   │   │   ├── PaymentStatusTracker.tsx
     │   │   │   ├── ReminderScheduler.tsx
     │   │   │   ├── ReminderLog.tsx
-    │   │   │   └── ReminderTemplateEditor.tsx
+    │   │   │   ├── ReminderTemplateEditor.tsx
+    │   │   │   ├── ClientRiskBadge.tsx      # Low / Medium / High risk label
+    │   │   │   ├── ClientRiskCard.tsx       # risk score breakdown per client
+    │   │   │   └── HighRiskInvoiceAlert.tsx # alert when invoicing a high-risk client
     │   │   │
     │   │   ├── pages/
-    │   │   │   └── AutomationSettingsPage.tsx
+    │   │   │   ├── AutomationSettingsPage.tsx
+    │   │   │   └── ClientRiskPage.tsx       # full risk scoring view
     │   │   │
     │   │   ├── hooks/
-    │   │   │   └── useRevenueAutomation.ts
+    │   │   │   ├── useRevenueAutomation.ts
+    │   │   │   └── useClientRisk.ts         # risk score data hook
     │   │   │
     │   │   ├── api.ts
     │   │   ├── types.ts
     │   │   └── index.ts
     │   │
-    │   ├── revenue-intelligence/        # Core Feature 3: Dashboard & Insights
+    │   ├── revenue-intelligence/            # Core Feature 3: Cash Flow Intelligence
     │   │   ├── components/
     │   │   │   ├── RevenueOverviewCard.tsx
     │   │   │   ├── RevenueTrendChart.tsx
     │   │   │   ├── PendingPaymentsCard.tsx
     │   │   │   ├── TopClientsCard.tsx
-    │   │   │   └── AIInsightsSummary.tsx
+    │   │   │   ├── AIInsightsSummary.tsx
+    │   │   │   ├── CashFlowForecastCard.tsx # "₦850,000 expected in 14 days"
+    │   │   │   ├── CashShortageAlert.tsx    # shortage warning component
+    │   │   │   └── CollectionRateChart.tsx  # collection rate over time
     │   │   │
     │   │   ├── pages/
     │   │   │   └── DashboardPage.tsx
     │   │   │
     │   │   ├── hooks/
-    │   │   │   └── useRevenueAnalytics.ts
+    │   │   │   ├── useRevenueAnalytics.ts
+    │   │   │   └── useCashFlowForecast.ts   # forecast data hook
     │   │   │
     │   │   ├── api.ts
     │   │   ├── types.ts
     │   │   └── index.ts
     │   │
-    │   ├── clients/                     # Supporting Domain
+    │   ├── clients/                         # Supporting Domain
     │   │   ├── components/
     │   │   │   ├── ClientForm.tsx
     │   │   │   ├── ClientList.tsx
@@ -90,7 +120,8 @@ FRONTEND STRUCTURE
     │   │   └── Badge.tsx
     │   │
     │   ├── hooks/
-    │   │   └── useDebounce.ts
+    │   │   ├── useDebounce.ts
+    │   │   └── useOrganization.ts           # active org/tenant context
     │   │
     │   ├── utils/
     │   │   ├── formatCurrency.ts
@@ -100,6 +131,7 @@ FRONTEND STRUCTURE
     │   │
     │   └── constants/
     │       ├── invoiceStatus.ts
+    │       ├── paymentStatus.ts             # was missing on frontend
     │       └── reminderIntervals.ts
     │
     ├── services/
@@ -109,6 +141,7 @@ FRONTEND STRUCTURE
     │   └── index.css
     │
     └── types/
+        └── global.d.ts
 ```
 
 
@@ -116,25 +149,12 @@ BACKEND STRUCTURE
 ```server/
 └── src/
     │
-    ├── server.ts                     # bootstrap only (listen)
-    ├── app.ts                        # express setup
+    ├── server.ts                            # bootstrap only (listen)
+    ├── app.ts                               # express setup
     │
-    ├── generated/
-    │   ├── Internal/     # Core Feature 3
-    │   │   ├
-    │   │   ├
-    │   │   ├
-    │   │   ├── prismaNamespaceBrowser.ts
-    │   │   ├── prismaNamespace.ts
-    │   │   └── class.ts
-    │   │   
-    │   │-- models/
-    |   |   
-    |   |-- browser.ts               # etc
-    |
     ├── modules/
     │
-    │   ├── billing/                  # Core Feature 1: AI + Invoice Domain
+    │   ├── billing/                         # Core Feature 1: Smart Invoicing
     │   │   ├── ai/
     │   │   │   ├── ai.controller.ts
     │   │   │   ├── ai.service.ts
@@ -149,15 +169,17 @@ BACKEND STRUCTURE
     │   │   │   ├── invoice.service.ts
     │   │   │   ├── invoice.routes.ts
     │   │   │   ├── invoice.repository.ts
+    │   │   │   ├── invoice.tracker.ts       # view receipt / open tracking
     │   │   │   ├── invoice.status.ts
     │   │   │   └── invoice.types.ts
     │   │   │
-    │   │   └── index.ts              # billing module router aggregator
+    │   │   └── index.ts
     │   │
-    │   ├── revenue-automation/       # Core Feature 2
+    │   ├── revenue-automation/              # Core Feature 2: AI Collection Engine
     │   │   ├── payments/
     │   │   │   ├── payment.controller.ts
     │   │   │   ├── payment.service.ts
+    │   │   │   ├── payment.webhook.ts       # Paystack webhook handler
     │   │   │   ├── payment.routes.ts
     │   │   │   ├── payment.repository.ts
     │   │   │   └── payment.types.ts
@@ -165,31 +187,48 @@ BACKEND STRUCTURE
     │   │   ├── reminders/
     │   │   │   ├── reminder.controller.ts
     │   │   │   ├── reminder.service.ts
+    │   │   │   ├── reminder.ai.ts           # AI tone + message generation
     │   │   │   ├── reminder.scheduler.ts
+    │   │   │   ├── reminder.escalation.ts   # gentle → firm → formal logic
     │   │   │   ├── reminder.routes.ts
     │   │   │   ├── reminder.repository.ts
     │   │   │   └── reminder.types.ts
     │   │   │
+    │   │   ├── risk/                        # Client risk scoring (was missing)
+    │   │   │   ├── risk.controller.ts
+    │   │   │   ├── risk.service.ts          # scoring logic per client
+    │   │   │   ├── risk.routes.ts
+    │   │   │   ├── risk.repository.ts
+    │   │   │   └── risk.types.ts
+    │   │   │
     │   │   └── index.ts
     │   │
-    │   ├── revenue-intelligence/     # Core Feature 3
+    │   ├── revenue-intelligence/            # Core Feature 3: Cash Flow Intelligence
     │   │   ├── analytics/
     │   │   │   ├── analytics.controller.ts
     │   │   │   ├── analytics.service.ts
+    │   │   │   ├── analytics.ai.ts          # AI-narrated dashboard summaries
     │   │   │   ├── analytics.routes.ts
     │   │   │   ├── analytics.repository.ts
     │   │   │   └── analytics.types.ts
     │   │   │
+    │   │   ├── forecasting/                 # Cash flow forecasting (was missing)
+    │   │   │   ├── forecast.controller.ts
+    │   │   │   ├── forecast.service.ts      # expected collections + shortage alerts
+    │   │   │   ├── forecast.routes.ts
+    │   │   │   ├── forecast.repository.ts
+    │   │   │   └── forecast.types.ts
+    │   │   │
     │   │   └── index.ts
     │   │
-    │   ├── clients/                  # Supporting Domain
+    │   ├── clients/                         # Supporting Domain
     │   │   ├── client.controller.ts
     │   │   ├── client.service.ts
     │   │   ├── client.routes.ts
     │   │   ├── client.repository.ts
     │   │   └── client.types.ts
     │   │
-    │   ├── users/                    # Auth + Accounts
+    │   ├── users/                           # Auth + Accounts
     │   │   ├── auth.controller.ts
     │   │   ├── auth.service.ts
     │   │   ├── auth.routes.ts
@@ -197,7 +236,7 @@ BACKEND STRUCTURE
     │   │   ├── user.types.ts
     │   │   └── jwt.strategy.ts
     │   │
-    │   └── organizations/            # NEW: Multi-tenant SaaS ready
+    │   └── organizations/                   # Multi-tenant SaaS
     │       ├── org.controller.ts
     │       ├── org.service.ts
     │       ├── org.routes.ts
@@ -210,14 +249,14 @@ BACKEND STRUCTURE
     │   │   ├── error.middleware.ts
     │   │   ├── validate.middleware.ts
     │   │   ├── rate-limit.middleware.ts
-    │   │   └── tenant.middleware.ts      # NEW (multi-tenant isolation)
+    │   │   └── tenant.middleware.ts
     │   │
     │   ├── utils/
     │   │   ├── logger.ts
     │   │   ├── date.ts
     │   │   ├── currency.ts
     │   │   ├── calculateTotals.ts
-    │   │   ├── sanitize.ts               # prompt injection safety
+    │   │   ├── sanitize.ts
     │   │   └── invoiceNumber.ts
     │   │
     │   ├── validators/
@@ -228,15 +267,35 @@ BACKEND STRUCTURE
     │   │   └── user.validator.ts
     │   │
     │   ├── database/
-    │   │   ├── index.ts                 # DB connection / pool
+    │   │   ├── index.ts
     │   │   ├── migrations/
-    │   │   ├── seed/
-    │   │   └── models/                  # Optional ORM layer
+    │   │   └── seed/
     │   │
     │   └── constants/
     │       ├── invoiceStatus.ts
     │       ├── paymentStatus.ts
     │       └── reminderIntervals.ts
+    │
+    ├── infrastructure/
+    │   ├── queues/
+    │   │   ├── reminder.queue.ts            # reminder job queue
+    │   │   └── recurring-invoice.queue.ts   # recurring invoice queue
+    │   │
+    │   ├── jobs/
+    │   │   ├── reminder.job.ts              # processes reminder queue
+    │   │   ├── recurring-invoice.job.ts     # auto-generates recurring invoices
+    │   │   ├── risk-score.job.ts            # recalculates client risk scores
+    │   │   └── forecast.job.ts             # refreshes cash flow forecasts
+    │   │
+    │   └── events/
+    │       ├── invoice.events.ts            # invoice created/paid/overdue
+    │       ├── payment.events.ts            # payment confirmed via webhook
+    │       └── reminder.events.ts           # reminder sent/cancelled
+    │
+    ├── prisma/                              # moved out of src/generated
+    │   ├── schema.prisma
+    │   ├── migrations/
+    │   └── seed.ts
     │
     ├── config/
     │   ├── env.ts
