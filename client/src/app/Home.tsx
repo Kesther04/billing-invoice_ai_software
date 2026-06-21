@@ -359,7 +359,7 @@ export default function HomeLandingPage(): React.ReactElement {
 
   /* Active nav section */
   useEffect(() => {
-    const ids = ["hero", "features", "howitworks", "why"];
+    const ids = ["hero", "features", "howitworks", "roadmap","why"];
     const handleScroll = () => {
       const scrollMid = window.scrollY + window.innerHeight / 2;
       for (const id of ids) {
