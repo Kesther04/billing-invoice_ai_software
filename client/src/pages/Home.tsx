@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
   Zap,
@@ -372,9 +372,17 @@ export default function HomeLandingPage(): React.ReactElement {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  /* Pin/pause flag for the step list: clicking a step sets this true so
+     the auto-cycle stops touching activeStep until the mouse leaves that
+     step. A ref (not state) so toggling it on hover doesn't re-render. */
+  const stepsPausedRef = useRef<boolean>(false);
+
   /* Auto-cycle steps */
   useEffect(() => {
-    const timer = setInterval(() => setActiveStep((s) => (s + 1) % steps.length), 4000);
+    const timer = setInterval(() => {
+      if (stepsPausedRef.current) return;
+      setActiveStep((s) => (s + 1) % steps.length);
+    }, 4000);
     return () => clearInterval(timer);
   }, []);
 
@@ -568,8 +576,6 @@ export default function HomeLandingPage(): React.ReactElement {
                 </h1>
 
                 <p className="mt-5 max-w-md text-sm leading-relaxed text-white/60">
-                  {/* Generate invoices with a prompt, automate payment reminders and see exactly how your */}
-                  {/* money flows — all in one simple dashboard. */}
                   TraqBill invoices your clients, follows up when they go quiet and tells you exactly what's coming in, 
                   so you stop losing money to slow payers and guesswork.
                 </p>
@@ -622,7 +628,6 @@ export default function HomeLandingPage(): React.ReactElement {
               >
                 <span className="text-xs text-white/50 tracking-widest uppercase">Used by</span>
                 <div className="flex gap-4 text-sm font-semibold text-white/40">
-                  {/* <span>freelancers and agencies across 12+ countries</span> */}
                   <span>Freelancers</span>
                   <span>Agencies</span>
                   <span>Developers</span>
@@ -736,7 +741,13 @@ export default function HomeLandingPage(): React.ReactElement {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
-                  onClick={() => setActiveStep(i)}
+                  onClick={() => {
+                    stepsPausedRef.current = true;
+                    setActiveStep(i);
+                  }}
+                  onMouseLeave={() => {
+                    stepsPausedRef.current = false;
+                  }}
                   className={`flex gap-5 py-6 cursor-pointer transition-opacity ${
                     activeStep === i ? "opacity-100" : "opacity-50 hover:opacity-75"
                   }`}
@@ -760,7 +771,7 @@ export default function HomeLandingPage(): React.ReactElement {
             </div>
 
             {/* Preview panel */}
-            <div className={`rounded-2xl border p-6 shadow-lg sticky top-24 ${t.card(dark)}`}>
+            <div className={`rounded-2xl p-6 shadow-lg sticky top-24 ${t.card(dark)}`}>
               <div className={`flex items-center gap-3 pb-4 border-b mb-4 ${t.border(dark)}`}>
                 <div className="flex gap-1.5">
                   <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
