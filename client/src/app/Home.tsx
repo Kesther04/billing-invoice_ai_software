@@ -137,7 +137,7 @@ const benefits: string[] = [
 
 const compareRows: CompareRowData[] = [
   { label: "Billing",     oldVal: "Manual invoices",   newVal: "Prompt-based billing"    },
-  { label: "Follow-ups",  oldVal: "Manual reminders",  newVal: "Automated AI follow-ups" },
+  { label: "Follow-ups",  oldVal: "Manual reminders",  newVal: "Automated follow-ups" },
   { label: "Insights",    oldVal: "No revenue insight", newVal: "Real-time intelligence"  },
   { label: "Setup",       oldVal: "Hours of config",    newVal: "Live in minutes"         },
   { label: "Focus",       oldVal: "Software-first",     newVal: "Revenue-first"           },
@@ -153,7 +153,7 @@ const steps: StepData[] = [
   {
     num: "02",
     title: "AI Builds the Invoice",
-    desc: "TraqBill parses your prompt and instantly generates a branded, ready-to-send invoice — itemized, dated, and professional.",
+    desc: "TraqBill parses your prompt and drafts a branded, itemized invoice in seconds — review it, tweak anything, then send.",
     tag: "✦ AI-generated in seconds",
   },
   {
@@ -397,6 +397,7 @@ export default function HomeLandingPage(): React.ReactElement {
     { label: "Home",          id: "hero"       },
     { label: "Features",      id: "features"   },
     { label: "How It Works",  id: "howitworks" },
+    { label: "Roadmap",       id: "roadmap"    },
     { label: "Why Different", id: "why"        },
   ];
 
@@ -522,7 +523,7 @@ export default function HomeLandingPage(): React.ReactElement {
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
         }}
-        className="relative overflow-hidden min-h-screen flex items-center pt-20"
+        className="relative overflow-hidden min-h-[200vh] md:min-h-screen flex items-center pt-20"
       >
         {/* Base dark overlay */}
         <div className={`absolute inset-0 bg-black/85  pointer-events-none`} />
@@ -576,8 +577,8 @@ export default function HomeLandingPage(): React.ReactElement {
                 </h1>
 
                 <p className="mt-5 max-w-md text-sm leading-relaxed text-white/60">
-                  TraqBill invoices your clients, follows up when they go quiet and tells you exactly what's coming in, 
-                  so you stop losing money to slow payers and guesswork.
+                  TraqBill sends your invoices, follows up automatically when clients go quiet,
+                  and shows you exactly what's coming in, so slow payers stop costing you money and sleep.
                 </p>
               </motion.div>
 
@@ -605,14 +606,14 @@ export default function HomeLandingPage(): React.ReactElement {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.35 }}
-                className="grid grid-cols-3 gap-5 max-w-sm"
+                className="grid grid-cols-3 gap-2 max-w-md"
               >
                 {[
-                  { value: "50K+",   label: "Invoices Sent"   },
-                  { value: "$8.4M",  label: "Recovered via AI" },
-                  { value: "11 days", label: "Payment time cut"   },
+                  { value: "3 steps",  label: "Prompt to sent invoice"        },
+                  { value: "Auto",     label: "Reminders, zero manual chasing" },
+                  { value: "Real-time", label: "Dashboard, no spreadsheets"    },
                 ].map((s) => (
-                  <div key={s.label}>
+                  <div key={s.label} className="min-w-20">
                     <div className="text-2xl font-bold text-white">{s.value}</div>
                     <div className="mt-1 text-xs text-white/40">{s.label}</div>
                   </div>
@@ -626,7 +627,7 @@ export default function HomeLandingPage(): React.ReactElement {
                 transition={{ delay: 0.5 }}
                 className="flex items-center gap-5 opacity-50"
               >
-                <span className="text-xs text-white/50 tracking-widest uppercase">Used by</span>
+                <span className="text-xs text-white/50 tracking-widest uppercase">Built for</span>
                 <div className="flex gap-4 text-sm font-semibold text-white/40">
                   <span>Freelancers</span>
                   <span>Agencies</span>
@@ -651,15 +652,15 @@ export default function HomeLandingPage(): React.ReactElement {
                 transition={{ delay: 0.3 }}
                 className="grid grid-cols-2 gap-4"
               >
-                <div className="rounded-2xl p-4 bg-emerald-500/12 backdrop-blur-xl border border-emerald-500/20">
-                  <div className="text-xs text-emerald-400 mb-1">Overdue recovered</div>
-                  <div className="text-2xl font-bold text-white">$12,400</div>
-                  <div className="mt-1 text-xs text-emerald-400/80">↑ 18% this month via AI reminders</div>
+                <div className="rounded-2xl p-4 bg-emerald-500/12 backdrop-blur-xl border border-emerald-500/20 text-center md:text-left">
+                  <div className="text-xs text-emerald-400 mb-1">Auto-follow-up</div>
+                  <div className="text-sm md:text-2xl font-bold text-white">Gentle → Firm → Final</div>
+                  <div className="mt-1 text-xs text-emerald-400/80">Escalates automatically, stops the moment you're paid</div>
                 </div>
                 <div className="rounded-2xl p-4 bg-white/7 backdrop-blur-xl border border-white/10">
-                  <div className="text-xs text-white/45 mb-1">Avg. payment time</div>
-                  <div className="text-2xl font-bold text-white">4.2 days</div>
-                  <div className="mt-1 text-xs text-emerald-400">↓ was 11 days before TraqBill</div>
+                  <div className="text-xs text-white/45 mb-1">Always know</div>
+                  <div className="text-sm md:text-2xl font-bold text-white">What's owed, by who</div>
+                  <div className="mt-1 text-xs text-emerald-400">Live across every client</div>
                 </div>
               </motion.div>
             </div>
@@ -827,7 +828,7 @@ export default function HomeLandingPage(): React.ReactElement {
                       ))}
                     </div>
                   </div>
-                  <p className={`text-xs ${t.textMuted(dark)}`}>Branded, itemized & ready to send in seconds ✓</p>
+                  <p className={`text-xs ${t.textMuted(dark)}`}>Branded, itemized & ready to review in seconds ✓</p>
                 </motion.div>
               )}
 
@@ -892,6 +893,68 @@ export default function HomeLandingPage(): React.ReactElement {
                 </motion.div>
               )}
             </div>
+          </div>
+        </div>
+      </section>
+
+
+      {/* ══ ROADMAP ══ */}
+      <section id="roadmap" className={`border-t ${t.border(dark)}`}>
+        <div className="mx-auto w-full max-w-[1600px] px-6 py-20 md:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-10"
+          >
+            <SectionBadge label="What's Next" dark={dark} />
+            <h2 className={`text-4xl font-bold tracking-tight leading-[1.07] mt-1 ${t.text(dark)}`}>
+              TraqBill Gets Smarter
+              <br />
+              <span className="bg-gradient-to-r from-emerald-500 to-teal-400 bg-clip-text text-transparent">
+                As You Use It.
+              </span>
+            </h2>
+            <p className={`mt-3 max-w-md text-sm leading-relaxed ${t.textMuted(dark)}`}>
+              TraqBill ships lean and grows with real usage. Here's what's coming as your payment history builds up.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
+            {[
+              {
+                tag: "Billing",
+                title: "More Invoice Flexibility",
+                desc: "Recurring invoices for retainers, partial/deposit payments, multi-currency support, and a full audit trail per client.",
+              },
+              {
+                tag: "Collections",
+                title: "AI-Personalized Follow-Ups",
+                desc: "Reminder tone and timing shaped by each client's real payment behavior — plus risk scores and alerts before you send to a slow payer.",
+              },
+              {
+                tag: "Cash Flow",
+                title: "Forecasting & Insights",
+                desc: "Forward-looking collection forecasts, shortage warnings, revenue trend charts, and plain-language dashboard summaries.",
+              },
+            ].map((card, i) => (
+              <motion.div
+                key={card.title}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className={`relative overflow-hidden rounded-2xl border p-6 ${t.border(dark)} ${dark ? "bg-slate-900/40" : "bg-slate-50"}`}
+              >
+                <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium mb-4 ${
+                  dark ? "bg-amber-900/30 text-amber-400" : "bg-amber-50 text-amber-700"
+                }`}>
+                  Coming Soon · {card.tag}
+                </span>
+                <h3 className={`text-lg font-semibold mb-2 ${t.text(dark)}`}>{card.title}</h3>
+                <p className={`text-sm leading-relaxed ${t.textMuted(dark)}`}>{card.desc}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>

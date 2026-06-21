@@ -5,7 +5,7 @@ import { CreateInvoicePage, InvoiceDetailsPage, InvoiceListPage } from "../modul
 import { DashboardPage } from "../modules/revenue-intelligence";
 import { AutomationSettingsPage } from "../modules/revenue-automation";
 import { ClientsPage } from "../modules/clients";
-import HomeLandingPage from "../pages/Home";
+import HomeLandingPage from "./Home";
 
 export const router = createBrowserRouter([
   {
