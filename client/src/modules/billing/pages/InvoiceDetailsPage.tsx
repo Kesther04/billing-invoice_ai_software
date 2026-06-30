@@ -66,7 +66,7 @@
 //   );
 // }
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTheme } from "../../../shared/themes/ThemeContext";
