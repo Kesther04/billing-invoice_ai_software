@@ -359,3 +359,15 @@ import { CreateInvoicePage, InvoiceDetailsPage } from "./features/billing";
   <Route path="/" element={<RevPilotLandingPage />} />
 */
 ```
+
+Manual form:
+POST /billing/invoices
+  → invoice.controller → invoice.service → invoice.repository (saves)
+
+AI prompt:
+POST /billing/ai/generate
+  → ai.controller → ai.service → ai.parser (text → structured draft)
+  → returns draft to client (NOT saved yet)
+[user reviews/edits, hits confirm — same as if they'd filled the form]
+POST /billing/invoices
+  → invoice.controller → invoice.service → invoice.repository (saves)

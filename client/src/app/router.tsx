@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "./layout";
 import { ForgotPassword, Login, ResetPassword, SignUp } from "../modules/auth";
-import { CreateInvoicePage, InvoiceDetailsPage, InvoiceListPage } from "../modules/billing";
+import { AiInvoicePage, InvoiceDetailsPage, InvoiceListPage } from "../modules/billing";
 import { DashboardPage } from "../modules/revenue-intelligence";
 import { AutomationSettingsPage } from "../modules/revenue-automation";
 import { ClientsPage } from "../modules/clients";
@@ -58,8 +58,8 @@ export const router = createBrowserRouter([
         element: <AutomationSettingsPage />,
       },
       {
-        path: "/billing/create",
-        element: <CreateInvoicePage />,
+        path: "/billing/ai",
+        element: <AiInvoicePage />,
       },
       {
         path: "/settings",
