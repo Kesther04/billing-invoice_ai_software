@@ -31,7 +31,7 @@ export default function InvoiceDetailsPage() {
     if (!id) return;
     setLoading(true);
     invoiceBillingService
-      .get(id)
+      .getInvoice(id)
       .then((inv) => setInvoice(inv))
       .catch(() => setNotFound(true))
       .finally(() => setLoading(false));
