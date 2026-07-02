@@ -56,7 +56,9 @@ export const ModelName = {
   PasswordResetToken: 'PasswordResetToken',
   Client: 'Client',
   Invoice: 'Invoice',
-  LineItem: 'LineItem'
+  LineItem: 'LineItem',
+  PromptRun: 'PromptRun',
+  UserSession: 'UserSession'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -146,7 +148,7 @@ export const InvoiceScalarFieldEnum = {
   notes: 'notes',
   aiPrompt: 'aiPrompt',
   aiConfidence: 'aiConfidence',
-  aiSuggestions: 'aiSuggestions',
+  promptRunId: 'promptRunId',
   organizationId: 'organizationId',
   clientId: 'clientId',
   createdById: 'createdById',
@@ -167,6 +169,35 @@ export const LineItemScalarFieldEnum = {
 } as const
 
 export type LineItemScalarFieldEnum = (typeof LineItemScalarFieldEnum)[keyof typeof LineItemScalarFieldEnum]
+
+
+export const PromptRunScalarFieldEnum = {
+  id: 'id',
+  prompt: 'prompt',
+  status: 'status',
+  error: 'error',
+  draft: 'draft',
+  organizationId: 'organizationId',
+  createdById: 'createdById',
+  createdAt: 'createdAt'
+} as const
+
+export type PromptRunScalarFieldEnum = (typeof PromptRunScalarFieldEnum)[keyof typeof PromptRunScalarFieldEnum]
+
+
+export const UserSessionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tokenHash: 'tokenHash',
+  expiresAt: 'expiresAt',
+  revokedAt: 'revokedAt',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  createdAt: 'createdAt',
+  lastUsedAt: 'lastUsedAt'
+} as const
+
+export type UserSessionScalarFieldEnum = (typeof UserSessionScalarFieldEnum)[keyof typeof UserSessionScalarFieldEnum]
 
 
 export const SortOrder = {

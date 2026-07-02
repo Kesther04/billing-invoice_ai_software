@@ -21,6 +21,7 @@ import {
 import { t } from "../../shared/utils/themeClasses";
 import ThemeToggle from "../themes/ThemeToggle";
 import Logo from "./Logo";
+import { useAuth } from "../../modules/auth/context/AuthContext";
 
 /* ══════════════════════════════════════════
    TYPES
@@ -47,6 +48,7 @@ const primaryNav: NavItem[] = [
 const secondaryNav: NavItem[] = [
   { label: "Settings", icon: Settings, href: "/settings" },
 ];
+
 
 /* ══════════════════════════════════════════
    SIDEBAR NAV ITEM
@@ -225,6 +227,12 @@ export function Topbar({
   const [notifications] = useState(primaryNav[1]?.badge ? parseInt(primaryNav[1].badge) : 0);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
+  // const { logout, isLoading, error } = useLogout();
+  // const handleLogout = async () => {
+  //   await logout();
+  // };
+  const { logout } = useAuth();
+  
   return (
     <header
       className={`fixed top-0 right-0 z-30 flex h-16 items-center gap-30 border-b px-4 w-full backdrop-blur-md transition-all duration-300 ${t.topbar(dark)}`}
@@ -279,7 +287,7 @@ export function Topbar({
                   <div className={`text-xs font-semibold leading-tight ${t.text(dark)}`}>
                     {name || "User"}
                   </div>
-                  <div className={`text-[10px] ${t.textMuted(dark)}`}>Pro Plan</div>
+                  <div className={`text-[10px] ${t.textMuted(dark)}`}>Free Plan</div>
                 </div>
               </div>
 
@@ -310,9 +318,8 @@ export function Topbar({
               <Link to="/" className="w-full">
                 <button
                   className="flex items-center gap-3 w-full rounded-xl p-2 text-xs font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
-                  onClick={() => {
-                    localStorage.removeItem("user");
-                    localStorage.removeItem("token");
+                  onClick={async () => {
+                    await logout()
                     setIsProfileOpen(false);
                   }}
                 >
@@ -362,7 +369,7 @@ export function Topbar({
             <div className={`text-xs font-semibold leading-tight ${t.text(dark)}`}>
               {name}
             </div>
-            <div className={`text-[10px] ${t.textMuted(dark)}`}>Pro Plan</div>
+            <div className={`text-[10px] ${t.textMuted(dark)}`}>Free Plan</div>
           </div>
         </div>
 
@@ -370,9 +377,8 @@ export function Topbar({
         <Link to="/">
           <button
             className={`hidden md:flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-medium transition-colors ${t.notifBtn(dark)}`}
-            onClick={() => {
-              localStorage.removeItem("user");
-              localStorage.removeItem("token"); 
+            onClick={async () => {
+              await logout(); 
             }}
           >
             <LogOut className="h-3.5 w-3.5" />

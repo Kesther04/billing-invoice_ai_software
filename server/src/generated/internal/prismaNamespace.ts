@@ -389,7 +389,9 @@ export const ModelName = {
   PasswordResetToken: 'PasswordResetToken',
   Client: 'Client',
   Invoice: 'Invoice',
-  LineItem: 'LineItem'
+  LineItem: 'LineItem',
+  PromptRun: 'PromptRun',
+  UserSession: 'UserSession'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -405,7 +407,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "organization" | "user" | "passwordResetToken" | "client" | "invoice" | "lineItem"
+    modelProps: "organization" | "user" | "passwordResetToken" | "client" | "invoice" | "lineItem" | "promptRun" | "userSession"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -853,6 +855,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    PromptRun: {
+      payload: Prisma.$PromptRunPayload<ExtArgs>
+      fields: Prisma.PromptRunFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PromptRunFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PromptRunPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PromptRunFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PromptRunPayload>
+        }
+        findFirst: {
+          args: Prisma.PromptRunFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PromptRunPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PromptRunFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PromptRunPayload>
+        }
+        findMany: {
+          args: Prisma.PromptRunFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PromptRunPayload>[]
+        }
+        create: {
+          args: Prisma.PromptRunCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PromptRunPayload>
+        }
+        createMany: {
+          args: Prisma.PromptRunCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PromptRunCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PromptRunPayload>[]
+        }
+        delete: {
+          args: Prisma.PromptRunDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PromptRunPayload>
+        }
+        update: {
+          args: Prisma.PromptRunUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PromptRunPayload>
+        }
+        deleteMany: {
+          args: Prisma.PromptRunDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PromptRunUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PromptRunUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PromptRunPayload>[]
+        }
+        upsert: {
+          args: Prisma.PromptRunUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PromptRunPayload>
+        }
+        aggregate: {
+          args: Prisma.PromptRunAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePromptRun>
+        }
+        groupBy: {
+          args: Prisma.PromptRunGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PromptRunGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PromptRunCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PromptRunCountAggregateOutputType> | number
+        }
+      }
+    }
+    UserSession: {
+      payload: Prisma.$UserSessionPayload<ExtArgs>
+      fields: Prisma.UserSessionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UserSessionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserSessionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UserSessionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserSessionPayload>
+        }
+        findFirst: {
+          args: Prisma.UserSessionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserSessionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UserSessionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserSessionPayload>
+        }
+        findMany: {
+          args: Prisma.UserSessionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserSessionPayload>[]
+        }
+        create: {
+          args: Prisma.UserSessionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserSessionPayload>
+        }
+        createMany: {
+          args: Prisma.UserSessionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.UserSessionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserSessionPayload>[]
+        }
+        delete: {
+          args: Prisma.UserSessionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserSessionPayload>
+        }
+        update: {
+          args: Prisma.UserSessionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserSessionPayload>
+        }
+        deleteMany: {
+          args: Prisma.UserSessionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UserSessionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.UserSessionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserSessionPayload>[]
+        }
+        upsert: {
+          args: Prisma.UserSessionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserSessionPayload>
+        }
+        aggregate: {
+          args: Prisma.UserSessionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUserSession>
+        }
+        groupBy: {
+          args: Prisma.UserSessionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserSessionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UserSessionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserSessionCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -963,7 +1113,7 @@ export const InvoiceScalarFieldEnum = {
   notes: 'notes',
   aiPrompt: 'aiPrompt',
   aiConfidence: 'aiConfidence',
-  aiSuggestions: 'aiSuggestions',
+  promptRunId: 'promptRunId',
   organizationId: 'organizationId',
   clientId: 'clientId',
   createdById: 'createdById',
@@ -984,6 +1134,35 @@ export const LineItemScalarFieldEnum = {
 } as const
 
 export type LineItemScalarFieldEnum = (typeof LineItemScalarFieldEnum)[keyof typeof LineItemScalarFieldEnum]
+
+
+export const PromptRunScalarFieldEnum = {
+  id: 'id',
+  prompt: 'prompt',
+  status: 'status',
+  error: 'error',
+  draft: 'draft',
+  organizationId: 'organizationId',
+  createdById: 'createdById',
+  createdAt: 'createdAt'
+} as const
+
+export type PromptRunScalarFieldEnum = (typeof PromptRunScalarFieldEnum)[keyof typeof PromptRunScalarFieldEnum]
+
+
+export const UserSessionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tokenHash: 'tokenHash',
+  expiresAt: 'expiresAt',
+  revokedAt: 'revokedAt',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  createdAt: 'createdAt',
+  lastUsedAt: 'lastUsedAt'
+} as const
+
+export type UserSessionScalarFieldEnum = (typeof UserSessionScalarFieldEnum)[keyof typeof UserSessionScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1153,6 +1332,20 @@ export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMode
 
 
 /**
+ * Reference to a field of type 'PromptRunStatus'
+ */
+export type EnumPromptRunStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PromptRunStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'PromptRunStatus[]'
+ */
+export type ListEnumPromptRunStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PromptRunStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -1266,6 +1459,8 @@ export type GlobalOmitConfig = {
   client?: Prisma.ClientOmit
   invoice?: Prisma.InvoiceOmit
   lineItem?: Prisma.LineItemOmit
+  promptRun?: Prisma.PromptRunOmit
+  userSession?: Prisma.UserSessionOmit
 }
 
 /* Types for Logging */

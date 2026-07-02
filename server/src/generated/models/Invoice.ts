@@ -60,6 +60,7 @@ export type InvoiceMinAggregateOutputType = {
   notes: string | null
   aiPrompt: string | null
   aiConfidence: number | null
+  promptRunId: string | null
   organizationId: string | null
   clientId: string | null
   createdById: string | null
@@ -83,6 +84,7 @@ export type InvoiceMaxAggregateOutputType = {
   notes: string | null
   aiPrompt: string | null
   aiConfidence: number | null
+  promptRunId: string | null
   organizationId: string | null
   clientId: string | null
   createdById: string | null
@@ -108,7 +110,7 @@ export type InvoiceCountAggregateOutputType = {
   notes: number
   aiPrompt: number
   aiConfidence: number
-  aiSuggestions: number
+  promptRunId: number
   organizationId: number
   clientId: number
   createdById: number
@@ -152,6 +154,7 @@ export type InvoiceMinAggregateInputType = {
   notes?: true
   aiPrompt?: true
   aiConfidence?: true
+  promptRunId?: true
   organizationId?: true
   clientId?: true
   createdById?: true
@@ -175,6 +178,7 @@ export type InvoiceMaxAggregateInputType = {
   notes?: true
   aiPrompt?: true
   aiConfidence?: true
+  promptRunId?: true
   organizationId?: true
   clientId?: true
   createdById?: true
@@ -200,7 +204,7 @@ export type InvoiceCountAggregateInputType = {
   notes?: true
   aiPrompt?: true
   aiConfidence?: true
-  aiSuggestions?: true
+  promptRunId?: true
   organizationId?: true
   clientId?: true
   createdById?: true
@@ -313,7 +317,7 @@ export type InvoiceGroupByOutputType = {
   notes: string | null
   aiPrompt: string | null
   aiConfidence: number | null
-  aiSuggestions: runtime.JsonValue | null
+  promptRunId: string | null
   organizationId: string
   clientId: string | null
   createdById: string | null
@@ -362,7 +366,7 @@ export type InvoiceWhereInput = {
   notes?: Prisma.StringNullableFilter<"Invoice"> | string | null
   aiPrompt?: Prisma.StringNullableFilter<"Invoice"> | string | null
   aiConfidence?: Prisma.FloatNullableFilter<"Invoice"> | number | null
-  aiSuggestions?: Prisma.JsonNullableFilter<"Invoice">
+  promptRunId?: Prisma.StringNullableFilter<"Invoice"> | string | null
   organizationId?: Prisma.StringFilter<"Invoice"> | string
   clientId?: Prisma.StringNullableFilter<"Invoice"> | string | null
   createdById?: Prisma.StringNullableFilter<"Invoice"> | string | null
@@ -371,6 +375,7 @@ export type InvoiceWhereInput = {
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   client?: Prisma.XOR<Prisma.ClientNullableScalarRelationFilter, Prisma.ClientWhereInput> | null
   createdBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  promptRun?: Prisma.XOR<Prisma.PromptRunNullableScalarRelationFilter, Prisma.PromptRunWhereInput> | null
   lineItems?: Prisma.LineItemListRelationFilter
 }
 
@@ -392,7 +397,7 @@ export type InvoiceOrderByWithRelationInput = {
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   aiPrompt?: Prisma.SortOrderInput | Prisma.SortOrder
   aiConfidence?: Prisma.SortOrderInput | Prisma.SortOrder
-  aiSuggestions?: Prisma.SortOrderInput | Prisma.SortOrder
+  promptRunId?: Prisma.SortOrderInput | Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   clientId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdById?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -401,6 +406,7 @@ export type InvoiceOrderByWithRelationInput = {
   organization?: Prisma.OrganizationOrderByWithRelationInput
   client?: Prisma.ClientOrderByWithRelationInput
   createdBy?: Prisma.UserOrderByWithRelationInput
+  promptRun?: Prisma.PromptRunOrderByWithRelationInput
   lineItems?: Prisma.LineItemOrderByRelationAggregateInput
 }
 
@@ -425,7 +431,7 @@ export type InvoiceWhereUniqueInput = Prisma.AtLeast<{
   notes?: Prisma.StringNullableFilter<"Invoice"> | string | null
   aiPrompt?: Prisma.StringNullableFilter<"Invoice"> | string | null
   aiConfidence?: Prisma.FloatNullableFilter<"Invoice"> | number | null
-  aiSuggestions?: Prisma.JsonNullableFilter<"Invoice">
+  promptRunId?: Prisma.StringNullableFilter<"Invoice"> | string | null
   organizationId?: Prisma.StringFilter<"Invoice"> | string
   clientId?: Prisma.StringNullableFilter<"Invoice"> | string | null
   createdById?: Prisma.StringNullableFilter<"Invoice"> | string | null
@@ -434,6 +440,7 @@ export type InvoiceWhereUniqueInput = Prisma.AtLeast<{
   organization?: Prisma.XOR<Prisma.OrganizationScalarRelationFilter, Prisma.OrganizationWhereInput>
   client?: Prisma.XOR<Prisma.ClientNullableScalarRelationFilter, Prisma.ClientWhereInput> | null
   createdBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  promptRun?: Prisma.XOR<Prisma.PromptRunNullableScalarRelationFilter, Prisma.PromptRunWhereInput> | null
   lineItems?: Prisma.LineItemListRelationFilter
 }, "id" | "invoiceNumber">
 
@@ -455,7 +462,7 @@ export type InvoiceOrderByWithAggregationInput = {
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   aiPrompt?: Prisma.SortOrderInput | Prisma.SortOrder
   aiConfidence?: Prisma.SortOrderInput | Prisma.SortOrder
-  aiSuggestions?: Prisma.SortOrderInput | Prisma.SortOrder
+  promptRunId?: Prisma.SortOrderInput | Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   clientId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdById?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -489,7 +496,7 @@ export type InvoiceScalarWhereWithAggregatesInput = {
   notes?: Prisma.StringNullableWithAggregatesFilter<"Invoice"> | string | null
   aiPrompt?: Prisma.StringNullableWithAggregatesFilter<"Invoice"> | string | null
   aiConfidence?: Prisma.FloatNullableWithAggregatesFilter<"Invoice"> | number | null
-  aiSuggestions?: Prisma.JsonNullableWithAggregatesFilter<"Invoice">
+  promptRunId?: Prisma.StringNullableWithAggregatesFilter<"Invoice"> | string | null
   organizationId?: Prisma.StringWithAggregatesFilter<"Invoice"> | string
   clientId?: Prisma.StringNullableWithAggregatesFilter<"Invoice"> | string | null
   createdById?: Prisma.StringNullableWithAggregatesFilter<"Invoice"> | string | null
@@ -515,12 +522,12 @@ export type InvoiceCreateInput = {
   notes?: string | null
   aiPrompt?: string | null
   aiConfidence?: number | null
-  aiSuggestions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutInvoicesInput
   client?: Prisma.ClientCreateNestedOneWithoutInvoicesInput
   createdBy?: Prisma.UserCreateNestedOneWithoutInvoicesInput
+  promptRun?: Prisma.PromptRunCreateNestedOneWithoutInvoicesInput
   lineItems?: Prisma.LineItemCreateNestedManyWithoutInvoiceInput
 }
 
@@ -542,7 +549,7 @@ export type InvoiceUncheckedCreateInput = {
   notes?: string | null
   aiPrompt?: string | null
   aiConfidence?: number | null
-  aiSuggestions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  promptRunId?: string | null
   organizationId: string
   clientId?: string | null
   createdById?: string | null
@@ -569,12 +576,12 @@ export type InvoiceUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiConfidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  aiSuggestions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutInvoicesNestedInput
   client?: Prisma.ClientUpdateOneWithoutInvoicesNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutInvoicesNestedInput
+  promptRun?: Prisma.PromptRunUpdateOneWithoutInvoicesNestedInput
   lineItems?: Prisma.LineItemUpdateManyWithoutInvoiceNestedInput
 }
 
@@ -596,7 +603,7 @@ export type InvoiceUncheckedUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiConfidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  aiSuggestions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  promptRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -623,7 +630,7 @@ export type InvoiceCreateManyInput = {
   notes?: string | null
   aiPrompt?: string | null
   aiConfidence?: number | null
-  aiSuggestions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  promptRunId?: string | null
   organizationId: string
   clientId?: string | null
   createdById?: string | null
@@ -649,7 +656,6 @@ export type InvoiceUpdateManyMutationInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiConfidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  aiSuggestions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -672,7 +678,7 @@ export type InvoiceUncheckedUpdateManyInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiConfidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  aiSuggestions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  promptRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -708,7 +714,7 @@ export type InvoiceCountOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   aiPrompt?: Prisma.SortOrder
   aiConfidence?: Prisma.SortOrder
-  aiSuggestions?: Prisma.SortOrder
+  promptRunId?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
@@ -741,6 +747,7 @@ export type InvoiceMaxOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   aiPrompt?: Prisma.SortOrder
   aiConfidence?: Prisma.SortOrder
+  promptRunId?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
@@ -764,6 +771,7 @@ export type InvoiceMinOrderByAggregateInput = {
   notes?: Prisma.SortOrder
   aiPrompt?: Prisma.SortOrder
   aiConfidence?: Prisma.SortOrder
+  promptRunId?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
   createdById?: Prisma.SortOrder
@@ -949,6 +957,48 @@ export type InvoiceUpdateOneRequiredWithoutLineItemsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.InvoiceUpdateToOneWithWhereWithoutLineItemsInput, Prisma.InvoiceUpdateWithoutLineItemsInput>, Prisma.InvoiceUncheckedUpdateWithoutLineItemsInput>
 }
 
+export type InvoiceCreateNestedManyWithoutPromptRunInput = {
+  create?: Prisma.XOR<Prisma.InvoiceCreateWithoutPromptRunInput, Prisma.InvoiceUncheckedCreateWithoutPromptRunInput> | Prisma.InvoiceCreateWithoutPromptRunInput[] | Prisma.InvoiceUncheckedCreateWithoutPromptRunInput[]
+  connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutPromptRunInput | Prisma.InvoiceCreateOrConnectWithoutPromptRunInput[]
+  createMany?: Prisma.InvoiceCreateManyPromptRunInputEnvelope
+  connect?: Prisma.InvoiceWhereUniqueInput | Prisma.InvoiceWhereUniqueInput[]
+}
+
+export type InvoiceUncheckedCreateNestedManyWithoutPromptRunInput = {
+  create?: Prisma.XOR<Prisma.InvoiceCreateWithoutPromptRunInput, Prisma.InvoiceUncheckedCreateWithoutPromptRunInput> | Prisma.InvoiceCreateWithoutPromptRunInput[] | Prisma.InvoiceUncheckedCreateWithoutPromptRunInput[]
+  connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutPromptRunInput | Prisma.InvoiceCreateOrConnectWithoutPromptRunInput[]
+  createMany?: Prisma.InvoiceCreateManyPromptRunInputEnvelope
+  connect?: Prisma.InvoiceWhereUniqueInput | Prisma.InvoiceWhereUniqueInput[]
+}
+
+export type InvoiceUpdateManyWithoutPromptRunNestedInput = {
+  create?: Prisma.XOR<Prisma.InvoiceCreateWithoutPromptRunInput, Prisma.InvoiceUncheckedCreateWithoutPromptRunInput> | Prisma.InvoiceCreateWithoutPromptRunInput[] | Prisma.InvoiceUncheckedCreateWithoutPromptRunInput[]
+  connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutPromptRunInput | Prisma.InvoiceCreateOrConnectWithoutPromptRunInput[]
+  upsert?: Prisma.InvoiceUpsertWithWhereUniqueWithoutPromptRunInput | Prisma.InvoiceUpsertWithWhereUniqueWithoutPromptRunInput[]
+  createMany?: Prisma.InvoiceCreateManyPromptRunInputEnvelope
+  set?: Prisma.InvoiceWhereUniqueInput | Prisma.InvoiceWhereUniqueInput[]
+  disconnect?: Prisma.InvoiceWhereUniqueInput | Prisma.InvoiceWhereUniqueInput[]
+  delete?: Prisma.InvoiceWhereUniqueInput | Prisma.InvoiceWhereUniqueInput[]
+  connect?: Prisma.InvoiceWhereUniqueInput | Prisma.InvoiceWhereUniqueInput[]
+  update?: Prisma.InvoiceUpdateWithWhereUniqueWithoutPromptRunInput | Prisma.InvoiceUpdateWithWhereUniqueWithoutPromptRunInput[]
+  updateMany?: Prisma.InvoiceUpdateManyWithWhereWithoutPromptRunInput | Prisma.InvoiceUpdateManyWithWhereWithoutPromptRunInput[]
+  deleteMany?: Prisma.InvoiceScalarWhereInput | Prisma.InvoiceScalarWhereInput[]
+}
+
+export type InvoiceUncheckedUpdateManyWithoutPromptRunNestedInput = {
+  create?: Prisma.XOR<Prisma.InvoiceCreateWithoutPromptRunInput, Prisma.InvoiceUncheckedCreateWithoutPromptRunInput> | Prisma.InvoiceCreateWithoutPromptRunInput[] | Prisma.InvoiceUncheckedCreateWithoutPromptRunInput[]
+  connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutPromptRunInput | Prisma.InvoiceCreateOrConnectWithoutPromptRunInput[]
+  upsert?: Prisma.InvoiceUpsertWithWhereUniqueWithoutPromptRunInput | Prisma.InvoiceUpsertWithWhereUniqueWithoutPromptRunInput[]
+  createMany?: Prisma.InvoiceCreateManyPromptRunInputEnvelope
+  set?: Prisma.InvoiceWhereUniqueInput | Prisma.InvoiceWhereUniqueInput[]
+  disconnect?: Prisma.InvoiceWhereUniqueInput | Prisma.InvoiceWhereUniqueInput[]
+  delete?: Prisma.InvoiceWhereUniqueInput | Prisma.InvoiceWhereUniqueInput[]
+  connect?: Prisma.InvoiceWhereUniqueInput | Prisma.InvoiceWhereUniqueInput[]
+  update?: Prisma.InvoiceUpdateWithWhereUniqueWithoutPromptRunInput | Prisma.InvoiceUpdateWithWhereUniqueWithoutPromptRunInput[]
+  updateMany?: Prisma.InvoiceUpdateManyWithWhereWithoutPromptRunInput | Prisma.InvoiceUpdateManyWithWhereWithoutPromptRunInput[]
+  deleteMany?: Prisma.InvoiceScalarWhereInput | Prisma.InvoiceScalarWhereInput[]
+}
+
 export type InvoiceCreateWithoutOrganizationInput = {
   id?: string
   invoiceNumber: string
@@ -967,11 +1017,11 @@ export type InvoiceCreateWithoutOrganizationInput = {
   notes?: string | null
   aiPrompt?: string | null
   aiConfidence?: number | null
-  aiSuggestions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   client?: Prisma.ClientCreateNestedOneWithoutInvoicesInput
   createdBy?: Prisma.UserCreateNestedOneWithoutInvoicesInput
+  promptRun?: Prisma.PromptRunCreateNestedOneWithoutInvoicesInput
   lineItems?: Prisma.LineItemCreateNestedManyWithoutInvoiceInput
 }
 
@@ -993,7 +1043,7 @@ export type InvoiceUncheckedCreateWithoutOrganizationInput = {
   notes?: string | null
   aiPrompt?: string | null
   aiConfidence?: number | null
-  aiSuggestions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  promptRunId?: string | null
   clientId?: string | null
   createdById?: string | null
   createdAt?: Date | string
@@ -1048,7 +1098,7 @@ export type InvoiceScalarWhereInput = {
   notes?: Prisma.StringNullableFilter<"Invoice"> | string | null
   aiPrompt?: Prisma.StringNullableFilter<"Invoice"> | string | null
   aiConfidence?: Prisma.FloatNullableFilter<"Invoice"> | number | null
-  aiSuggestions?: Prisma.JsonNullableFilter<"Invoice">
+  promptRunId?: Prisma.StringNullableFilter<"Invoice"> | string | null
   organizationId?: Prisma.StringFilter<"Invoice"> | string
   clientId?: Prisma.StringNullableFilter<"Invoice"> | string | null
   createdById?: Prisma.StringNullableFilter<"Invoice"> | string | null
@@ -1074,11 +1124,11 @@ export type InvoiceCreateWithoutCreatedByInput = {
   notes?: string | null
   aiPrompt?: string | null
   aiConfidence?: number | null
-  aiSuggestions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutInvoicesInput
   client?: Prisma.ClientCreateNestedOneWithoutInvoicesInput
+  promptRun?: Prisma.PromptRunCreateNestedOneWithoutInvoicesInput
   lineItems?: Prisma.LineItemCreateNestedManyWithoutInvoiceInput
 }
 
@@ -1100,7 +1150,7 @@ export type InvoiceUncheckedCreateWithoutCreatedByInput = {
   notes?: string | null
   aiPrompt?: string | null
   aiConfidence?: number | null
-  aiSuggestions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  promptRunId?: string | null
   organizationId: string
   clientId?: string | null
   createdAt?: Date | string
@@ -1152,11 +1202,11 @@ export type InvoiceCreateWithoutClientInput = {
   notes?: string | null
   aiPrompt?: string | null
   aiConfidence?: number | null
-  aiSuggestions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutInvoicesInput
   createdBy?: Prisma.UserCreateNestedOneWithoutInvoicesInput
+  promptRun?: Prisma.PromptRunCreateNestedOneWithoutInvoicesInput
   lineItems?: Prisma.LineItemCreateNestedManyWithoutInvoiceInput
 }
 
@@ -1178,7 +1228,7 @@ export type InvoiceUncheckedCreateWithoutClientInput = {
   notes?: string | null
   aiPrompt?: string | null
   aiConfidence?: number | null
-  aiSuggestions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  promptRunId?: string | null
   organizationId: string
   createdById?: string | null
   createdAt?: Date | string
@@ -1230,12 +1280,12 @@ export type InvoiceCreateWithoutLineItemsInput = {
   notes?: string | null
   aiPrompt?: string | null
   aiConfidence?: number | null
-  aiSuggestions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   organization: Prisma.OrganizationCreateNestedOneWithoutInvoicesInput
   client?: Prisma.ClientCreateNestedOneWithoutInvoicesInput
   createdBy?: Prisma.UserCreateNestedOneWithoutInvoicesInput
+  promptRun?: Prisma.PromptRunCreateNestedOneWithoutInvoicesInput
 }
 
 export type InvoiceUncheckedCreateWithoutLineItemsInput = {
@@ -1256,7 +1306,7 @@ export type InvoiceUncheckedCreateWithoutLineItemsInput = {
   notes?: string | null
   aiPrompt?: string | null
   aiConfidence?: number | null
-  aiSuggestions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  promptRunId?: string | null
   organizationId: string
   clientId?: string | null
   createdById?: string | null
@@ -1298,12 +1348,12 @@ export type InvoiceUpdateWithoutLineItemsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiConfidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  aiSuggestions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutInvoicesNestedInput
   client?: Prisma.ClientUpdateOneWithoutInvoicesNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutInvoicesNestedInput
+  promptRun?: Prisma.PromptRunUpdateOneWithoutInvoicesNestedInput
 }
 
 export type InvoiceUncheckedUpdateWithoutLineItemsInput = {
@@ -1324,12 +1374,90 @@ export type InvoiceUncheckedUpdateWithoutLineItemsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiConfidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  aiSuggestions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  promptRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type InvoiceCreateWithoutPromptRunInput = {
+  id?: string
+  invoiceNumber: string
+  status?: $Enums.InvoiceStatus
+  source?: $Enums.InvoiceSource
+  fromParty: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  toParty: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  issueDate: Date | string
+  dueDate: Date | string
+  subtotal?: number
+  taxRate?: number
+  taxAmount?: number
+  discountAmount?: number
+  total?: number
+  currency?: string
+  notes?: string | null
+  aiPrompt?: string | null
+  aiConfidence?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organization: Prisma.OrganizationCreateNestedOneWithoutInvoicesInput
+  client?: Prisma.ClientCreateNestedOneWithoutInvoicesInput
+  createdBy?: Prisma.UserCreateNestedOneWithoutInvoicesInput
+  lineItems?: Prisma.LineItemCreateNestedManyWithoutInvoiceInput
+}
+
+export type InvoiceUncheckedCreateWithoutPromptRunInput = {
+  id?: string
+  invoiceNumber: string
+  status?: $Enums.InvoiceStatus
+  source?: $Enums.InvoiceSource
+  fromParty: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  toParty: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  issueDate: Date | string
+  dueDate: Date | string
+  subtotal?: number
+  taxRate?: number
+  taxAmount?: number
+  discountAmount?: number
+  total?: number
+  currency?: string
+  notes?: string | null
+  aiPrompt?: string | null
+  aiConfidence?: number | null
+  organizationId: string
+  clientId?: string | null
+  createdById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  lineItems?: Prisma.LineItemUncheckedCreateNestedManyWithoutInvoiceInput
+}
+
+export type InvoiceCreateOrConnectWithoutPromptRunInput = {
+  where: Prisma.InvoiceWhereUniqueInput
+  create: Prisma.XOR<Prisma.InvoiceCreateWithoutPromptRunInput, Prisma.InvoiceUncheckedCreateWithoutPromptRunInput>
+}
+
+export type InvoiceCreateManyPromptRunInputEnvelope = {
+  data: Prisma.InvoiceCreateManyPromptRunInput | Prisma.InvoiceCreateManyPromptRunInput[]
+  skipDuplicates?: boolean
+}
+
+export type InvoiceUpsertWithWhereUniqueWithoutPromptRunInput = {
+  where: Prisma.InvoiceWhereUniqueInput
+  update: Prisma.XOR<Prisma.InvoiceUpdateWithoutPromptRunInput, Prisma.InvoiceUncheckedUpdateWithoutPromptRunInput>
+  create: Prisma.XOR<Prisma.InvoiceCreateWithoutPromptRunInput, Prisma.InvoiceUncheckedCreateWithoutPromptRunInput>
+}
+
+export type InvoiceUpdateWithWhereUniqueWithoutPromptRunInput = {
+  where: Prisma.InvoiceWhereUniqueInput
+  data: Prisma.XOR<Prisma.InvoiceUpdateWithoutPromptRunInput, Prisma.InvoiceUncheckedUpdateWithoutPromptRunInput>
+}
+
+export type InvoiceUpdateManyWithWhereWithoutPromptRunInput = {
+  where: Prisma.InvoiceScalarWhereInput
+  data: Prisma.XOR<Prisma.InvoiceUpdateManyMutationInput, Prisma.InvoiceUncheckedUpdateManyWithoutPromptRunInput>
 }
 
 export type InvoiceCreateManyOrganizationInput = {
@@ -1350,7 +1478,7 @@ export type InvoiceCreateManyOrganizationInput = {
   notes?: string | null
   aiPrompt?: string | null
   aiConfidence?: number | null
-  aiSuggestions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  promptRunId?: string | null
   clientId?: string | null
   createdById?: string | null
   createdAt?: Date | string
@@ -1375,11 +1503,11 @@ export type InvoiceUpdateWithoutOrganizationInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiConfidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  aiSuggestions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   client?: Prisma.ClientUpdateOneWithoutInvoicesNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutInvoicesNestedInput
+  promptRun?: Prisma.PromptRunUpdateOneWithoutInvoicesNestedInput
   lineItems?: Prisma.LineItemUpdateManyWithoutInvoiceNestedInput
 }
 
@@ -1401,7 +1529,7 @@ export type InvoiceUncheckedUpdateWithoutOrganizationInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiConfidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  aiSuggestions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  promptRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1427,7 +1555,7 @@ export type InvoiceUncheckedUpdateManyWithoutOrganizationInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiConfidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  aiSuggestions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  promptRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1452,7 +1580,7 @@ export type InvoiceCreateManyCreatedByInput = {
   notes?: string | null
   aiPrompt?: string | null
   aiConfidence?: number | null
-  aiSuggestions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  promptRunId?: string | null
   organizationId: string
   clientId?: string | null
   createdAt?: Date | string
@@ -1477,11 +1605,11 @@ export type InvoiceUpdateWithoutCreatedByInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiConfidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  aiSuggestions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutInvoicesNestedInput
   client?: Prisma.ClientUpdateOneWithoutInvoicesNestedInput
+  promptRun?: Prisma.PromptRunUpdateOneWithoutInvoicesNestedInput
   lineItems?: Prisma.LineItemUpdateManyWithoutInvoiceNestedInput
 }
 
@@ -1503,7 +1631,7 @@ export type InvoiceUncheckedUpdateWithoutCreatedByInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiConfidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  aiSuggestions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  promptRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1529,7 +1657,7 @@ export type InvoiceUncheckedUpdateManyWithoutCreatedByInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiConfidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  aiSuggestions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  promptRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1554,7 +1682,7 @@ export type InvoiceCreateManyClientInput = {
   notes?: string | null
   aiPrompt?: string | null
   aiConfidence?: number | null
-  aiSuggestions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  promptRunId?: string | null
   organizationId: string
   createdById?: string | null
   createdAt?: Date | string
@@ -1579,11 +1707,11 @@ export type InvoiceUpdateWithoutClientInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiConfidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  aiSuggestions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   organization?: Prisma.OrganizationUpdateOneRequiredWithoutInvoicesNestedInput
   createdBy?: Prisma.UserUpdateOneWithoutInvoicesNestedInput
+  promptRun?: Prisma.PromptRunUpdateOneWithoutInvoicesNestedInput
   lineItems?: Prisma.LineItemUpdateManyWithoutInvoiceNestedInput
 }
 
@@ -1605,7 +1733,7 @@ export type InvoiceUncheckedUpdateWithoutClientInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiConfidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  aiSuggestions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  promptRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1631,8 +1759,110 @@ export type InvoiceUncheckedUpdateManyWithoutClientInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   aiConfidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  aiSuggestions?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  promptRunId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type InvoiceCreateManyPromptRunInput = {
+  id?: string
+  invoiceNumber: string
+  status?: $Enums.InvoiceStatus
+  source?: $Enums.InvoiceSource
+  fromParty: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  toParty: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  issueDate: Date | string
+  dueDate: Date | string
+  subtotal?: number
+  taxRate?: number
+  taxAmount?: number
+  discountAmount?: number
+  total?: number
+  currency?: string
+  notes?: string | null
+  aiPrompt?: string | null
+  aiConfidence?: number | null
+  organizationId: string
+  clientId?: string | null
+  createdById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type InvoiceUpdateWithoutPromptRunInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  source?: Prisma.EnumInvoiceSourceFieldUpdateOperationsInput | $Enums.InvoiceSource
+  fromParty?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  toParty?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  issueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  subtotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  taxRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  taxAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  total?: Prisma.FloatFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiConfidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneRequiredWithoutInvoicesNestedInput
+  client?: Prisma.ClientUpdateOneWithoutInvoicesNestedInput
+  createdBy?: Prisma.UserUpdateOneWithoutInvoicesNestedInput
+  lineItems?: Prisma.LineItemUpdateManyWithoutInvoiceNestedInput
+}
+
+export type InvoiceUncheckedUpdateWithoutPromptRunInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  source?: Prisma.EnumInvoiceSourceFieldUpdateOperationsInput | $Enums.InvoiceSource
+  fromParty?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  toParty?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  issueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  subtotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  taxRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  taxAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  total?: Prisma.FloatFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiConfidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lineItems?: Prisma.LineItemUncheckedUpdateManyWithoutInvoiceNestedInput
+}
+
+export type InvoiceUncheckedUpdateManyWithoutPromptRunInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  source?: Prisma.EnumInvoiceSourceFieldUpdateOperationsInput | $Enums.InvoiceSource
+  fromParty?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  toParty?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  issueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  subtotal?: Prisma.FloatFieldUpdateOperationsInput | number
+  taxRate?: Prisma.FloatFieldUpdateOperationsInput | number
+  taxAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
+  total?: Prisma.FloatFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiPrompt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiConfidence?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  organizationId?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1687,7 +1917,7 @@ export type InvoiceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   notes?: boolean
   aiPrompt?: boolean
   aiConfidence?: boolean
-  aiSuggestions?: boolean
+  promptRunId?: boolean
   organizationId?: boolean
   clientId?: boolean
   createdById?: boolean
@@ -1696,6 +1926,7 @@ export type InvoiceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   client?: boolean | Prisma.Invoice$clientArgs<ExtArgs>
   createdBy?: boolean | Prisma.Invoice$createdByArgs<ExtArgs>
+  promptRun?: boolean | Prisma.Invoice$promptRunArgs<ExtArgs>
   lineItems?: boolean | Prisma.Invoice$lineItemsArgs<ExtArgs>
   _count?: boolean | Prisma.InvoiceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["invoice"]>
@@ -1718,7 +1949,7 @@ export type InvoiceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   notes?: boolean
   aiPrompt?: boolean
   aiConfidence?: boolean
-  aiSuggestions?: boolean
+  promptRunId?: boolean
   organizationId?: boolean
   clientId?: boolean
   createdById?: boolean
@@ -1727,6 +1958,7 @@ export type InvoiceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   client?: boolean | Prisma.Invoice$clientArgs<ExtArgs>
   createdBy?: boolean | Prisma.Invoice$createdByArgs<ExtArgs>
+  promptRun?: boolean | Prisma.Invoice$promptRunArgs<ExtArgs>
 }, ExtArgs["result"]["invoice"]>
 
 export type InvoiceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1747,7 +1979,7 @@ export type InvoiceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   notes?: boolean
   aiPrompt?: boolean
   aiConfidence?: boolean
-  aiSuggestions?: boolean
+  promptRunId?: boolean
   organizationId?: boolean
   clientId?: boolean
   createdById?: boolean
@@ -1756,6 +1988,7 @@ export type InvoiceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   client?: boolean | Prisma.Invoice$clientArgs<ExtArgs>
   createdBy?: boolean | Prisma.Invoice$createdByArgs<ExtArgs>
+  promptRun?: boolean | Prisma.Invoice$promptRunArgs<ExtArgs>
 }, ExtArgs["result"]["invoice"]>
 
 export type InvoiceSelectScalar = {
@@ -1776,7 +2009,7 @@ export type InvoiceSelectScalar = {
   notes?: boolean
   aiPrompt?: boolean
   aiConfidence?: boolean
-  aiSuggestions?: boolean
+  promptRunId?: boolean
   organizationId?: boolean
   clientId?: boolean
   createdById?: boolean
@@ -1784,11 +2017,12 @@ export type InvoiceSelectScalar = {
   updatedAt?: boolean
 }
 
-export type InvoiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "invoiceNumber" | "status" | "source" | "fromParty" | "toParty" | "issueDate" | "dueDate" | "subtotal" | "taxRate" | "taxAmount" | "discountAmount" | "total" | "currency" | "notes" | "aiPrompt" | "aiConfidence" | "aiSuggestions" | "organizationId" | "clientId" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
+export type InvoiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "invoiceNumber" | "status" | "source" | "fromParty" | "toParty" | "issueDate" | "dueDate" | "subtotal" | "taxRate" | "taxAmount" | "discountAmount" | "total" | "currency" | "notes" | "aiPrompt" | "aiConfidence" | "promptRunId" | "organizationId" | "clientId" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
 export type InvoiceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   client?: boolean | Prisma.Invoice$clientArgs<ExtArgs>
   createdBy?: boolean | Prisma.Invoice$createdByArgs<ExtArgs>
+  promptRun?: boolean | Prisma.Invoice$promptRunArgs<ExtArgs>
   lineItems?: boolean | Prisma.Invoice$lineItemsArgs<ExtArgs>
   _count?: boolean | Prisma.InvoiceCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1796,11 +2030,13 @@ export type InvoiceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   client?: boolean | Prisma.Invoice$clientArgs<ExtArgs>
   createdBy?: boolean | Prisma.Invoice$createdByArgs<ExtArgs>
+  promptRun?: boolean | Prisma.Invoice$promptRunArgs<ExtArgs>
 }
 export type InvoiceIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.OrganizationDefaultArgs<ExtArgs>
   client?: boolean | Prisma.Invoice$clientArgs<ExtArgs>
   createdBy?: boolean | Prisma.Invoice$createdByArgs<ExtArgs>
+  promptRun?: boolean | Prisma.Invoice$promptRunArgs<ExtArgs>
 }
 
 export type $InvoicePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1809,6 +2045,7 @@ export type $InvoicePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     organization: Prisma.$OrganizationPayload<ExtArgs>
     client: Prisma.$ClientPayload<ExtArgs> | null
     createdBy: Prisma.$UserPayload<ExtArgs> | null
+    promptRun: Prisma.$PromptRunPayload<ExtArgs> | null
     lineItems: Prisma.$LineItemPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1829,7 +2066,7 @@ export type $InvoicePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     notes: string | null
     aiPrompt: string | null
     aiConfidence: number | null
-    aiSuggestions: runtime.JsonValue | null
+    promptRunId: string | null
     organizationId: string
     clientId: string | null
     createdById: string | null
@@ -2232,6 +2469,7 @@ export interface Prisma__InvoiceClient<T, Null = never, ExtArgs extends runtime.
   organization<T extends Prisma.OrganizationDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.OrganizationDefaultArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   client<T extends Prisma.Invoice$clientArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Invoice$clientArgs<ExtArgs>>): Prisma.Prisma__ClientClient<runtime.Types.Result.GetResult<Prisma.$ClientPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   createdBy<T extends Prisma.Invoice$createdByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Invoice$createdByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  promptRun<T extends Prisma.Invoice$promptRunArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Invoice$promptRunArgs<ExtArgs>>): Prisma.Prisma__PromptRunClient<runtime.Types.Result.GetResult<Prisma.$PromptRunPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   lineItems<T extends Prisma.Invoice$lineItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Invoice$lineItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LineItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2279,7 +2517,7 @@ export interface InvoiceFieldRefs {
   readonly notes: Prisma.FieldRef<"Invoice", 'String'>
   readonly aiPrompt: Prisma.FieldRef<"Invoice", 'String'>
   readonly aiConfidence: Prisma.FieldRef<"Invoice", 'Float'>
-  readonly aiSuggestions: Prisma.FieldRef<"Invoice", 'Json'>
+  readonly promptRunId: Prisma.FieldRef<"Invoice", 'String'>
   readonly organizationId: Prisma.FieldRef<"Invoice", 'String'>
   readonly clientId: Prisma.FieldRef<"Invoice", 'String'>
   readonly createdById: Prisma.FieldRef<"Invoice", 'String'>
@@ -2716,6 +2954,25 @@ export type Invoice$createdByArgs<ExtArgs extends runtime.Types.Extensions.Inter
    */
   include?: Prisma.UserInclude<ExtArgs> | null
   where?: Prisma.UserWhereInput
+}
+
+/**
+ * Invoice.promptRun
+ */
+export type Invoice$promptRunArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PromptRun
+   */
+  select?: Prisma.PromptRunSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PromptRun
+   */
+  omit?: Prisma.PromptRunOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PromptRunInclude<ExtArgs> | null
+  where?: Prisma.PromptRunWhereInput
 }
 
 /**

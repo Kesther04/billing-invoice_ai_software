@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { nanoid } from "nanoid";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../../shared/themes/ThemeContext";
-import { invoiceService } from "../api";
+import { invoiceBillingService } from "../api";
 import type { Invoice, InvoiceStatus, LineItem } from "../types";
 import InvoiceEditor from "../components/InvoiceEditor";
 import InvoicePreview from "../components/InvoicePreview";
@@ -96,8 +96,8 @@ export default function InvoiceListPage() {
 
   /* ── load from API ─────────────────────────────────────────── */
   useEffect(() => {
-    invoiceService
-      .list()
+    invoiceBillingService
+      .listInvoices()
       .then(setInvoices)
       .catch(() => setInvoices(MOCK_INVOICES))
       .finally(() => setIsLoading(false));
@@ -173,10 +173,10 @@ export default function InvoiceListPage() {
     try {
       let result: Invoice;
       if (view.name === "create") {
-        result = await invoiceService.create(activeInvoice);
+        result = await invoiceBillingService.create(activeInvoice);
         setInvoices((prev) => [result, ...prev]);
       } else {
-        result = await invoiceService.update(activeInvoice.id, activeInvoice);
+        result = await invoiceBillingService.update(activeInvoice.id, activeInvoice);
         setInvoices((prev) => prev.map((i) => (i.id === result.id ? result : i)));
       }
       setView({ name: "preview", invoice: result });

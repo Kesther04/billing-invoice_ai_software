@@ -366,8 +366,27 @@ POST /billing/invoices
 
 AI prompt:
 POST /billing/ai/generate
-  → ai.controller → ai.service → ai.parser (text → structured draft)
+  → ai.controller → ai.service → ai.prompt → ai.parser (text → structured draft)
   → returns draft to client (NOT saved yet)
 [user reviews/edits, hits confirm — same as if they'd filled the form]
 POST /billing/invoices
   → invoice.controller → invoice.service → invoice.repository (saves)
+
+  React App
+│
+├── AuthContext
+│      ├── accessToken (memory only)
+│      ├── user
+│      └── setAccessToken()
+│
+├── Axios Interceptor
+│      └── Reads accessToken from memory
+│
+└── Backend
+       ├── Access Token (Authorization header)
+       └── Refresh Token (HttpOnly cookie)
+
+NOTE: remember to run this when supabase technical issues are resolved
+npx prisma migrate resolve --applied "add_prompt_run_model"
+npx prisma generate
+npx prisma migrate dev ( maybe )

@@ -7,7 +7,7 @@ import { JwtPayload, UserRole, OrganizationType } from "./user.types";
 const ACCESS_SECRET  = process.env.JWT_ACCESS_SECRET!;
 const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET!;
 const ACCESS_EXPIRY  = process.env.JWT_ACCESS_EXPIRY  ?? "15m";
-const REFRESH_EXPIRY = process.env.JWT_REFRESH_EXPIRY ?? "7d";
+const REFRESH_EXPIRY = process.env.JWT_REFRESH_EXPIRY ?? "30d";
 
 if (!process.env.JWT_ACCESS_SECRET || !process.env.JWT_REFRESH_SECRET) {
   throw new Error("JWT_ACCESS_SECRET and JWT_REFRESH_SECRET must be defined");
@@ -23,12 +23,7 @@ export function signRefreshToken(payload: Omit<JwtPayload, "iat" | "exp">): stri
   return jwt.sign(payload, REFRESH_SECRET, { expiresIn: REFRESH_EXPIRY } as jwt.SignOptions);
 }
 
-export function signTokenPair(payload: Omit<JwtPayload, "iat" | "exp">) {
-  return {
-    accessToken:  signAccessToken(payload),
-    refreshToken: signRefreshToken(payload),
-  };
-}
+
 
 // ─── Verify ───────────────────────────────────────────────────────────────────
 

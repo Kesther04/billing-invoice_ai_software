@@ -1,5 +1,6 @@
 import axios from "axios";
 import { VITE_API_URL } from "../constants/API_URL";
+import { getAccessToken } from "../constants/tokenStore";
 
 export const apiClient = axios.create({
   baseURL: VITE_API_URL,
@@ -11,15 +12,13 @@ export const apiClient = axios.create({
 
 // runs before every request — always picks up the latest token
 apiClient.interceptors.request.use((config) => {
-  const raw = localStorage.getItem("token");
-  const parsed = raw ? JSON.parse(raw) : null;
-  const token = parsed?.accessToken;
+  const token = getAccessToken();
 
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
 
-  return config;
+    return config;
 });
 
 // handles expired tokens globally

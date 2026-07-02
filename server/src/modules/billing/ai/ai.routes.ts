@@ -1,36 +1,23 @@
-// src/modules/billing/ai/ai.routes.ts
-
 import { Router } from "express";
-import { aiController } from "./ai.controller";
+import { generateInvoice, getPromptHistory } from "./ai.controller";
 import { authMiddleware } from "../../../shared/middlewares/auth.middleware";
-import { validateBody } from "../../../shared/middlewares/validate.middleware";
-import { generateInvoiceSchema, saveAIInvoiceSchema } from "../../../shared/validators/ai.validator";
-import { rateLimitMiddleware } from "../../../shared/middlewares/rate-limit.middleware";
 
 const router = Router();
 
-// Apply auth to all AI routes
+// All AI billing routes require authentication
 router.use(authMiddleware);
 
 /**
  * POST /billing/ai/generate
- * Rate limited — each call hits OpenAI
+ * Parses a natural language prompt into a structured invoice draft.
+ * Does NOT save an invoice — that happens via POST /billing/invoices.
  */
-router.post(
-  "/generate",
-  rateLimitMiddleware({ windowMs: 60_000, max: 10 }), // 10 req/min per user
-  validateBody(generateInvoiceSchema),
-  aiController.generate
-);
+router.post("/generate", generateInvoice);
 
 /**
- * POST /billing/ai/save
- * Persists a reviewed AI-generated invoice
+ * GET /billing/ai/history
+ * Returns the last 20 prompt runs for the authenticated org.
  */
-router.post(
-  "/save",
-  validateBody(saveAIInvoiceSchema),
-  aiController.save
-);
+router.get("/history", getPromptHistory);
 
 export default router;

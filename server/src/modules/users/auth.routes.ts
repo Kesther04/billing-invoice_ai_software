@@ -9,6 +9,8 @@ import {
   forgotPasswordHandler,
   resetPasswordHandler,
   getMeHandler,
+  logoutHandler,
+  refreshHandler,
 } from "./auth.controller";
 import { requireAuth } from "./jwt.strategy";
 
@@ -77,4 +79,10 @@ router.post("/reset-password", resetPasswordHandler);
  */
 router.get("/me", requireAuth, getMeHandler);
 
+
+
+router.post("/refresh", requireAuth, refreshHandler);
+
+
+router.post("/logout", requireAuth, logoutHandler);
 export default router;

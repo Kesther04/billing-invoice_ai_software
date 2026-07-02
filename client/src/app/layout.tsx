@@ -4,19 +4,9 @@ import { motion } from "framer-motion";
 import { t } from "../shared/utils/themeClasses";
 import { useTheme } from "../shared/themes/ThemeContext";
 import { MobileSidebar, Sidebar, Topbar } from "../shared/components/Navbar";
+import { useAuth } from "../modules/auth/context/AuthContext";
 
 
-// check if user is logged in, if not redirect to login page
-const useRequireAuth = () => {
-  const navigate = useNavigate();
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      navigate("/auth/login");
-    }
-  }, [navigate]);
-};
 
 /* ══════════════════════════════════════════
    MAIN LAYOUT
@@ -27,8 +17,21 @@ export default function MainLayout(): React.ReactElement {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
-  const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!) : null;
   
+  
+  const { accessToken, user } = useAuth();
+
+  // check if user is logged in, if not redirect to login page
+  const useRequireAuth = () => {
+    const navigate = useNavigate();
+    
+    useEffect(() => {
+      if (!accessToken) {
+        navigate("/auth/login", { replace: true });
+      }
+    }, [accessToken, navigate]);
+  };
+
   useRequireAuth();
 
   // Close mobile menu on route change
@@ -72,7 +75,7 @@ export default function MainLayout(): React.ReactElement {
           dark={dark}
           toggleTheme={toggleTheme}
           sidebarCollapsed={sidebarCollapsed}
-          name ={user?.name}
+          name ={user?.name || null}
           onMobileMenuToggle={() => setMobileMenuOpen(true)}
         />
       </motion.div>
@@ -83,7 +86,7 @@ export default function MainLayout(): React.ReactElement {
           dark={dark}
           toggleTheme={toggleTheme}
           sidebarCollapsed={false}
-          name={user?.name}
+          name={user?.name || null}
           onMobileMenuToggle={() => setMobileMenuOpen(true)}
         />
       </div>

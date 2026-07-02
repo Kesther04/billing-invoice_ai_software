@@ -1,95 +1,56 @@
-// src/modules/billing/ai/ai.controller.ts
+import type { Request, Response } from "express";
+import * as aiService from "./ai.service";
 
-import type { Request, Response, NextFunction } from "express";
-import { aiService } from "./ai.service";
-import type { GenerateInvoiceRequest } from "./ai.types";
+/**
+ * POST /billing/ai/generate
+ * Body: { prompt: string }
+ * Returns: { draft: ParsedInvoiceDraft, promptRunId: string }
+ */
+export async function generateInvoice(req: Request, res: Response): Promise<void> {
+  const { prompt } = req.body as { prompt?: string };
 
-export const aiController = {
-  /**
-   * POST /billing/ai/generate
-   *
-   * Accepts a natural-language prompt and returns a structured invoice
-   * preview WITHOUT saving to the database yet.
-   *
-   * Body: { prompt: string }
-   * Response: { invoice: ParsedInvoiceFromAI, confidence, suggestions }
-   */
-  async generate(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const { prompt } = req.body as GenerateInvoiceRequest;
-      const user = (req as any).user;  // set by authMiddleware
+  if (!prompt || typeof prompt !== "string" || !prompt.trim()) {
+    res.status(400).json({ message: "prompt is required" });
+    return;
+  }
 
-      if (!prompt || typeof prompt !== "string" || !prompt.trim()) {
-        res.status(400).json({ message: "prompt is required" });
-        return;
-      }
+  const organizationId = (req as any).user?.organizationId;
+  const createdById    = (req as any).user?.id;
 
-      const result = await aiService.generateFromPrompt({
-        prompt: prompt.trim(),
-        fromParty: {                          // ← populated from JWT payload
-          name:             user.id,          // swap for user.name if you store it
-          email:            user.email,
-          organizationName: user.organizationName,
-        },
-      });
+  if (!organizationId) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
 
-      res.status(200).json(result);
-    } catch (err) {
-      next(err);
-    }
-  },
+  try {
+    const result = await aiService.generateInvoiceDraft({
+      prompt:         prompt.trim(),
+      organizationId,
+      createdById,
+    });
+    res.status(200).json(result);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Something went wrong";
+    res.status(422).json({ message });
+  }
+}
 
-  /**
-   * POST /billing/ai/save
-   *
-   * Saves a previously AI-generated (and optionally user-edited) invoice
-   * to the database. Accepts the full invoice payload + original prompt metadata.
-   *
-   * Body: {
-   *   invoice:     ParsedInvoiceFromAI  (may have been edited by user)
-   *   prompt:      string
-   *   confidence:  number
-   *   suggestions: string[]
-   * }
-   */
-  async save(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const { invoice, prompt, confidence, suggestions } = req.body as {
-        invoice:     import("./ai.types").ParsedInvoiceFromAI;
-        prompt:      string;
-        confidence:  number;
-        suggestions: string[];
-      };
+/**
+ * GET /billing/ai/history
+ * Returns the last 20 prompt runs for the authenticated org.
+ */
+export async function getPromptHistory(req: Request, res: Response): Promise<void> {
+  const organizationId = req.user?.organizationId;
 
-      if (!invoice || !prompt) {
-        res.status(400).json({ message: "invoice and prompt are required" });
-        return;
-      }
+  if (!organizationId) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
 
-      // req.user is populated by auth middleware
-      const organizationId = (req as any).user?.organizationId as string;
-      const createdById    = (req as any).user?.id as string;
-
-      // Sender details come from the authenticated user's organisation
-      const fromParty = {
-        name:    (req as any).user?.organizationName ?? "Your Business",
-        email:   (req as any).user?.email ?? "",
-        address: (req as any).user?.organizationAddress,
-      };
-
-      const saved = await aiService.saveGeneratedInvoice({
-        parsed: invoice,
-        prompt,
-        confidence,
-        suggestions: suggestions ?? [],
-        organizationId,
-        createdById,
-        fromParty,
-      });
-
-      res.status(201).json(saved);
-    } catch (err) {
-      next(err);
-    }
-  },
-};
+  try {
+    const history = await aiService.getPromptHistory(organizationId);
+    res.status(200).json(history);
+  } catch {
+    res.status(500).json({ message: "Failed to fetch prompt history" });
+  }
+}

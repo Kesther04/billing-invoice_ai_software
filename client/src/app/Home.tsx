@@ -442,7 +442,7 @@ export default function HomeLandingPage(): React.ReactElement {
                   Login
                 </button>
               </Link>
-              <Link to="/billing/create">
+              <Link to="/billing/invoices">
                 <SoftButton dark={dark}>Start Free</SoftButton>
               </Link>
             </div>
@@ -504,7 +504,7 @@ export default function HomeLandingPage(): React.ReactElement {
                 Login
               </button>
             </Link>
-            <Link to="/billing/create" onClick={() => setMobileMenuOpen(false)} className="w-full">
+            <Link to="/billing/invoices" onClick={() => setMobileMenuOpen(false)} className="w-full">
               <button className="mt-1 w-full rounded-xl bg-emerald-500 px-4 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90 border-none cursor-pointer">
                 Start Free →
               </button>
@@ -594,7 +594,7 @@ export default function HomeLandingPage(): React.ReactElement {
                     Sign Up <ArrowUpRight className="ml-1 inline h-4 w-4" />
                   </SoftButton>
                 </Link>
-                <Link to="/billing/create">
+                <Link to="/billing/ai">
                   <SoftButton variant="ghost">
                     Try the Prompt <ArrowUpRight className="ml-1 inline h-4 w-4" />
                   </SoftButton>
@@ -1029,7 +1029,7 @@ export default function HomeLandingPage(): React.ReactElement {
                   <div className={`text-sm font-semibold ${t.text(dark)}`}>Ready to switch?</div>
                   <div className={`text-xs mt-0.5 ${t.textMuted(dark)}`}>No credit card required.</div>
                 </div>
-                <Link to="/billing/create">
+                <Link to="/billing/invoices">
                   <SoftButton variant="accent">
                     Start Free <ArrowUpRight className="ml-1 inline h-4 w-4" />
                   </SoftButton>

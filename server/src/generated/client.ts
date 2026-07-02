@@ -69,3 +69,13 @@ export type Invoice = Prisma.InvoiceModel
  * 
  */
 export type LineItem = Prisma.LineItemModel
+/**
+ * Model PromptRun
+ * 
+ */
+export type PromptRun = Prisma.PromptRunModel
+/**
+ * Model UserSession
+ * 
+ */
+export type UserSession = Prisma.UserSessionModel

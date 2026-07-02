@@ -2,6 +2,19 @@ import { useState } from "react";
 import { authService } from "../api";
 import { useNavigate } from "react-router-dom";
 import type { userData } from "../types";
+import { useAuth } from "../context/AuthContext";
+
+const SaveAuth = async (result:any) => {
+  const { login: saveAuth } = useAuth();
+
+  saveAuth({
+    user: result.data.user,
+    organization: result.data.organization,
+    accessToken: result.data.accessToken,
+  });
+
+}
+
 
 export const useIndividualRegister = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -11,14 +24,12 @@ export const useIndividualRegister = () => {
   const register = async (userData:userData) => {
     setIsLoading(true);
     setError(null);
-    try {
+    try {    
+      
       const result = await authService.registerIndividual(userData);
-      // Save token and user data to localStorage, redirect user, etc.
-      localStorage.setItem("token", JSON.stringify(result.data.tokens));
-      localStorage.setItem("user", JSON.stringify(result.data.user));
-      console.log("Individual Registration successful, redirecting...");
-      return navigate("/dashboard"); // Adjust the path as needed
-    
+      SaveAuth(result);
+      navigate("/dashboard");
+
     } catch (err: any) {
       setError(err.response?.data?.message || "Registration failed");
     } finally {
@@ -41,11 +52,9 @@ export const useCreateOrg = () => {
     setError(null);
     try {
       const result = await authService.createOrg(userData);
-      // Save token to localStorage, redirect user, etc.
-      localStorage.setItem("token", JSON.stringify(result.data.tokens));
-      localStorage.setItem("user", JSON.stringify(result.data.user));
-      console.log("Organization creation successful, redirecting...");
-      return navigate("/dashboard"); // Adjust the path as needed
+
+      SaveAuth(result);
+      navigate("/dashboard");
     
     } catch (err: any) {
       setError(err.response?.data?.message || "Registration failed");
@@ -69,11 +78,9 @@ export const useJoinOrg = () => {
     setError(null);
     try {
       const result = await authService.joinOrg(userData);
-      // Save token to localStorage, redirect user, etc.
-      localStorage.setItem("token", JSON.stringify(result.data.tokens));
-      localStorage.setItem("user", JSON.stringify(result.data.user));
-      console.log(`registration with ${result.data.organization.name} successful, redirecting...`);
-      return navigate("/dashboard"); // Adjust the path as needed
+
+      SaveAuth(result);
+      navigate("/dashboard");
     
     } catch (err: any) {
       setError(err.response?.data?.message || "Registration failed");

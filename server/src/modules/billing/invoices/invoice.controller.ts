@@ -1,125 +1,128 @@
-// src/modules/billing/invoices/invoice.controller.ts
+import type { Request, Response } from "express";
+import * as invoiceService from "./invoice.service";
+import { NotFoundError, ValidationError } from "./invoice.service";
+import type { CreateInvoiceBody, UpdateInvoiceBody } from "./invoice.types";
 
-import type { Request, Response, NextFunction } from "express";
-import { invoiceService } from "./invoice.service";
-import type { CreateInvoiceInput, UpdateInvoiceInput, InvoiceListFilters } from "./invoice.types";
+/* ── POST /billing/invoices ──────────────────────────────────────────────────── */
+export async function createInvoice(req: Request, res: Response): Promise<void> {
+  const organizationId = (req as any).user?.organizationId;
+  const createdById    = (req as any).user?.id;
 
-// Helper — pulls org / user from request (set by auth middleware)
-function orgId(req: Request): string {
-  return (req as any).user?.organizationId as string;
+  if (!organizationId) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
+
+  try {
+    const invoice = await invoiceService.createInvoice(
+      req.body as CreateInvoiceBody,
+      organizationId,
+      createdById
+    );
+    res.status(201).json(invoice);
+  } catch (err) {
+    handleError(err, res);
+  }
 }
-function userId(req: Request): string {
-  return (req as any).user?.id as string;
+
+/* ── GET /billing/invoices ───────────────────────────────────────────────────── */
+export async function listInvoices(req: Request, res: Response): Promise<void> {
+  const organizationId = req.user?.organizationId;
+
+  if (!organizationId) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
+
+  try {
+    const { status, clientId } = req.query as Record<string, string | undefined>;
+    const invoices = await invoiceService.listInvoices(organizationId, { status, clientId });
+    res.status(200).json(invoices);
+  } catch (err) {
+    handleError(err, res);
+  }
 }
 
-export const invoiceController = {
-  /**
-   * POST /billing/invoices
-   * Creates a manual invoice and persists it immediately.
-   */
-  async create(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const input = req.body as CreateInvoiceInput;
+/* ── GET /billing/invoices/:id ───────────────────────────────────────────────── */
+export async function getInvoice(req: Request, res: Response): Promise<void> {
+  const organizationId = (req as any).user?.organizationId;
 
-      const invoice = await invoiceService.create({
-        organizationId: orgId(req),
-        createdById:    userId(req),
-        input: {
-          ...input,
-          source: "manual", // always "manual" for this endpoint
-        },
-      });
+  if (!organizationId) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
 
-      res.status(201).json(invoice);
-    } catch (err) {
-      next(err);
-    }
-  },
+  try {
+    const invoice = await invoiceService.getInvoice((req as any).params.id, organizationId);
+    res.status(200).json(invoice);
+  } catch (err) {
+    handleError(err, res);
+  }
+}
 
-  /**
-   * GET /billing/invoices
-   * Paginated list with optional filters.
-   */
-  async list(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const filters: InvoiceListFilters = {
-        status:   req.query.status   as any,
-        clientId: req.query.clientId as string,
-        search:   req.query.search   as string,
-        from:     req.query.from     as string,
-        to:       req.query.to       as string,
-        page:     req.query.page     ? Number(req.query.page)  : 1,
-        limit:    req.query.limit    ? Number(req.query.limit) : 20,
-      };
+/* ── PATCH /billing/invoices/:id ─────────────────────────────────────────────── */
+export async function updateInvoice(req: Request, res: Response): Promise<void> {
+  const organizationId = req.user?.organizationId;
 
-      const result = await invoiceService.list(orgId(req), filters);
-      res.status(200).json(result);
-    } catch (err) {
-      next(err);
-    }
-  },
+  if (!organizationId) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
 
-  /**
-   * GET /billing/invoices/:id
-   */
-  async getOne(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const invoiceId = req.params.id;
+  try {
+    const invoice = await invoiceService.updateInvoice(
+      (req as any).params.id,
+      organizationId,
+      req.body as UpdateInvoiceBody
+    );
+    res.status(200).json(invoice);
+  } catch (err) {
+    handleError(err, res);
+  }
+}
 
-      if (typeof invoiceId == "string") {
-        const invoice = await invoiceService.getById(invoiceId  , orgId(req));
-        res.status(200).json(invoice);
-      } else {
-        res.status(400).json({ error: "Invalid invoice ID" });
-      }
-    } catch (err) {
-      next(err);
-    }
-  },
+/* ── DELETE /billing/invoices/:id ────────────────────────────────────────────── */
+export async function deleteInvoice(req: Request, res: Response): Promise<void> {
+  const organizationId = req.user?.organizationId;
 
-  /**
-   * PATCH /billing/invoices/:id
-   */
-  async update(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const input = req.body as UpdateInvoiceInput;
-      if (typeof req.params.id == "string") {
-        const invoice = await invoiceService.update(req.params.id, orgId(req), input);
-        res.status(200).json(invoice);
-      } else {
-        res.status(400).json({ error: "Invalid invoice ID" });
-      }
-    } catch (err) {
-      next(err);
-    }
-  },
+  if (!organizationId) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
 
-  /**
-   * DELETE /billing/invoices/:id
-   */
-  async remove(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      if (typeof req.params.id == "string") {
-        await invoiceService.delete(req.params.id, orgId(req));
-        res.status(204).send();
-      } else {
-        res.status(400).json({ error: "Invalid invoice ID" });
-      }
-    } catch (err) {
-      next(err);
-    }
-  },
+  try {
+    await invoiceService.deleteInvoice((req as any).params.id, organizationId);
+    res.status(204).send();
+  } catch (err) {
+    handleError(err, res);
+  }
+}
 
-  /**
-   * GET /billing/invoices/summary
-   * Returns per-status counts and totals — used by dashboard.
-   */
-  async summary(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const data = await invoiceService.getStatusSummary(orgId(req));
-      res.status(200).json(data);
-    } catch (err) {
-      next(err);
-    }
-  },
-};
+/* ── POST /billing/invoices/:id/send ─────────────────────────────────────────── */
+export async function sendInvoice(req: Request, res: Response): Promise<void> {
+  const organizationId = req.user?.organizationId;
+
+  if (!organizationId) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
+
+  try {
+    const invoice = await invoiceService.sendInvoice((req as any).params.id, organizationId);
+    res.status(200).json(invoice);
+  } catch (err) {
+    handleError(err, res);
+  }
+}
+
+/* ── Error handler ───────────────────────────────────────────────────────────── */
+function handleError(err: unknown, res: Response): void {
+  if (err instanceof NotFoundError) {
+    res.status(404).json({ message: err.message });
+  } else if (err instanceof ValidationError) {
+    res.status(400).json({ message: err.message });
+  } else {
+    const message = err instanceof Error ? err.message : "Internal server error";
+    res.status(500).json({ message });
+  }
+}

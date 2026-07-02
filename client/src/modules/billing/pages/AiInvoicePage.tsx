@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../../shared/themes/ThemeContext";
 import { useInvoiceAI } from "../hooks/useInvoiceAI";
-import { invoiceService } from "../api";
+import { invoiceBillingService } from "../api";
 import type { Invoice, LineItem } from "../types";
 import InvoicePromptInput from "../components/InvoicePromptInput";
 import InvoicePreview from "../components/InvoicePreview";
@@ -103,7 +103,7 @@ export default function AiInvoicePage() {
     if (!draft) return;
     setIsSaving(true);
     try {
-      const saved = await invoiceService.create(draft);
+      const saved = await invoiceBillingService.create(draft);
       setIsSaving(false);
       setSaved(true);
       setTimeout(() => {

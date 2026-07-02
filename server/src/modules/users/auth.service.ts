@@ -5,6 +5,13 @@ import bcrypt    from "bcryptjs";
 import crypto    from "crypto";
 import nodemailer from "nodemailer";
 import { env } from "../../config/env";
+import { hashToken } from "./hash";
+
+import {
+  verifyRefreshToken,
+  signAccessToken,
+  signRefreshToken,
+} from "./jwt.strategy";
 
 import {
   RegisterIndividualDto,
@@ -29,9 +36,14 @@ import {
   updateUserPassword,
   toSafeUser,
   toSafeOrg,
+  createUserSession,
+  findUserSessionByTokenHash,
+  updateUserSession,
+  revokeUserSession,
 } from "./user.repository";
+import { REFRESH_MAX_AGE } from "../../config/auth";
 
-import { signTokenPair } from "./jwt.strategy";
+// import { signTokenPair } from "./jwt.strategy";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -54,12 +66,12 @@ async function sendResetEmail(toEmail: string, token: string): Promise<void> {
   const url = `${env.FRONTEND_URL.replace(/\/+$/, "")}/auth/reset-password?token=${token}`;
 
   await mailer.sendMail({
-    from:    `"RevPilot" <${process.env.SMTP_FROM ?? process.env.SMTP_USER}>`,
+    from:    `"TraqBill" <${process.env.SMTP_FROM ?? process.env.SMTP_USER}>`,
     to:      toEmail,
-    subject: "Reset your RevPilot password",
+    subject: "Reset your TraqBill password",
     html: `
       <div style="font-family:sans-serif;max-width:480px;margin:auto;">
-        <h2 style="color:#10b981;">RevPilot — Password Reset</h2>
+        <h2 style="color:#10b981;">TraqBill — Password Reset</h2>
         <p>We received a request to reset the password for your account.</p>
         <p>
           <a href="${url}"
@@ -74,6 +86,33 @@ async function sendResetEmail(toEmail: string, token: string): Promise<void> {
       </div>
     `,
   });
+}
+
+async function issueSession(
+  payload: ReturnType<typeof buildPayload>,
+  options?: {
+    ipAddress?: string;
+    userAgent?: string;
+  }
+) {
+  const accessToken = signAccessToken(payload);
+
+  const refreshToken = signRefreshToken(payload);
+
+  const tokenHash = hashToken(refreshToken);
+
+  await createUserSession({
+    userId: payload.sub,
+    tokenHash,
+    expiresAt: new Date(Date.now() + REFRESH_MAX_AGE), 
+    ipAddress: options?.ipAddress,
+    userAgent: options?.userAgent,
+  });
+
+  return {
+    accessToken,
+    refreshToken,
+  };
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -116,11 +155,11 @@ export async function registerIndividual(dto: RegisterIndividualDto): Promise<Au
   });
 
   // 5. Issue tokens
-  const tokens = signTokenPair(
+  const tokens = await issueSession(
     buildPayload(user.id, user.email, user.role, org.id, org.type)
   );
 
-  return { user: toSafeUser(user), organization: toSafeOrg(org), tokens };
+  return { user: toSafeUser(user), organization: toSafeOrg(org), accessToken: tokens.accessToken, refreshToken: tokens.refreshToken };
 }
 
 // ─── Register: Create Organisation ───────────────────────────────────────────
@@ -149,11 +188,11 @@ export async function registerCreateOrg(dto: RegisterCreateOrgDto): Promise<Auth
   });
 
   // 5. Issue tokens
-  const tokens = signTokenPair(
+  const tokens = await issueSession(
     buildPayload(user.id, user.email, user.role, org.id, org.type)
   );
 
-  return { user: toSafeUser(user), organization: toSafeOrg(org), tokens };
+  return { user: toSafeUser(user), organization: toSafeOrg(org), accessToken: tokens.accessToken, refreshToken: tokens.refreshToken };
 }
 
 // ─── Register: Join Organisation ─────────────────────────────────────────────
@@ -182,11 +221,11 @@ export async function registerJoinOrg(dto: RegisterJoinOrgDto): Promise<AuthResp
   });
 
   // 6. Issue tokens
-  const tokens = signTokenPair(
+  const tokens = await issueSession(
     buildPayload(user.id, user.email, user.role, org.id, org.type)
   );
 
-  return { user: toSafeUser(user), organization: toSafeOrg(org), tokens };
+  return { user: toSafeUser(user), organization: toSafeOrg(org), accessToken: tokens.accessToken, refreshToken: tokens.refreshToken };
 }
 
 // ─── Login (unified — all roles) ─────────────────────────────────────────────
@@ -206,11 +245,11 @@ export async function login(dto: LoginDto): Promise<AuthResponse> {
   if (!org) throw new Error("ORG_NOT_FOUND"); // should never happen with cascade
 
   // 4. Issue tokens
-  const tokens = signTokenPair(
+  const tokens = await issueSession(
     buildPayload(user.id, user.email, user.role, org.id, org.type)
   );
 
-  return { user: toSafeUser(user), organization: toSafeOrg(org), tokens };
+  return { user: toSafeUser(user), organization: toSafeOrg(org), accessToken: tokens.accessToken, refreshToken: tokens.refreshToken };
 }
 
 // ─── Forgot Password ──────────────────────────────────────────────────────────
@@ -249,4 +288,72 @@ export async function resetPassword(dto: ResetPasswordDto): Promise<void> {
   // 3. Persist new password and consume token (both must succeed)
   await updateUserPassword(record.userId, passwordHash);
   await markResetTokenUsed(record.id);
+}
+
+export async function refreshSession(refreshToken: string) {
+  // Verify JWT signature and expiry
+  const payload = verifyRefreshToken(refreshToken);
+
+  // Hash incoming refresh token
+  const tokenHash = hashToken(refreshToken);
+
+  // Find matching session
+  const session = await findUserSessionByTokenHash(tokenHash);
+
+  if (
+    !session ||
+    session.revokedAt ||
+    session.expiresAt <= new Date()
+  ) {
+    throw new Error("INVALID_REFRESH_TOKEN");
+  }
+
+  // Load user
+  const { findUserById, findOrgById } = await import("./user.repository");
+
+  const user = await findUserById(session.userId);
+  if (!user) {
+    throw new Error("INVALID_REFRESH_TOKEN");
+  }
+
+  // Load organisation
+  const org = await findOrgById(user.organizationId);
+  if (!org) {
+    throw new Error("ORG_NOT_FOUND");
+  }
+
+  // Generate new tokens
+  const newAccessToken = signAccessToken(
+    buildPayload(user.id, user.email, user.role, org.id, org.type)
+  );
+
+  const newRefreshToken = signRefreshToken(
+    buildPayload(user.id, user.email, user.role, org.id, org.type)
+  );
+
+  // Rotate refresh token
+  await updateUserSession(session.id, {
+    tokenHash: hashToken(newRefreshToken),
+    lastUsedAt: new Date(),
+    expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+  });
+
+  return {
+    user: toSafeUser(user),
+    organization: toSafeOrg(org),
+    accessToken: newAccessToken,
+    refreshToken: newRefreshToken,
+  };
+}
+
+
+// ─── Logout ───────────────────────────────────────────────────────────────────
+export async function logout(refreshToken: string) {
+  const tokenHash = hashToken(refreshToken);
+
+  const session = await findUserSessionByTokenHash(tokenHash);
+
+  if (session) {
+    await revokeUserSession(session.id);
+  } 
 }

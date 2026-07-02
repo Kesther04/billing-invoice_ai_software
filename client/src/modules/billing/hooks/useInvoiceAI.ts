@@ -225,7 +225,7 @@
 
 import { useCallback, useState } from "react";
 import { nanoid } from "nanoid";
-import { aiService } from "../api";
+import { aiBillingService } from "../api";
 import type { Invoice, PromptRun } from "../types";
 
 interface UseInvoiceAIState {
@@ -260,7 +260,7 @@ export function useInvoiceAI() {
       status: "success",
     };
     try {
-      const { draft } = await aiService.generate(prompt);
+      const { draft } = await aiBillingService.generate(prompt);
       run.draft = draft;
       setState((s) => ({
         ...s,
@@ -285,7 +285,7 @@ export function useInvoiceAI() {
   const loadHistory = useCallback(async () => {
     setState((s) => ({ ...s, isLoadingHistory: true }));
     try {
-      const history = await aiService.listPromptHistory();
+      const history = await aiBillingService.listPromptHistory();
       setState((s) => ({ ...s, history, isLoadingHistory: false }));
     } catch {
       // Non-critical — history is a convenience, not load-bearing.

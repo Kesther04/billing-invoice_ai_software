@@ -87,8 +87,6 @@ export interface SafeOrg {
 export interface AuthResponse {
   user:         SafeUser;
   organization: SafeOrg;
-  tokens: {
-    accessToken:  string;
-    refreshToken: string;
-  };
+  accessToken:  string;
+  refreshToken: string;
 }

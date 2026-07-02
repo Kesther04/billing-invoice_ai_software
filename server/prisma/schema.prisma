@@ -34,6 +34,11 @@ enum UserRole {
   MEMBER    // Invited team member
 }
 
+enum PromptRunStatus {
+  success
+  error
+}
+
 model Organization {
   id        String           @id @default(uuid())
   name      String
@@ -45,6 +50,7 @@ model Organization {
   clients   Client[]
   invoices  Invoice[]
   users     User[]
+  promptRuns   PromptRun[]
   // ← Add this back-relation (optional since organizationId? in token)
   passwordResetTokens PasswordResetToken[]
 }
@@ -62,6 +68,8 @@ model User {
   // ← Add this back-relation
   passwordResetTokens PasswordResetToken[]
   invoices       Invoice[]
+  promptRuns     PromptRun[]
+  userSessions UserSession[]
 }
 
 model PasswordResetToken {
@@ -104,16 +112,14 @@ model Invoice {
   id             String        @id @default(uuid())
   invoiceNumber  String        @unique
   status         InvoiceStatus @default(draft)
-  source         InvoiceSource @default(manual) // tracks whether AI or manual
+  source         InvoiceSource @default(manual)
 
-  // Parties stored as JSON (flexible — matches frontend InvoiceParty type)
-  fromParty      Json          // { name, email, address, phone, company }
-  toParty        Json          // { name, email, address, phone, company }
+  fromParty      Json
+  toParty        Json
 
   issueDate      DateTime
   dueDate        DateTime
 
-  // Financials
   subtotal       Float         @default(0)
   taxRate        Float         @default(0)
   taxAmount      Float         @default(0)
@@ -123,19 +129,19 @@ model Invoice {
 
   notes          String?
 
-  // AI metadata (null when source = manual)
-  aiPrompt       String?       // the original prompt used
-  aiConfidence   Float?        // confidence score from AI parser
-  aiSuggestions  Json?         // array of string suggestions
+  // AI metadata — present only when source = ai
+  aiPrompt       String?       // the prompt that produced this invoice
+  aiConfidence   Float?        // parser confidence score (future use)
+  promptRunId    String?       // back-link to the PromptRun that generated it
 
-  // Relations
   organizationId String
-  clientId       String?       // optional — client may not exist in DB yet
-  createdById    String?       // user who created it
+  clientId       String?
+  createdById    String?
 
   organization Organization @relation(fields: [organizationId], references: [id])
   client       Client?      @relation(fields: [clientId], references: [id])
   createdBy    User?        @relation(fields: [createdById], references: [id])
+  promptRun    PromptRun?   @relation(fields: [promptRunId], references: [id])
 
   lineItems    LineItem[]
 
@@ -161,4 +167,50 @@ model LineItem {
   invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
 
   @@index([invoiceId])
+}
+
+// ─── AI Prompt Runs (for audit log / regeneration) ─────────────────────────────────────────────
+
+model PromptRun {
+  id             String          @id @default(uuid())
+  prompt         String
+  status         PromptRunStatus
+  error          String?         // present only when status = error
+  draft  Json?           // the parsed draft — present only when status = success. NOT a live Invoice reference; snapshots the output at parse time so history is always accurate even if the invoice is later edited or deleted
+  
+  organizationId String
+  createdById    String?
+  createdAt      DateTime        @default(now())
+
+  organization   Organization    @relation(fields: [organizationId], references: [id])
+  createdBy      User?           @relation(fields: [createdById], references: [id])
+
+  invoices     Invoice[]     // invoices that were saved from this run
+
+  @@index([organizationId])
+  @@index([createdAt])
+
+}
+
+// ─── User Sessions (for storing refresh tokens) ─────────────────────────────────────────────
+
+model UserSession {
+  id           String   @id @default(uuid())
+
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  tokenHash    String   @unique
+
+  expiresAt    DateTime
+  revokedAt    DateTime?
+
+  ipAddress    String?
+  userAgent    String?
+
+  createdAt    DateTime @default(now())
+  lastUsedAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
 }

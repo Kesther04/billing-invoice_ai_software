@@ -1,15 +1,15 @@
-// src/modules/billing/index.ts
 
 import { Router } from "express";
-import invoiceRouter from "./invoices/invoice.routes";
-import aiRouter      from "./ai/ai.routes";
+import aiRoutes      from "./ai/ai.routes";
+import invoiceRoutes from "./invoices/invoice.routes";
 
 const router = Router();
 
-// /billing/invoices/...
-router.use("/invoices", invoiceRouter);
-
-// /billing/ai/...
-router.use("/ai", aiRouter);
+/**
+ * /billing/ai/*       — AI generation + prompt history
+ * /billing/invoices/* — Invoice CRUD + send
+ */
+router.use("/ai",       aiRoutes);
+router.use("/invoices", invoiceRoutes);
 
 export default router;

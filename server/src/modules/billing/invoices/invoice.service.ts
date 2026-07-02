@@ -1,226 +1,139 @@
-// src/modules/billing/invoices/invoice.service.ts
-
-import { nanoid } from "nanoid";
-import { invoiceRepository } from "./invoice.repository";
-import { generateInvoiceNumber } from "../../../shared/utils/invoiceNumber";
-import { calculateTotals } from "../../../shared/utils/calculateTotals";
+import * as invoiceRepository from "./invoice.repository";
+import { isValidTransition, isTerminal } from "./invoice.status";
 import type {
-  CreateInvoiceInput,
-  UpdateInvoiceInput,
+  CreateInvoiceBody,
   InvoiceDTO,
-  InvoiceListFilters,
-  PaginatedInvoices,
-  LineItemDTO,
-  InvoiceParty,
+  UpdateInvoiceBody,
 } from "./invoice.types";
 
-// ─── Mapper ────────────────────────────────────────────────────────────────────
-
-function toDTO(prismaInvoice: any): InvoiceDTO {
-  return {
-    id:             prismaInvoice.id,
-    invoiceNumber:  prismaInvoice.invoiceNumber,
-    status:         prismaInvoice.status,
-    source:         prismaInvoice.source,
-    from:           prismaInvoice.fromParty as InvoiceParty,
-    to:             prismaInvoice.toParty   as InvoiceParty,
-    issueDate:      prismaInvoice.issueDate.toISOString().split("T")[0],
-    dueDate:        prismaInvoice.dueDate.toISOString().split("T")[0],
-    lineItems:      prismaInvoice.lineItems.map((li: any): LineItemDTO => ({
-      id:          li.id,
-      description: li.description,
-      quantity:    li.quantity,
-      unitPrice:   li.unitPrice,
-      total:       li.total,
-    })),
-    subtotal:       prismaInvoice.subtotal,
-    taxRate:        prismaInvoice.taxRate,
-    taxAmount:      prismaInvoice.taxAmount,
-    discountAmount: prismaInvoice.discountAmount,
-    total:          prismaInvoice.total,
-    currency:       prismaInvoice.currency,
-    notes:          prismaInvoice.notes ?? undefined,
-    clientId:       prismaInvoice.clientId ?? undefined,
-    organizationId: prismaInvoice.organizationId,
-    createdAt:      prismaInvoice.createdAt.toISOString(),
-    updatedAt:      prismaInvoice.updatedAt.toISOString(),
-  };
+/* ── Create invoice ─────────────────────────────────────────────────────────── */
+export async function createInvoice(
+  body: CreateInvoiceBody,
+  organizationId: string,
+  createdById?: string
+): Promise<InvoiceDTO> {
+  validateCreateBody(body);
+  return invoiceRepository.createInvoice(body, organizationId, createdById);
 }
 
-// ─── Service ───────────────────────────────────────────────────────────────────
+/* ── List invoices ───────────────────────────────────────────────────────────── */
+export async function listInvoices(
+  organizationId: string,
+  filters?: { status?: string; clientId?: string }
+): Promise<InvoiceDTO[]> {
+  return invoiceRepository.listInvoices(organizationId, filters);
+}
 
-export const invoiceService = {
-  /**
-   * Create a new invoice — works for BOTH manual and AI-generated invoices.
-   * ai.service calls this after generation; the invoice controller calls it
-   * for manual creation. The `source` field distinguishes them.
-   */
-  async create(params: {
-    organizationId: string;
-    createdById?:   string;
-    input:          CreateInvoiceInput & {
-      source?:        "manual" | "ai";
-      aiPrompt?:      string;
-      aiConfidence?:  number;
-      aiSuggestions?: string[];
-    };
-  }): Promise<InvoiceDTO> {
-    const { organizationId, createdById, input } = params;
+/* ── Get single invoice ──────────────────────────────────────────────────────── */
+export async function getInvoice(
+  id: string,
+  organizationId: string
+): Promise<InvoiceDTO> {
+  const invoice = await invoiceRepository.getInvoice(id, organizationId);
+  if (!invoice) throw new NotFoundError("Invoice not found");
+  return invoice;
+}
 
-    // ── Resolve invoice number ──────────────────────────────────────────────
-    const invoiceNumber =
-      input.invoiceNumber?.trim() ||
-      (await generateInvoiceNumber(organizationId));
+/* ── Update invoice ──────────────────────────────────────────────────────────── */
+export async function updateInvoice(
+  id: string,
+  organizationId: string,
+  body: UpdateInvoiceBody
+): Promise<InvoiceDTO> {
+  const existing = await invoiceRepository.getInvoice(id, organizationId);
+  if (!existing) throw new NotFoundError("Invoice not found");
 
-    // ── Build line items with guaranteed IDs ────────────────────────────────
-    const lineItems = (input.lineItems ?? []).map((li) => ({
-      description: li.description,
-      quantity:    li.quantity,
-      unitPrice:   li.unitPrice,
-      total:       li.quantity * li.unitPrice,
-    }));
-
-    // ── Calculate totals ────────────────────────────────────────────────────
-    const { subtotal, taxAmount, total } = calculateTotals({
-      lineItems,
-      taxRate:        input.taxRate ?? 0,
-      discountAmount: input.discountAmount ?? 0,
-    });
-
-    // ── Persist ─────────────────────────────────────────────────────────────
-    const record = await invoiceRepository.create({
-      invoiceNumber,
-      status:         input.status ?? "draft",
-      source:         input.source ?? "manual",
-      fromParty:      input.from as object,
-      toParty:        input.to   as object,
-      issueDate:      new Date(input.issueDate),
-      dueDate:        new Date(input.dueDate),
-      subtotal,
-      taxRate:        input.taxRate        ?? 0,
-      taxAmount,
-      discountAmount: input.discountAmount ?? 0,
-      total,
-      currency:       input.currency ?? "USD",
-      notes:          input.notes,
-      organizationId,
-      clientId:       input.clientId,
-      createdById,
-      aiPrompt:       input.aiPrompt,
-      aiConfidence:   input.aiConfidence,
-      aiSuggestions:  input.aiSuggestions
-                        ? JSON.parse(JSON.stringify(input.aiSuggestions))
-                        : undefined,
-      lineItems,
-    });
-
-    return toDTO(record);
-  },
-
-  // ── Read ─────────────────────────────────────────────────────────────────────
-
-  async getById(id: string, organizationId: string): Promise<InvoiceDTO> {
-    const record = await invoiceRepository.findById(id, organizationId);
-    if (!record) {
-      const err = new Error("Invoice not found") as any;
-      err.status = 404;
-      throw err;
-    }
-    return toDTO(record);
-  },
-
-  async list(
-    organizationId: string,
-    filters: InvoiceListFilters
-  ): Promise<PaginatedInvoices> {
-    const { data, total } = await invoiceRepository.findMany(organizationId, filters);
-    return {
-      data:  data.map(toDTO),
-      total,
-      page:  filters.page  ?? 1,
-      limit: filters.limit ?? 20,
-    };
-  },
-
-  // ── Update ───────────────────────────────────────────────────────────────────
-
-  async update(
-    id: string,
-    organizationId: string,
-    input: UpdateInvoiceInput
-  ): Promise<InvoiceDTO> {
-    // Ensure the invoice exists and belongs to this org
-    const existing = await invoiceRepository.findById(id, organizationId);
-    if (!existing) {
-      const err = new Error("Invoice not found") as any;
-      err.status = 404;
-      throw err;
-    }
-
-    // Recalculate totals if line items or rates changed
-    let financials: {
-      subtotal?: number;
-      taxAmount?: number;
-      total?: number;
-    } = {};
-
-    let dbLineItems:
-      | Array<{ description: string; quantity: number; unitPrice: number; total: number }>
-      | undefined;
-
-    if (input.lineItems) {
-      dbLineItems = input.lineItems.map((li) => ({
-        description: li.description,
-        quantity:    li.quantity,
-        unitPrice:   li.unitPrice,
-        total:       li.quantity * li.unitPrice,
-      }));
-
-      const taxRate        = input.taxRate        ?? existing.taxRate;
-      const discountAmount = input.discountAmount ?? existing.discountAmount;
-
-      const totals = calculateTotals({ lineItems: dbLineItems, taxRate, discountAmount });
-      financials = totals;
-    }
-
-    const record = await invoiceRepository.update(
-      id,
-      organizationId,
-      {
-        ...(input.invoiceNumber && { invoiceNumber: input.invoiceNumber }),
-        ...(input.status        && { status:        input.status }),
-        ...(input.from          && { fromParty:      input.from as object }),
-        ...(input.to            && { toParty:        input.to   as object }),
-        ...(input.issueDate     && { issueDate:      new Date(input.issueDate) }),
-        ...(input.dueDate       && { dueDate:        new Date(input.dueDate) }),
-        ...(input.currency      && { currency:       input.currency }),
-        ...(input.notes !== undefined && { notes:    input.notes }),
-        ...(input.taxRate       !== undefined && { taxRate:        input.taxRate }),
-        ...(input.discountAmount !== undefined && { discountAmount: input.discountAmount }),
-        ...financials,
-        ...(input.clientId !== undefined && { clientId: input.clientId }),
-      },
-      dbLineItems
+  if (isTerminal(existing.status)) {
+    throw new ValidationError(
+      `Invoice is ${existing.status} and cannot be modified`
     );
+  }
 
-    return toDTO(record);
-  },
-
-  // ── Delete ───────────────────────────────────────────────────────────────────
-
-  async delete(id: string, organizationId: string): Promise<void> {
-    const existing = await invoiceRepository.findById(id, organizationId);
-    if (!existing) {
-      const err = new Error("Invoice not found") as any;
-      err.status = 404;
-      throw err;
+  // Validate status transition if status is being changed
+  if (body.status && body.status !== existing.status) {
+    if (!isValidTransition(existing.status, body.status)) {
+      throw new ValidationError(
+        `Cannot transition invoice from "${existing.status}" to "${body.status}"`
+      );
     }
-    await invoiceRepository.delete(id, organizationId);
-  },
+  }
 
-  // ── Summary ──────────────────────────────────────────────────────────────────
+  const updated = await invoiceRepository.updateInvoice(id, organizationId, body);
+  if (!updated) throw new NotFoundError("Invoice not found");
+  return updated;
+}
 
-  async getStatusSummary(organizationId: string) {
-    return invoiceRepository.getStatusSummary(organizationId);
-  },
-};
+/* ── Delete invoice ──────────────────────────────────────────────────────────── */
+export async function deleteInvoice(
+  id: string,
+  organizationId: string
+): Promise<void> {
+  const existing = await invoiceRepository.getInvoice(id, organizationId);
+  if (!existing) throw new NotFoundError("Invoice not found");
+
+  if (isTerminal(existing.status)) {
+    throw new ValidationError(
+      `Cannot delete a ${existing.status} invoice`
+    );
+  }
+
+  await invoiceRepository.deleteInvoice(id, organizationId);
+}
+
+/* ── Send invoice ────────────────────────────────────────────────────────────── *
+   Marks the invoice as sent (draft → pending), generates a Paystack
+   payment link, and emails it to the client.
+   Paystack link generation and email sending are stubbed for Layer 1 —
+   the status transition and response are real, the side effects are TODO.  */
+export async function sendInvoice(
+  id: string,
+  organizationId: string
+): Promise<InvoiceDTO> {
+  const existing = await invoiceRepository.getInvoice(id, organizationId);
+  if (!existing) throw new NotFoundError("Invoice not found");
+
+  if (existing.status !== "draft") {
+    throw new ValidationError(
+      `Only draft invoices can be sent. This invoice is "${existing.status}"`
+    );
+  }
+
+  // TODO Layer 2: generate Paystack payment link and attach to invoice
+  // const paymentLink = await paystackService.createPaymentLink(existing);
+
+  // TODO Layer 2: send email to existing.to.email with invoice + payment link
+  // await emailService.sendInvoice(existing, paymentLink);
+
+  const sent = await invoiceRepository.markSent(id, organizationId);
+  if (!sent) throw new NotFoundError("Invoice not found");
+  return sent;
+}
+
+/* ── Validation helpers ──────────────────────────────────────────────────────── */
+function validateCreateBody(body: CreateInvoiceBody): void {
+  if (!body.from) throw new ValidationError("from (sender) is required");
+  if (!body.to)   throw new ValidationError("to (recipient) is required");
+  if (!body.issueDate) throw new ValidationError("issueDate is required");
+  if (!body.dueDate)   throw new ValidationError("dueDate is required");
+  if (!body.lineItems || body.lineItems.length === 0) {
+    throw new ValidationError("At least one line item is required");
+  }
+  if (new Date(body.dueDate) < new Date(body.issueDate)) {
+    throw new ValidationError("dueDate cannot be before issueDate");
+  }
+}
+
+/* ── Typed errors ────────────────────────────────────────────────────────────── */
+export class NotFoundError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "NotFoundError";
+  }
+}
+
+export class ValidationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ValidationError";
+  }
+}

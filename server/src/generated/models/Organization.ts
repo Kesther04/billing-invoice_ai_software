@@ -193,6 +193,7 @@ export type OrganizationWhereInput = {
   clients?: Prisma.ClientListRelationFilter
   invoices?: Prisma.InvoiceListRelationFilter
   users?: Prisma.UserListRelationFilter
+  promptRuns?: Prisma.PromptRunListRelationFilter
   passwordResetTokens?: Prisma.PasswordResetTokenListRelationFilter
 }
 
@@ -206,6 +207,7 @@ export type OrganizationOrderByWithRelationInput = {
   clients?: Prisma.ClientOrderByRelationAggregateInput
   invoices?: Prisma.InvoiceOrderByRelationAggregateInput
   users?: Prisma.UserOrderByRelationAggregateInput
+  promptRuns?: Prisma.PromptRunOrderByRelationAggregateInput
   passwordResetTokens?: Prisma.PasswordResetTokenOrderByRelationAggregateInput
 }
 
@@ -222,6 +224,7 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
   clients?: Prisma.ClientListRelationFilter
   invoices?: Prisma.InvoiceListRelationFilter
   users?: Prisma.UserListRelationFilter
+  promptRuns?: Prisma.PromptRunListRelationFilter
   passwordResetTokens?: Prisma.PasswordResetTokenListRelationFilter
 }, "id" | "email" | "inviteCode">
 
@@ -259,6 +262,7 @@ export type OrganizationCreateInput = {
   clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
   users?: Prisma.UserCreateNestedManyWithoutOrganizationInput
+  promptRuns?: Prisma.PromptRunCreateNestedManyWithoutOrganizationInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutOrganizationInput
 }
 
@@ -272,6 +276,7 @@ export type OrganizationUncheckedCreateInput = {
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
   users?: Prisma.UserUncheckedCreateNestedManyWithoutOrganizationInput
+  promptRuns?: Prisma.PromptRunUncheckedCreateNestedManyWithoutOrganizationInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
@@ -285,6 +290,7 @@ export type OrganizationUpdateInput = {
   clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
   users?: Prisma.UserUpdateManyWithoutOrganizationNestedInput
+  promptRuns?: Prisma.PromptRunUpdateManyWithoutOrganizationNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutOrganizationNestedInput
 }
 
@@ -298,6 +304,7 @@ export type OrganizationUncheckedUpdateInput = {
   clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutOrganizationNestedInput
+  promptRuns?: Prisma.PromptRunUncheckedUpdateManyWithoutOrganizationNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
@@ -439,6 +446,20 @@ export type OrganizationUpdateOneRequiredWithoutInvoicesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutInvoicesInput, Prisma.OrganizationUpdateWithoutInvoicesInput>, Prisma.OrganizationUncheckedUpdateWithoutInvoicesInput>
 }
 
+export type OrganizationCreateNestedOneWithoutPromptRunsInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutPromptRunsInput, Prisma.OrganizationUncheckedCreateWithoutPromptRunsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutPromptRunsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneRequiredWithoutPromptRunsNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutPromptRunsInput, Prisma.OrganizationUncheckedCreateWithoutPromptRunsInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutPromptRunsInput
+  upsert?: Prisma.OrganizationUpsertWithoutPromptRunsInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutPromptRunsInput, Prisma.OrganizationUpdateWithoutPromptRunsInput>, Prisma.OrganizationUncheckedUpdateWithoutPromptRunsInput>
+}
+
 export type OrganizationCreateWithoutUsersInput = {
   id?: string
   name: string
@@ -448,6 +469,7 @@ export type OrganizationCreateWithoutUsersInput = {
   createdAt?: Date | string
   clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
+  promptRuns?: Prisma.PromptRunCreateNestedManyWithoutOrganizationInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutOrganizationInput
 }
 
@@ -460,6 +482,7 @@ export type OrganizationUncheckedCreateWithoutUsersInput = {
   createdAt?: Date | string
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
+  promptRuns?: Prisma.PromptRunUncheckedCreateNestedManyWithoutOrganizationInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
@@ -488,6 +511,7 @@ export type OrganizationUpdateWithoutUsersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
+  promptRuns?: Prisma.PromptRunUpdateManyWithoutOrganizationNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutOrganizationNestedInput
 }
 
@@ -500,6 +524,7 @@ export type OrganizationUncheckedUpdateWithoutUsersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
+  promptRuns?: Prisma.PromptRunUncheckedUpdateManyWithoutOrganizationNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
@@ -513,6 +538,7 @@ export type OrganizationCreateWithoutPasswordResetTokensInput = {
   clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
   users?: Prisma.UserCreateNestedManyWithoutOrganizationInput
+  promptRuns?: Prisma.PromptRunCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutPasswordResetTokensInput = {
@@ -525,6 +551,7 @@ export type OrganizationUncheckedCreateWithoutPasswordResetTokensInput = {
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
   users?: Prisma.UserUncheckedCreateNestedManyWithoutOrganizationInput
+  promptRuns?: Prisma.PromptRunUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutPasswordResetTokensInput = {
@@ -553,6 +580,7 @@ export type OrganizationUpdateWithoutPasswordResetTokensInput = {
   clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
   users?: Prisma.UserUpdateManyWithoutOrganizationNestedInput
+  promptRuns?: Prisma.PromptRunUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutPasswordResetTokensInput = {
@@ -565,6 +593,7 @@ export type OrganizationUncheckedUpdateWithoutPasswordResetTokensInput = {
   clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutOrganizationNestedInput
+  promptRuns?: Prisma.PromptRunUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutClientsInput = {
@@ -576,6 +605,7 @@ export type OrganizationCreateWithoutClientsInput = {
   createdAt?: Date | string
   invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
   users?: Prisma.UserCreateNestedManyWithoutOrganizationInput
+  promptRuns?: Prisma.PromptRunCreateNestedManyWithoutOrganizationInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutOrganizationInput
 }
 
@@ -588,6 +618,7 @@ export type OrganizationUncheckedCreateWithoutClientsInput = {
   createdAt?: Date | string
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
   users?: Prisma.UserUncheckedCreateNestedManyWithoutOrganizationInput
+  promptRuns?: Prisma.PromptRunUncheckedCreateNestedManyWithoutOrganizationInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
@@ -616,6 +647,7 @@ export type OrganizationUpdateWithoutClientsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
   users?: Prisma.UserUpdateManyWithoutOrganizationNestedInput
+  promptRuns?: Prisma.PromptRunUpdateManyWithoutOrganizationNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutOrganizationNestedInput
 }
 
@@ -628,6 +660,7 @@ export type OrganizationUncheckedUpdateWithoutClientsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutOrganizationNestedInput
+  promptRuns?: Prisma.PromptRunUncheckedUpdateManyWithoutOrganizationNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
@@ -640,6 +673,7 @@ export type OrganizationCreateWithoutInvoicesInput = {
   createdAt?: Date | string
   clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
   users?: Prisma.UserCreateNestedManyWithoutOrganizationInput
+  promptRuns?: Prisma.PromptRunCreateNestedManyWithoutOrganizationInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutOrganizationInput
 }
 
@@ -652,6 +686,7 @@ export type OrganizationUncheckedCreateWithoutInvoicesInput = {
   createdAt?: Date | string
   clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
   users?: Prisma.UserUncheckedCreateNestedManyWithoutOrganizationInput
+  promptRuns?: Prisma.PromptRunUncheckedCreateNestedManyWithoutOrganizationInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
@@ -680,6 +715,7 @@ export type OrganizationUpdateWithoutInvoicesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
   users?: Prisma.UserUpdateManyWithoutOrganizationNestedInput
+  promptRuns?: Prisma.PromptRunUpdateManyWithoutOrganizationNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutOrganizationNestedInput
 }
 
@@ -691,6 +727,75 @@ export type OrganizationUncheckedUpdateWithoutInvoicesInput = {
   inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutOrganizationNestedInput
+  promptRuns?: Prisma.PromptRunUncheckedUpdateManyWithoutOrganizationNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationCreateWithoutPromptRunsInput = {
+  id?: string
+  name: string
+  email: string
+  type: $Enums.OrganizationType
+  inviteCode?: string | null
+  createdAt?: Date | string
+  clients?: Prisma.ClientCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutOrganizationInput
+  users?: Prisma.UserCreateNestedManyWithoutOrganizationInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutPromptRunsInput = {
+  id?: string
+  name: string
+  email: string
+  type: $Enums.OrganizationType
+  inviteCode?: string | null
+  createdAt?: Date | string
+  clients?: Prisma.ClientUncheckedCreateNestedManyWithoutOrganizationInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutOrganizationInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutOrganizationInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutPromptRunsInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutPromptRunsInput, Prisma.OrganizationUncheckedCreateWithoutPromptRunsInput>
+}
+
+export type OrganizationUpsertWithoutPromptRunsInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutPromptRunsInput, Prisma.OrganizationUncheckedUpdateWithoutPromptRunsInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutPromptRunsInput, Prisma.OrganizationUncheckedCreateWithoutPromptRunsInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutPromptRunsInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutPromptRunsInput, Prisma.OrganizationUncheckedUpdateWithoutPromptRunsInput>
+}
+
+export type OrganizationUpdateWithoutPromptRunsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  clients?: Prisma.ClientUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutOrganizationNestedInput
+  users?: Prisma.UserUpdateManyWithoutOrganizationNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutPromptRunsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumOrganizationTypeFieldUpdateOperationsInput | $Enums.OrganizationType
+  inviteCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  clients?: Prisma.ClientUncheckedUpdateManyWithoutOrganizationNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutOrganizationNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutOrganizationNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutOrganizationNestedInput
 }
@@ -704,6 +809,7 @@ export type OrganizationCountOutputType = {
   clients: number
   invoices: number
   users: number
+  promptRuns: number
   passwordResetTokens: number
 }
 
@@ -711,6 +817,7 @@ export type OrganizationCountOutputTypeSelect<ExtArgs extends runtime.Types.Exte
   clients?: boolean | OrganizationCountOutputTypeCountClientsArgs
   invoices?: boolean | OrganizationCountOutputTypeCountInvoicesArgs
   users?: boolean | OrganizationCountOutputTypeCountUsersArgs
+  promptRuns?: boolean | OrganizationCountOutputTypeCountPromptRunsArgs
   passwordResetTokens?: boolean | OrganizationCountOutputTypeCountPasswordResetTokensArgs
 }
 
@@ -748,6 +855,13 @@ export type OrganizationCountOutputTypeCountUsersArgs<ExtArgs extends runtime.Ty
 /**
  * OrganizationCountOutputType without action
  */
+export type OrganizationCountOutputTypeCountPromptRunsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PromptRunWhereInput
+}
+
+/**
+ * OrganizationCountOutputType without action
+ */
 export type OrganizationCountOutputTypeCountPasswordResetTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.PasswordResetTokenWhereInput
 }
@@ -763,6 +877,7 @@ export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   clients?: boolean | Prisma.Organization$clientsArgs<ExtArgs>
   invoices?: boolean | Prisma.Organization$invoicesArgs<ExtArgs>
   users?: boolean | Prisma.Organization$usersArgs<ExtArgs>
+  promptRuns?: boolean | Prisma.Organization$promptRunsArgs<ExtArgs>
   passwordResetTokens?: boolean | Prisma.Organization$passwordResetTokensArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["organization"]>
@@ -799,6 +914,7 @@ export type OrganizationInclude<ExtArgs extends runtime.Types.Extensions.Interna
   clients?: boolean | Prisma.Organization$clientsArgs<ExtArgs>
   invoices?: boolean | Prisma.Organization$invoicesArgs<ExtArgs>
   users?: boolean | Prisma.Organization$usersArgs<ExtArgs>
+  promptRuns?: boolean | Prisma.Organization$promptRunsArgs<ExtArgs>
   passwordResetTokens?: boolean | Prisma.Organization$passwordResetTokensArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizationCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -811,6 +927,7 @@ export type $OrganizationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     clients: Prisma.$ClientPayload<ExtArgs>[]
     invoices: Prisma.$InvoicePayload<ExtArgs>[]
     users: Prisma.$UserPayload<ExtArgs>[]
+    promptRuns: Prisma.$PromptRunPayload<ExtArgs>[]
     passwordResetTokens: Prisma.$PasswordResetTokenPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1217,6 +1334,7 @@ export interface Prisma__OrganizationClient<T, Null = never, ExtArgs extends run
   clients<T extends Prisma.Organization$clientsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$clientsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ClientPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   invoices<T extends Prisma.Organization$invoicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$invoicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   users<T extends Prisma.Organization$usersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$usersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  promptRuns<T extends Prisma.Organization$promptRunsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$promptRunsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PromptRunPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   passwordResetTokens<T extends Prisma.Organization$passwordResetTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$passwordResetTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PasswordResetTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1710,6 +1828,30 @@ export type Organization$usersArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.UserScalarFieldEnum | Prisma.UserScalarFieldEnum[]
+}
+
+/**
+ * Organization.promptRuns
+ */
+export type Organization$promptRunsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PromptRun
+   */
+  select?: Prisma.PromptRunSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PromptRun
+   */
+  omit?: Prisma.PromptRunOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PromptRunInclude<ExtArgs> | null
+  where?: Prisma.PromptRunWhereInput
+  orderBy?: Prisma.PromptRunOrderByWithRelationInput | Prisma.PromptRunOrderByWithRelationInput[]
+  cursor?: Prisma.PromptRunWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PromptRunScalarFieldEnum | Prisma.PromptRunScalarFieldEnum[]
 }
 
 /**

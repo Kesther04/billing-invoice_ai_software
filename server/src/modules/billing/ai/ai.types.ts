@@ -1,53 +1,59 @@
-// src/modules/billing/ai/ai.types.ts
+import type { Prisma } from "../../../generated/client";
 
-import type { InvoiceParty, LineItemInput } from "../invoices/invoice.types";
-
-// ─── Request / Response shapes ────────────────────────────────────────────────
-
+/* ── Request shape from the frontend ───────────────────────────────────────── */
 export interface GenerateInvoiceRequest {
   prompt: string;
-  fromParty: {          // ← add — populated from auth middleware
-    name: string;
-    email: string;
-    organizationName: string;
-  };
 }
 
-export interface GenerateInvoiceResponse {
-  invoice: ParsedInvoiceFromAI;
-  confidence: number;
-  suggestions: string[];
-}
-
-// ─── What the AI parser produces ─────────────────────────────────────────────
-
-export interface ParsedInvoiceFromAI {
+/* ── What the parser returns — a structured draft matching the frontend
+   Invoice shape, before it's been saved to the DB ──────────────────────────── */
+export interface ParsedInvoiceDraft {
   invoiceNumber?: string;
-  from?: InvoiceParty;
-  to?: InvoiceParty;
-  issueDate?: string;
-  dueDate?: string;
-  lineItems: LineItemInput[];
-  taxRate?: number;
-  discountAmount?: number;
-  currency?: string;
+  fromParty: {
+    name?: string;
+    email?: string;
+    company?: string;
+    address?: string;
+  };
+  toParty: {
+    name?: string;
+    email?: string;
+    company?: string;
+    address?: string;
+  };
+  issueDate?: string;       // ISO date string
+  dueDate?: string;         // ISO date string
+  lineItems: {
+    description: string;
+    quantity: number;
+    unitPrice: number;
+    total: number;
+  }[];
+  subtotal: number;
+  taxRate: number;
+  taxAmount: number;
+  discountAmount: number;
+  total: number;
+  currency: string;
   notes?: string;
+  aiConfidence?: number;
 }
 
-// ─── Raw OpenAI function-call result (before validation) ─────────────────────
-export interface RawAIInvoicePayload {
-  client_name?:        string | null;
-  client_email?:       string | null;
-  client_company?:     string | null;
-  client_address?:     string | null;  // ← add
-  client_phone?:       string | null;  // ← add
-  service_description?: string | null;
-  amount?:             number | null;
-  quantity?:           number | null;
-  unit_price?:         number | null;
-  line_items?:         { description: string; quantity: number; unit_price: number }[] | null;
-  currency?:           string | null;
-  tax_rate?:           number | null;
-  due_days?:           number | null;
-  notes?:              string | null;
+/* ── What the generate endpoint returns to the frontend ─────────────────────── */
+export interface GenerateInvoiceResponse {
+  draft: ParsedInvoiceDraft;
+  promptRunId: string;      // so the frontend can link the saved invoice back
 }
+
+/* ── PromptRun as returned from the DB (serialized for the API) ─────────────── */
+export interface PromptRunDTO {
+  id: string;
+  prompt: string;
+  status: "success" | "error";
+  draft?: ParsedInvoiceDraft;
+  error?: string;
+  createdAt: string;
+}
+
+/* ── Prisma create input alias ───────────────────────────────────────────────── */
+export type PromptRunCreateInput = Prisma.PromptRunCreateInput;

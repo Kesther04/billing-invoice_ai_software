@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTheme } from "../../../shared/themes/ThemeContext";
-import { invoiceService } from "../api";
+import { invoiceBillingService } from "../api";
 import type { Invoice, LineItem } from "../types";
 import InvoicePreview from "../components/InvoicePreview";
 import InvoiceEditor from "../components/InvoiceEditor";
@@ -30,7 +30,7 @@ export default function InvoiceDetailsPage() {
   useEffect(() => {
     if (!id) return;
     setLoading(true);
-    invoiceService
+    invoiceBillingService
       .get(id)
       .then((inv) => setInvoice(inv))
       .catch(() => setNotFound(true))
@@ -69,7 +69,7 @@ export default function InvoiceDetailsPage() {
     if (!invoice) return;
     setIsSaving(true);
     try {
-      const result = await invoiceService.update(invoice.id, invoice);
+      const result = await invoiceBillingService.update(invoice.id, invoice);
       setInvoice(result);
       setView("preview");
       setSaved(true);

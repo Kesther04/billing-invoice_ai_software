@@ -13,7 +13,8 @@ export function useRevenueAnalytics() {
     try {
       const d = await dashboardServices.fetchRevenueAnalytics();
       setData(d);
-    } catch {
+    } catch (err: any) {
+      console.log(err);
       // Fall back to mock
       await new Promise((r) => setTimeout(r, 600));
       setData(buildMockAnalytics());

@@ -7,6 +7,7 @@ import {
   PasswordResetToken,
   OrganizationType,
   UserRole,
+  UserSession
 } from "../../generated/client";
 import { SafeUser, SafeOrg } from "./user.types";
 
@@ -190,3 +191,97 @@ export async function updateUserPassword(userId: string, passwordHash: string): 
     data:  { password: passwordHash },
   });
 }
+
+// ─── User Sessions (Refresh Tokens) ──────────────────────────────────────────
+
+export async function createUserSession(data: {
+  userId: string;
+  tokenHash: string;
+  expiresAt: Date;
+  ipAddress?: string;
+  userAgent?: string;
+}): Promise<UserSession> {
+  return prisma.userSession.create({
+    data,
+  });
+}
+
+export async function findUserSessionByTokenHash(
+  tokenHash: string
+): Promise<UserSession | null> {
+  return prisma.userSession.findUnique({
+    where: {
+      tokenHash,
+    },
+  });
+}
+
+export async function updateUserSession(
+  id: string,
+  data: {
+    tokenHash?: string;
+    expiresAt?: Date;
+    lastUsedAt?: Date;
+    revokedAt?: Date | null;
+    ipAddress?: string;
+    userAgent?: string;
+  }
+): Promise<UserSession> {
+  return prisma.userSession.update({
+    where: { id },
+    data,
+  });
+}
+
+export async function revokeUserSession(id: string): Promise<void> {
+  await prisma.userSession.update({
+    where: { id },
+    data: {
+      revokedAt: new Date(),
+    },
+  });
+}
+
+export async function deleteUserSession(id: string): Promise<void> {
+  await prisma.userSession.delete({
+    where: { id },
+  });
+}
+
+export async function deleteAllUserSessions(
+  userId: string
+): Promise<void> {
+  await prisma.userSession.deleteMany({
+    where: {
+      userId,
+    },
+  });
+}
+
+export async function deleteExpiredUserSessions(): Promise<void> {
+  await prisma.userSession.deleteMany({
+    where: {
+      expiresAt: {
+        lt: new Date(),
+      },
+    },
+  });
+}
+
+export async function findUserSessions(
+  userId: string
+): Promise<UserSession[]> {
+  return prisma.userSession.findMany({
+    where: {
+      userId,
+      revokedAt: null,
+      expiresAt: {
+        gt: new Date(),
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+}
+
