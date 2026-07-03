@@ -35,21 +35,6 @@ function handleError(err: unknown, res: Response): void {
   res.status(500).json({ success: false, message: "Internal server error" });
 }
 
-//─── Set Refresh Token Cookie ────────────────────────────────────────────────
-const setRefreshTokenCookie = (res: Response, data: any) => {
-  const isProduction = process.env.NODE_ENV === "production";
-
-  res.cookie("refreshToken", data.refreshToken, {
-    httpOnly: true,
-    secure: isProduction,                    // HTTPS only in production
-    sameSite: isProduction ? "none" : "lax", // Cross-site only in production
-    maxAge: REFRESH_MAX_AGE,
-    path: "/",
-  });
-
-  const {refreshToken, ...response} = data;
-  return response;
-};
 
 // ─── POST /auth/register/individual ──────────────────────────────────────────
 // Body: { name, email, password }
@@ -249,12 +234,21 @@ export async function logoutHandler(
     }
   }
 
-  const isProduction = process.env.NODE_ENV === "production";
+  // const isProduction = process.env.NODE_ENV === "production";
 
+  // local development
+  // res.clearCookie("refreshToken", {
+  //   httpOnly: true,
+  //   secure: false,      // localhost is not HTTPS
+  //   sameSite: "lax",    // allows same-site cookies
+  //   path: "/",
+  // });
+
+  // production cross-site
   res.clearCookie("refreshToken", {
     httpOnly: true,
-    secure: isProduction,
-    sameSite: isProduction ? "none" : "lax",
+    secure: true,       // required for sameSite=none
+    sameSite: "none",   // required for cross-site cookies
     path: "/",
   });
 
@@ -263,3 +257,33 @@ export async function logoutHandler(
     message: "Logged out successfully",
   });
 }
+
+
+//─── Set Refresh Token Cookie ────────────────────────────────────────────────
+// development local 
+// const setRefreshTokenCookie = (res: Response, data: any) => {
+//   res.cookie("refreshToken", data.refreshToken, {
+//     httpOnly: true,
+//     secure: false,      // localhost isn't HTTPS
+//     sameSite: "lax",    // works for localhost
+//     maxAge: REFRESH_MAX_AGE,
+//     path: "/",
+//   });
+
+//   const { refreshToken, ...response } = data;
+//   return response;
+// };
+
+// production cross-site
+const setRefreshTokenCookie = (res: Response, data: any) => {
+  res.cookie("refreshToken", data.refreshToken, {
+    httpOnly: true,
+    secure: true,       // REQUIRED for SameSite=None
+    sameSite: "none",   // REQUIRED for cross-site cookies
+    maxAge: REFRESH_MAX_AGE,
+    path: "/",
+  });
+
+  const { refreshToken, ...response } = data;
+  return response;
+};
