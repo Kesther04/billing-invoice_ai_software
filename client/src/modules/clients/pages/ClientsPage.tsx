@@ -149,9 +149,27 @@ import { motion } from "framer-motion";
 import { Users, Clock3, Sparkles } from "lucide-react";
 import { useTheme } from "../../../shared/themes/ThemeContext";
 import { t } from "../../../shared/utils/themeClasses";
+// import { useAuth } from "../../auth/context/AuthContext";
+// import { useEffect } from "react";
+// import { useNavigate } from "react-router-dom";
 
 export default function ClientsPage() {
   const { dark } = useTheme();
+  // const { loading, accessToken } = useAuth();
+  // const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   // Wait until AuthProvider finishes restoring the session
+  //   if (loading) return;
+
+  //   // User is not authenticated
+  //   if (!accessToken) {
+  //     navigate("/login");
+  //   }
+
+  // }, [loading, accessToken]);
+  
+
 
   return (
     <div

@@ -37,11 +37,14 @@ function handleError(err: unknown, res: Response): void {
 
 //─── Set Refresh Token Cookie ────────────────────────────────────────────────
 const setRefreshTokenCookie = (res: Response, data: any) => {
+  const isProduction = process.env.NODE_ENV === "production";
+
   res.cookie("refreshToken", data.refreshToken, {
     httpOnly: true,
-    secure:   process.env.NODE_ENV === "development",
-    sameSite: "strict",
-    maxAge:   REFRESH_MAX_AGE,
+    secure: isProduction,                    // HTTPS only in production
+    sameSite: isProduction ? "none" : "lax", // Cross-site only in production
+    maxAge: REFRESH_MAX_AGE,
+    path: "/",
   });
 
   const {refreshToken, ...response} = data;
@@ -200,6 +203,7 @@ export async function refreshHandler(
   req: Request,
   res: Response
 ): Promise<void> {
+  
   const refreshToken = req.cookies?.refreshToken;
 
   if (!refreshToken) {
@@ -245,10 +249,13 @@ export async function logoutHandler(
     }
   }
 
+  const isProduction = process.env.NODE_ENV === "production";
+
   res.clearCookie("refreshToken", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "development",
-    sameSite: "strict",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
+    path: "/",
   });
 
   res.status(200).json({

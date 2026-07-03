@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { t } from "../shared/utils/themeClasses";
 import { useTheme } from "../shared/themes/ThemeContext";
 import { MobileSidebar, Sidebar, Topbar } from "../shared/components/Navbar";
-import { useAuth } from "../modules/auth/context/AuthContext";
+import {  useAuth } from "../modules/auth/context/AuthContext";
 
 
 
@@ -19,17 +19,19 @@ export default function MainLayout(): React.ReactElement {
   
   
   
-  const { accessToken, user } = useAuth();
+  const { accessToken, user, loading } = useAuth();
 
   // check if user is logged in, if not redirect to login page
   const useRequireAuth = () => {
     const navigate = useNavigate();
     
     useEffect(() => {
+      if (loading) return;
+      
       if (!accessToken) {
         navigate("/auth/login", { replace: true });
       }
-    }, [accessToken, navigate]);
+    }, [accessToken, navigate, loading]);
   };
 
   useRequireAuth();
@@ -42,72 +44,74 @@ export default function MainLayout(): React.ReactElement {
   const sidebarWidth = sidebarCollapsed ? 72 : 240;
   const {dark, toggleTheme} = useTheme();
   return (
-    <div
-      className={`min-h-screen ${t.bg(dark)} transition-colors duration-300`}
-    >
-      
+    // <AuthProvider>
+      <div
+        className={`min-h-screen ${t.bg(dark)} transition-colors duration-300`}
+      >
+        
 
-      {/* Desktop Sidebar */}
-      <div className="hidden md:block">
-        <Sidebar
+        {/* Desktop Sidebar */}
+        <div className="hidden md:block">
+          <Sidebar
+            dark={dark}
+            collapsed={sidebarCollapsed}
+            onCollapse={setSidebarCollapsed}
+            currentPath={currentPath}
+          />
+        </div>
+
+        {/* Mobile Sidebar */}
+        <MobileSidebar
           dark={dark}
-          collapsed={sidebarCollapsed}
-          onCollapse={setSidebarCollapsed}
+          open={mobileMenuOpen}
+          onClose={() => setMobileMenuOpen(false)}
           currentPath={currentPath}
         />
-      </div>
 
-      {/* Mobile Sidebar */}
-      <MobileSidebar
-        dark={dark}
-        open={mobileMenuOpen}
-        onClose={() => setMobileMenuOpen(false)}
-        currentPath={currentPath}
-      />
+        {/* Topbar — full width, shifts right on desktop */}
+        <motion.div
+          animate={{ paddingLeft: sidebarWidth }}
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          className="hidden md:block"
+        >
+          <Topbar
+            dark={dark}
+            toggleTheme={toggleTheme}
+            sidebarCollapsed={sidebarCollapsed}
+            name ={user?.name || null}
+            onMobileMenuToggle={() => setMobileMenuOpen(true)}
+          />
+        </motion.div>
 
-      {/* Topbar — full width, shifts right on desktop */}
-      <motion.div
-        animate={{ paddingLeft: sidebarWidth }}
-        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        className="hidden md:block"
-      >
-        <Topbar
-          dark={dark}
-          toggleTheme={toggleTheme}
-          sidebarCollapsed={sidebarCollapsed}
-          name ={user?.name || null}
-          onMobileMenuToggle={() => setMobileMenuOpen(true)}
-        />
-      </motion.div>
-
-      {/* Mobile topbar (no left padding) */}
-      <div className="md:hidden">
-        <Topbar
-          dark={dark}
-          toggleTheme={toggleTheme}
-          sidebarCollapsed={false}
-          name={user?.name || null}
-          onMobileMenuToggle={() => setMobileMenuOpen(true)}
-        />
-      </div>
-
-      {/* Page content */}
-      <motion.main
-        animate={{ paddingLeft: sidebarWidth }}
-        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        className="hidden md:block pt-16 min-h-screen"
-      >
-        <div className="p-6 lg:p-8">
-          <Outlet />
+        {/* Mobile topbar (no left padding) */}
+        <div className="md:hidden">
+          <Topbar
+            dark={dark}
+            toggleTheme={toggleTheme}
+            sidebarCollapsed={false}
+            name={user?.name || null}
+            onMobileMenuToggle={() => setMobileMenuOpen(true)}
+          />
         </div>
-      </motion.main>
 
-      {/* Mobile content */}
-      <main className="md:hidden pt-16 min-h-screen">
-        <div className="p-4">
-          <Outlet />
-        </div>
-      </main>
-    </div>
+        {/* Page content */}
+        <motion.main
+          animate={{ paddingLeft: sidebarWidth }}
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          className="hidden md:block pt-16 min-h-screen"
+        >
+          <div className="p-6 lg:p-8">
+            <Outlet />
+          </div>
+        </motion.main>
+
+        {/* Mobile content */}
+        <main className="md:hidden pt-16 min-h-screen">
+          <div className="p-4">
+            <Outlet />
+          </div>
+        </main>
+      </div>
+    // </AuthProvider>
   );
 }

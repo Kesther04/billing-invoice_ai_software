@@ -3,11 +3,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import { nanoid } from "nanoid";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../../shared/themes/ThemeContext";
-import { invoiceBillingService } from "../api";
 import type { Invoice, InvoiceStatus, LineItem } from "../types";
 import InvoiceEditor from "../components/InvoiceEditor";
 import InvoicePreview from "../components/InvoicePreview";
 import InvoiceStatusBadge from "../components/InvoiceStatusBadge";
+import { useInvoice } from "../hooks/useInvoice";
 
 /* ─────────────────────────────────────────────────────────────────
    TYPES
@@ -94,14 +94,26 @@ export default function InvoiceListPage() {
   const [isSaving, setIsSaving]         = useState(false);
   const [saved, setSaved]               = useState(false);
 
+  const { listInvoices, createInvoice, updateInvoice } = useInvoice()
   /* ── load from API ─────────────────────────────────────────── */
   useEffect(() => {
-    invoiceBillingService
-      .listInvoices()
-      .then(setInvoices)
-      .catch(() => setInvoices(MOCK_INVOICES))
-      .finally(() => setIsLoading(false));
-  }, []);
+  const loadInvoices = async () => {
+    try {
+      const invoices = await listInvoices();
+      if (invoices) {
+        setInvoices(invoices);
+      }
+      
+    } catch (error) {
+      console.error(error);
+      setInvoices(MOCK_INVOICES);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  loadInvoices();
+}, [listInvoices]);
 
   /* ── derived ────────────────────────────────────────────────── */
   const filtered = useMemo(() =>
@@ -167,29 +179,85 @@ export default function InvoiceListPage() {
   /* ── save — same invoiceService used by AiInvoicePage ─────────
      A manually created invoice and an AI-drafted invoice both end up
      here: same endpoint, same shape, no distinction once persisted. */
+  // const handleSave = useCallback(async () => {
+  //   if (!activeInvoice) return;
+  //   setIsSaving(true);
+  //   try {
+  //     let result: Invoice;
+  //     if (view.name === "create") {
+  //       result = await invoiceBillingService.create(activeInvoice);
+  //       setInvoices((prev) => [result, ...prev]);
+  //     } else {
+  //       result = await invoiceBillingService.update(activeInvoice.id, activeInvoice);
+  //       setInvoices((prev) => prev.map((i) => (i.id === result.id ? result : i)));
+  //     }
+  //     setView({ name: "preview", invoice: result });
+  //   } catch {
+  //     // Keep the user on the current view; InvoiceEditor/Preview's
+  //     // Save button returning to non-saving state is enough signal
+  //     // for now — surfacing a toast here is a good follow-up.
+  //   } finally {
+  //     setIsSaving(false);
+  //     setSaved(true);
+  //     setTimeout(() => setSaved(false), 2500);
+  //   }
+  // }, [activeInvoice, view.name]);
+
+  // const {
+  //   createInvoice,
+  //   updateInvoice,
+  // } = useInvoice();
+
   const handleSave = useCallback(async () => {
     if (!activeInvoice) return;
+
     setIsSaving(true);
+
     try {
       let result: Invoice;
+
       if (view.name === "create") {
-        result = await invoiceBillingService.create(activeInvoice);
+        const inv = await createInvoice(activeInvoice);
+
+        if (!inv) {
+          throw new Error("Invoice creation failed: result is null");
+        }
+        result = inv;
+
         setInvoices((prev) => [result, ...prev]);
       } else {
-        result = await invoiceBillingService.update(activeInvoice.id, activeInvoice);
-        setInvoices((prev) => prev.map((i) => (i.id === result.id ? result : i)));
+        const inv = await updateInvoice(activeInvoice.id, activeInvoice);
+
+        if (!inv) {
+          throw new Error("Invoice update failed: result is null");
+        }
+        result = inv;
+
+        setInvoices((prev) =>
+          prev.map((invoice) =>
+            invoice.id === result.id ? result : invoice
+          )
+        );
       }
-      setView({ name: "preview", invoice: result });
-    } catch {
-      // Keep the user on the current view; InvoiceEditor/Preview's
-      // Save button returning to non-saving state is enough signal
-      // for now — surfacing a toast here is a good follow-up.
-    } finally {
-      setIsSaving(false);
+
+      setView({
+        name: "preview",
+        invoice: result,
+      });
+
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSaving(false);
     }
-  }, [activeInvoice, view.name]);
+  }, [
+    activeInvoice,
+    view.name,
+    createInvoice,
+    updateInvoice,
+  ]);
 
   /* ── step indicator logic ──────────────────────────────────── */
   const steps: { name: ViewName; label: string }[] = view.name === "list"

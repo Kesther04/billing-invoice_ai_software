@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTheme } from "../../../shared/themes/ThemeContext";
-import { invoiceBillingService } from "../api";
 import type { Invoice, LineItem } from "../types";
 import InvoicePreview from "../components/InvoicePreview";
 import InvoiceEditor from "../components/InvoiceEditor";
+import { useInvoice } from "../hooks/useInvoice";
 
 type LocalView = "preview" | "edit";
 
@@ -27,14 +27,27 @@ export default function InvoiceDetailsPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [saved, setSaved]       = useState(false);
 
+  const { getInvoice, updateInvoice } = useInvoice();
+  
   useEffect(() => {
     if (!id) return;
     setLoading(true);
-    invoiceBillingService
-      .getInvoice(id)
-      .then((inv) => setInvoice(inv))
-      .catch(() => setNotFound(true))
-      .finally(() => setLoading(false));
+
+    const loadInvoice = async () => {
+      try {
+        const invoice = await getInvoice(id);
+        if (invoice) {
+          setInvoice(invoice);
+        }
+      } catch (error) {
+        console.error(error);
+        setNotFound(true);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadInvoice()
+    
   }, [id]);
 
   const patch = (updates: Partial<Invoice>) => {
@@ -69,7 +82,7 @@ export default function InvoiceDetailsPage() {
     if (!invoice) return;
     setIsSaving(true);
     try {
-      const result = await invoiceBillingService.update(invoice.id, invoice);
+      const result = await updateInvoice(invoice.id, invoice);
       setInvoice(result);
       setView("preview");
       setSaved(true);

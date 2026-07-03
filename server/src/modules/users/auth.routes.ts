@@ -81,8 +81,8 @@ router.get("/me", requireAuth, getMeHandler);
 
 
 
-router.post("/refresh", requireAuth, refreshHandler);
+router.post("/refresh", refreshHandler);
 
 
-router.post("/logout", requireAuth, logoutHandler);
+router.post("/logout", logoutHandler);
 export default router;

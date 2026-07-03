@@ -2,24 +2,12 @@ import { apiClient } from "../../shared/api/client";
 import type { RevenueAnalytics } from "./types";
 
 
-// function headers(): HeadersInit {
-//   const raw = localStorage.getItem("token");
-//   const token = raw ? JSON.parse(raw).accessToken : null;
-//   return { ...(token ? { Authorization: `Bearer ${token}` } : {}) };
-// }
-
 export const dashboardServices = {
   fetchRevenueAnalytics: async (): Promise<RevenueAnalytics> => {
-    const response = await apiClient.get("/analytics/revenue");
+    const response = await apiClient.get("/revenue/analytics");
     return response.data;
   }
 }
-
-// export async function fetchRevenueAnalytics(): Promise<RevenueAnalytics> {
-//   const r = await fetch(`${BASE}/analytics/revenue`, { headers: headers() });
-//   if (!r.ok) throw new Error("Failed to fetch analytics");
-//   return r.json();
-// }
 
 // Exported for tests / Storybook
 export function buildMockAnalytics(): RevenueAnalytics {

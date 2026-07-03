@@ -39,10 +39,10 @@ interface NavItem {
 ══════════════════════════════════════════ */
 const primaryNav: NavItem[] = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
-  { label: "Invoices", icon: FileText, href: "/billing/invoices", badge: "6" },
+  { label: "Invoices", icon: FileText, href: "/billing/invoices"},
   { label: "Clients", icon: Users, href: "/clients" },
   { label: "Revenue", icon: TrendingUp, href: "/revenue" },
-  { label: "AI Billing", icon: Zap, href: "/billing/ai", badge: "New" },
+  { label: "AI Billing", icon: Zap, href: "/billing/ai" },
 ];
 
 const secondaryNav: NavItem[] = [

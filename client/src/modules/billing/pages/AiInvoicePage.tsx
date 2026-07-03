@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../../shared/themes/ThemeContext";
-import { useInvoiceAI } from "../hooks/useInvoiceAI";
+import { useAI } from "../hooks/useAI";
 import { invoiceBillingService } from "../api";
 import type { Invoice, LineItem } from "../types";
 import InvoicePromptInput from "../components/InvoicePromptInput";
@@ -35,7 +35,7 @@ function withDefaults(draft: Partial<Invoice>): Partial<Invoice> {
 export default function AiInvoicePage() {
   const { dark } = useTheme();
   const navigate = useNavigate();
-  const { state, setPrompt, generate, loadHistory } = useInvoiceAI();
+  const { state, setPrompt, generate, loadHistory } = useAI();
 
   const [step, setStep] = useState<LocalStep>("describe");
   const [draft, setDraft] = useState<Partial<Invoice> | null>(null);
@@ -134,9 +134,8 @@ export default function AiInvoicePage() {
           {STEPS.map((s, i) => (
             <React.Fragment key={s}>
               <span
-                className={`text-xs font-medium transition-colors ${
-                  i === stepIndex ? stepActive : i < stepIndex ? stepDone : stepInactive
-                }`}
+                className={`text-xs font-medium transition-colors ${i === stepIndex ? stepActive : i < stepIndex ? stepDone : stepInactive
+                  }`}
               >
                 {i < stepIndex ? "✓ " : `${i + 1}. `}{s}
               </span>

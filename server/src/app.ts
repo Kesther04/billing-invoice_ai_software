@@ -3,9 +3,19 @@ import cors from "cors";
 import { env } from "./config/env";
 import { authRouter } from "./modules/users";
 import  billRouter  from "./modules/billing";
+import revRouter from "./modules/revenue-intelligence";
+import cookieParser from "cookie-parser";
 
 // express configuration
 const app = express();
+
+// Cookie Middleware
+app.use(cookieParser())
+
+
+// JSON middleware
+app.use(express.json());
+
 
 const normalizeOrigin = (value: string) => value.replace(/\/+$/, "");
 
@@ -29,9 +39,6 @@ app.use(cors({
   optionsSuccessStatus: 204,
 }));
 
-// JSON middleware
-app.use(express.json());
-
 app.get("/", (_, res) => {
   res.json({message: "Welcome to the TraqBill AI server!"});
 });
@@ -39,7 +46,7 @@ app.get("/", (_, res) => {
 // module routers mounted
 app.use("/auth", authRouter); // Mount all auth routes under /auth
 app.use("/billing", billRouter ); // Mount all invoice and AI routes under /billing
-
+app.use("/revenue", revRouter); // Mount all revenue analytics routes under /revenue
 // error handling
 
 // rate limiting

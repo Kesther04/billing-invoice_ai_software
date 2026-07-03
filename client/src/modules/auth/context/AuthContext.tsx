@@ -83,6 +83,7 @@ export function AuthProvider({
       const res = await authService.refresh();
 
       saveToken(res.data.accessToken);
+      
       setAccessToken(res.data.accessToken);
       setUser(res.data.user);
       setOrganization(res.data.organization);
@@ -120,13 +121,34 @@ export function AuthProvider({
    * Since the access token is stored only in memory,
    * re-fetch a new one from the refresh cookie.
    */
+  // useEffect(() => {
+  //   const initialize = async () => {
+  //     await refresh();
+  //     setLoading(false);
+  //   };
+
+  //   initialize();
+  // }, []);
+
   useEffect(() => {
-    const initialize = async () => {
-      await refresh();
-      setLoading(false);
+    const restoreSession = async () => {
+      try {
+        const result = await authService.refresh();
+        saveToken(result.data.accessToken);
+
+        setUser(result.data.user);
+        setOrganization(result.data.organization);
+        setAccessToken(result.data.accessToken);
+      } catch {
+        setUser(null);
+        setOrganization(null);
+        setAccessToken(null);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    initialize();
+    restoreSession();
   }, []);
 
   return (

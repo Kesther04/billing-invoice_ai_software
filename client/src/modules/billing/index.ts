@@ -10,7 +10,8 @@ export { default as InvoiceStatusBadge } from "./components/InvoiceStatusBadge";
 export { default as InvoicePromptInput } from "./components/InvoicePromptInput";
 export { default as PromptHistoryList } from "./components/PromptHistoryList";
 
-export { useInvoiceAI } from "./hooks/useInvoiceAI";
+export { useAI } from "./hooks/useAI";
+export {useInvoice} from "./hooks/useInvoice";
 
 export * from "./types";
 export * from "./api";
