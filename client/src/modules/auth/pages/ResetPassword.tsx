@@ -14,7 +14,9 @@ import { useResetPassword } from "../hooks/useReset";
 export const ResetPassword: React.FC = () => {
   const { dark } = useTheme();
   const { resetPassword, isLoading, error } = useResetPassword();
-  const [form,setForm] = useState({ token: "", newPassword: "" });
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlToken = urlParams.get("token");
+  const [form,setForm] = useState({ token: urlToken || "", newPassword: "" });
   const { token, newPassword } = form;
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,16 +68,16 @@ export const ResetPassword: React.FC = () => {
                         {error}
                       </p>
                     )}
-                  <Input
+                  {/* <Input
                     label="Token"
                     type="text"
                     value={token}
                     onChange={(e) => setForm({...form, token: e.target.value})}
                     placeholder="Enter your token"
                     dark={dark}
-                  />
+                  /> */}
                   <Input
-                    label="Password"
+                    label="Enter New Password"
                     type="password"
                     value={newPassword}
                     onChange={(e) => setForm({...form, newPassword: e.target.value})}
