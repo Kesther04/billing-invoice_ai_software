@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { nanoid } from "nanoid";
 import { aiBillingService } from "../api";
-import type { Invoice, PromptRun } from "../types";
+import type {  ParsedInvoiceDraft, PromptRun } from "../types";
 import { useAuth } from "../../auth/context/AuthContext";
 
 interface UseAIState {
@@ -28,7 +28,7 @@ export function useAI() {
 
   /* Generate a draft from a prompt. Returns the draft (or null on failure)
      so the caller decides what to do next — it never saves anything itself. */
-  const generate = useCallback(async (prompt: string): Promise<Partial<Invoice> | null> => {
+  const generate = useCallback(async (prompt: string): Promise<ParsedInvoiceDraft | null> => {
     // Wait until authentication has been restored
     if (authLoading) return null;
 
@@ -49,8 +49,9 @@ export function useAI() {
       status: "success",
     };
     try {
-      const draft = await aiBillingService.generate(prompt);
-      run.draft = draft as Invoice;
+      const {draft, promptRunId} = await aiBillingService.generate(prompt);
+      run.draft = draft;
+      run.id = promptRunId;
       setState((s) => ({
         ...s,
         isGenerating: false,

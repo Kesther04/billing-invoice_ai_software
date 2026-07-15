@@ -24,21 +24,13 @@ export async function generateInvoiceDraft(params: {
   let rawResponse: string;
 
   try {
-    // const message = await client.chat.completions.create({
-    //   model:      env.GROQ_MODEL ?? "llama-3.3-70b-versatile",
-    //   temperature: 0.1,
-    //   max_tokens: 1024,
-    //   response_format: { type: "json_object" },
-    //   messages:   [{ role: "user", content: buildUserMessage(prompt) }],
-    // });
-
     const message = await client.chat.completions.create({
       model:      env.GROQ_MODEL ?? "llama-3.3-70b-versatile",
       temperature: 0.1,
       max_tokens: 1024,
       response_format: { type: "json_object" },
       messages:   [
-        { role: "system", content: SYSTEM_PROMPT }, // <-- Add this line here
+        { role: "system", content: SYSTEM_PROMPT },
         { role: "user", content: buildUserMessage(prompt) }
       ],
     });

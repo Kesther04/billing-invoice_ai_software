@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../../shared/themes/ThemeContext";
 import { useAI } from "../hooks/useAI";
 import { invoiceBillingService } from "../api";
-import type { Invoice, LineItem } from "../types";
+import type { Invoice, LineItem, ParsedInvoiceDraft } from "../types";
 import InvoicePromptInput from "../components/InvoicePromptInput";
 import InvoicePreview from "../components/InvoicePreview";
 import InvoiceEditor from "../components/InvoiceEditor";
@@ -16,7 +16,7 @@ const STEPS = ["Describe", "Preview", "Edit"] as const;
 
 /* Sensible blank-ish defaults for fields the AI parser doesn't fill in,
    so a draft is never missing required pieces of the Invoice shape. */
-function withDefaults(draft: Partial<Invoice>): Partial<Invoice> {
+function withDefaults(draft: Partial<ParsedInvoiceDraft>): Partial<Invoice> {
   const today = new Date();
   const due = new Date(today);
   due.setDate(due.getDate() + 14);
@@ -27,7 +27,9 @@ function withDefaults(draft: Partial<Invoice>): Partial<Invoice> {
     currency: "USD",
     taxRate: 0,
     discountAmount: 0,
-    lineItems: [],
+    lineItems: draft.lineItems,
+    from: draft.fromParty,
+    to: draft.toParty,
     ...draft,
   };
 }

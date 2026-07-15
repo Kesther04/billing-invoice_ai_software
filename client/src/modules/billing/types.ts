@@ -44,6 +44,23 @@ export interface PromptRun {
   createdAt: string;
   status: "success" | "error";
   /* Present only when status === "success" — the parsed draft, not yet saved. */
-  draft?: Partial<Invoice>;
+  draft?: ParsedInvoiceDraft;
   error?: string;
 }
+
+export interface ParsedInvoiceDraft {
+  fromParty: Party;
+  toParty: Party;
+  lineItems: LineItem[];
+  subtotal: number;
+  taxRate: number;
+  taxAmount: number;
+  discountAmount: number;
+  total: number;
+  currency: string;
+  issueDate?: string;
+  dueDate?: string;
+  notes?: string;
+  aiConfidence?: number;
+}
+

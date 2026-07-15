@@ -1,9 +1,9 @@
 import { apiClient } from "../../shared/api/client";
-import type { PromptRun, Invoice } from "./types";
+import type { PromptRun, Invoice, ParsedInvoiceDraft } from "./types";
 
 // AI invoice related services
 export const aiBillingService = {
-  generate: async (prompt: string): Promise<Invoice> => {
+  generate: async (prompt: string): Promise<{draft: ParsedInvoiceDraft, promptRunId: string}> => {
     const response = await apiClient.post("/billing/ai/generate", { prompt });
     return response.data;
   },
