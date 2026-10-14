@@ -16,6 +16,8 @@ export async function generateInvoice(req: Request, res: Response): Promise<void
 
   const organizationId = (req as any).user?.organizationId;
   const createdById    = (req as any).user?.id;
+  const userName = (req as any).user?.sub;
+  const userEmail = (req as any).user?.email;
 
   if (!organizationId) {
     res.status(401).json({ message: "Unauthorized" });
@@ -27,6 +29,8 @@ export async function generateInvoice(req: Request, res: Response): Promise<void
       prompt:         prompt.trim(),
       organizationId,
       createdById,
+      userName,
+      userEmail
     });
     res.status(200).json(result);
   } catch (err) {

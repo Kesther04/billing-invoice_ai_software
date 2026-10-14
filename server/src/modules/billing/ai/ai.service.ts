@@ -1,6 +1,6 @@
 import Groq from "groq-sdk";
 import { env } from "../../../config/env";
-import { SYSTEM_PROMPT, buildUserMessage } from "./ai.prompt";
+import { getSystemPrompt, buildUserMessage } from "./ai.prompt";
 import { parseAIResponse, ParseError } from "./ai.parser";
 import * as aiRepository from "./ai.repository";
 import type { GenerateInvoiceResponse, PromptRunDTO } from "./ai.types";
@@ -12,32 +12,37 @@ const client = new Groq({
 /**
  * Generates a structured invoice draft from a natural language prompt.
  * Persists the PromptRun (success or failure) for history.
- * Returns the draft + promptRunId — never saves an Invoice itself.
+ * Returns the draft + promptRunId, never saves an Invoice itself.
  */
 export async function generateInvoiceDraft(params: {
   prompt: string;
   organizationId: string;
   createdById?: string;
+  userName: string;
+  userEmail: string;
 }): Promise<GenerateInvoiceResponse> {
-  const { prompt, organizationId, createdById } = params;
+  const { prompt, organizationId, createdById, userName, userEmail } = params;
 
   let rawResponse: string;
 
   try {
     const message = await client.chat.completions.create({
-      model:      env.GROQ_MODEL ?? "openai/gpt-oss-20b",
+      model: env.GROQ_MODEL ?? "openai/gpt-oss-20b",
       temperature: 0.0,
       max_tokens: 1024,
       response_format: { type: "json_object" },
-      messages:   [
-        { role: "system", content: SYSTEM_PROMPT },
-        { role: "user", content: buildUserMessage(prompt) }
+      messages: [
+        { role: "system", content: getSystemPrompt(undefined, userName, userEmail) },
+        { role: "user", content: buildUserMessage(prompt) },
       ],
     });
 
-    rawResponse = message.choices[0].message.content ?? "";
+    const choice = message.choices[0];
+    if (!choice?.message?.content) {
+      throw new Error("AI service returned an empty response.");
+    }
+    rawResponse = choice.message.content;
   } catch (err) {
-    // LLM call itself failed — persist the error run and re-throw
     const message = err instanceof Error ? err.message : "LLM call failed";
     await aiRepository.createErrorRun({
       prompt,
@@ -65,7 +70,6 @@ export async function generateInvoiceDraft(params: {
     throw new Error(message);
   }
 
-  // Persist the successful run
   const run = await aiRepository.createSuccessRun({
     prompt,
     draft,
@@ -80,8 +84,8 @@ export async function generateInvoiceDraft(params: {
 }
 
 /**
- * Returns the prompt history for an org — used by the AI Billing page's
- * history panel. Non-critical: failure here should never block the UI.
+ * Returns the prompt history for an org, used by the AI Billing page's
+ * history panel. Non critical: failure here should never block the UI.
  */
 export async function getPromptHistory(
   organizationId: string,
