@@ -25,8 +25,8 @@ export async function generateInvoiceDraft(params: {
 
   try {
     const message = await client.chat.completions.create({
-      model:      env.GROQ_MODEL ?? "llama-3.3-70b-versatile",
-      temperature: 0.1,
+      model:      env.GROQ_MODEL ?? "openai/gpt-oss-20b",
+      temperature: 0.0,
       max_tokens: 1024,
       response_format: { type: "json_object" },
       messages:   [
