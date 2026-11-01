@@ -1,6 +1,9 @@
-export { default as ClientsPage } from "./pages/ClientsPage";
-export { default as ClientForm } from "./components/ClientForm";
-export { default as ClientList } from "./components/ClientList";
-export { default as ClientDetailsCard } from "./components/ClientDetailsCard";
-export * from "./api";
-export type * from "./types";
+// src/modules/clients/index.ts
+
+export { ClientsPage } from "./pages/ClientsPage";
+export { ClientForm } from "./components/ClientForm";
+export { ClientList } from "./components/ClientList";
+export { ClientDetailsCard } from "./components/ClientDetailsCard";
+export { useClients } from "./hooks/useClient";
+export { clientService } from "./api";
+export * from "./types";

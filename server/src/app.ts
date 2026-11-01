@@ -4,6 +4,7 @@ import { env } from "./config/env";
 import { authRouter } from "./modules/users";
 import  billRouter  from "./modules/billing";
 import revRouter from "./modules/revenue-intelligence";
+import {clientRouter} from "./modules/clients";
 import cookieParser from "cookie-parser";
 
 // express configuration
@@ -47,6 +48,7 @@ app.get("/", (_, res) => {
 app.use("/auth", authRouter); // Mount all auth routes under /auth
 app.use("/billing", billRouter ); // Mount all invoice and AI routes under /billing
 app.use("/revenue", revRouter); // Mount all revenue analytics routes under /revenue
+app.use("/clients", clientRouter); // Mount all client routes under /clients
 // error handling
 
 // rate limiting

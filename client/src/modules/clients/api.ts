@@ -1,26 +1,31 @@
+// src/modules/clients/api.ts
+
 import { apiClient } from "../../shared/api/client";
-import type { Client, ClientFormData } from "./types";
+import type { CreateClientPayload, UpdateClientPayload, ListClientsParams } from "./types";
 
-
-export const clientService = { 
-  listClients: async (): Promise<Client[]> => {
-    const response = await apiClient.get("/clients");
+export const clientService = {
+  list: async (params?: ListClientsParams) => {
+    const response = await apiClient.get("/clients", { params });
     return response.data;
   },
-  getClient: async (id: string): Promise<Client> => {
+
+  getById: async (id: string) => {
     const response = await apiClient.get(`/clients/${id}`);
     return response.data;
   },
-  createClient: async (data: ClientFormData): Promise<Client> => {
-    const response = await apiClient.post("/clients", data);
+
+  create: async (payload: CreateClientPayload) => {
+    const response = await apiClient.post("/clients", payload);
     return response.data;
   },
-  updateClient: async (id: string, data: Partial<ClientFormData>): Promise<Client> => {
-    const response = await apiClient.patch(`/clients/${id}`, data);
+
+  update: async (id: string, payload: UpdateClientPayload) => {
+    const response = await apiClient.patch(`/clients/${id}`, payload);
     return response.data;
   },
-  deleteClient: async (id: string): Promise<void> => {
+
+  remove: async (id: string) => {
     const response = await apiClient.delete(`/clients/${id}`);
     return response.data;
-  }
+  },
 };
