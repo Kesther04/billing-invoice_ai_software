@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTheme } from "../../../shared/themes/ThemeContext";
 import { useClients } from "../hooks/useClient";
 import { ClientList } from "../components/ClientList";
 import { ClientForm } from "../components/ClientForm";
@@ -14,11 +15,9 @@ type ModalState =
   | { type: "create" }
   | { type: "edit"; client: Client };
 
-interface ClientsPageProps {
-  dark?: boolean;
-}
+export function ClientsPage() {
+  const { dark } = useTheme();
 
-export function ClientsPage({ dark = false }: ClientsPageProps) {
   const [searchInput, setSearchInput] = useState("");
   const debouncedSearch = useDebounce(searchInput, 300);
   const [page, setPage] = useState(1);
