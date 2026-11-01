@@ -28,6 +28,17 @@ export interface UpdateClientPayload {
   address?: string;
 }
 
+// What ClientForm actually produces — name is always required,
+// everything else optional. Structurally assignable to both
+// CreateClientPayload and UpdateClientPayload.
+export interface ClientFormValues {
+  name:     string;
+  email?:   string;
+  phone?:   string;
+  company?: string;
+  address?: string;
+}
+
 export interface ListClientsParams {
   search?: string;
   page?:   number;

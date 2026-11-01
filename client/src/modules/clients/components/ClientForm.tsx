@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { SoftButton } from "../../../shared/components/Button";
 import { Input } from "../../../shared/components/Input";
-import type { Client, CreateClientPayload, UpdateClientPayload } from "../types";
+import type { Client, ClientFormValues } from "../types";
 
 interface ClientFormProps {
   initialValues?: Client;
-  onSubmit: (payload: CreateClientPayload | UpdateClientPayload) => Promise<void>;
+  onSubmit: (payload: ClientFormValues) => Promise<void>;
   onCancel: () => void;
   submitting?: boolean;
   dark?: boolean;
