@@ -58,7 +58,7 @@ interface CompareRowProps {
   label: string;
   oldVal: string;
   newVal: string;
-  delay: number;
+  delay?: number;
   dark: boolean;
 }
 
@@ -286,8 +286,9 @@ function FeatureCard({ card, index, dark }: FeatureCardProps): React.ReactElemen
     <motion.div
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.12, duration: 0.5 }}
+      viewport={{ once: true, amount: 0.2 }}
+      style={{ willChange: "transform, opacity" }}
+      transition={{ delay: index * 0.1, duration: 0.5, ease: "easeOut" }}
       className={`relative overflow-hidden rounded-2xl bg-gradient-to-b ${gradient} p-6 shadow-lg`}
     >
       <svg className="absolute inset-0 h-full w-full opacity-10 pointer-events-none" viewBox="0 0 300 300">
@@ -311,13 +312,9 @@ function FeatureCard({ card, index, dark }: FeatureCardProps): React.ReactElemen
   );
 }
 
-function CompareRow({ label, oldVal, newVal, delay, dark }: CompareRowProps): React.ReactElement {
+function CompareRow({ label, oldVal, newVal, dark }: CompareRowProps): React.ReactElement {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay }}
+    <div
       className={`grid grid-cols-3 gap-2 items-center text-sm py-3 border-b last:border-none ${t.compareRowBorder(dark)}`}
     >
       <span className={`font-medium ${t.textMuted(dark)}`}>{label}</span>
@@ -329,7 +326,7 @@ function CompareRow({ label, oldVal, newVal, delay, dark }: CompareRowProps): Re
         <Check className="h-3.5 w-3.5 shrink-0" />
         {newVal}
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -359,12 +356,22 @@ export default function HomeLandingPage(): React.ReactElement {
 
   /* Active nav section */
   useEffect(() => {
-    const ids = ["hero", "features", "howitworks", "roadmap","why"];
+    const ids = ["hero", "features", "howitworks", "roadmap", "why"];
+    let ticking = false;
+
     const handleScroll = () => {
-      const scrollMid = window.scrollY + window.innerHeight / 2;
-      for (const id of ids) {
-        const el = document.getElementById(id);
-        if (el && el.offsetTop <= scrollMid) setCurrentSection(id);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollMid = window.scrollY + window.innerHeight / 2;
+          let active = "hero";
+          for (const id of ids) {
+            const el = document.getElementById(id);
+            if (el && el.offsetTop <= scrollMid) active = id;
+          }
+          setCurrentSection((prev) => (prev !== active ? active : prev));
+          ticking = false;
+        });
+        ticking = true;
       }
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -403,7 +410,7 @@ export default function HomeLandingPage(): React.ReactElement {
 
   return (
     <motion.div
-      className={`min-h-screen w-full transition-colors duration-300 ${t.bg(dark)}`}
+      className={`min-h-screen w-full ${t.bg(dark)}`}
       animate={{ backgroundColor: dark ? "#0F1117" : "#F3F5F7" }}
       transition={{ duration: 0.3 }}
     >
@@ -518,12 +525,11 @@ export default function HomeLandingPage(): React.ReactElement {
         id="hero"
         style={{
           backgroundImage: `url(${hero})`,
-          backgroundAttachment: "fixed",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
         }}
-        className="relative overflow-hidden min-h-[200vh] md:min-h-screen flex items-center pt-20"
+        className="relative overflow-hidden min-h-screen flex items-center pt-20"
       >
         {/* Base dark overlay */}
         <div className={`absolute inset-0 bg-black/85  pointer-events-none`} />
@@ -686,7 +692,9 @@ export default function HomeLandingPage(): React.ReactElement {
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.2 }}
+            style={{ willChange: "transform, opacity" }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
             className="mb-10"
           >
             <SectionBadge label="Core Features" dark={dark} />
@@ -716,7 +724,9 @@ export default function HomeLandingPage(): React.ReactElement {
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.2 }}
+            style={{ willChange: "transform, opacity" }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
             className="mb-12"
           >
             <SectionBadge label="How It Works" dark={dark} />
@@ -740,8 +750,9 @@ export default function HomeLandingPage(): React.ReactElement {
                   key={i}
                   initial={{ opacity: 0, y: 14 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  style={{ willChange: "transform, opacity" }}
+                  transition={{ delay: i * 0.1, duration: 0.4, ease: "easeOut" }}
                   onClick={() => {
                     stepsPausedRef.current = true;
                     setActiveStep(i);
@@ -749,16 +760,16 @@ export default function HomeLandingPage(): React.ReactElement {
                   onMouseLeave={() => {
                     stepsPausedRef.current = false;
                   }}
-                  className={`flex gap-5 py-6 cursor-pointer transition-opacity ${
-                    activeStep === i ? "opacity-100" : "opacity-50 hover:opacity-75"
-                  }`}
+                  className="flex gap-5 py-6 cursor-pointer"
                 >
-                  <div className={`text-3xl font-bold w-10 shrink-0 leading-none transition-colors ${
+                  <div className={`text-3xl font-bold w-10 shrink-0 leading-none transition-colors duration-200 ${
                     activeStep === i ? "text-emerald-500" : t.textMuted(dark)
                   }`}>
                     {step.num}
                   </div>
-                  <div>
+                  <div className={`transition-opacity duration-200 ${
+                    activeStep === i ? "opacity-100" : "opacity-50 hover:opacity-75"
+                  }`}>
                     <div className={`text-base font-semibold mb-1.5 ${t.text(dark)}`}>{step.title}</div>
                     <div className={`text-sm leading-relaxed ${t.textMuted(dark)}`}>{step.desc}</div>
                     <span className={`mt-2.5 inline-block rounded-full px-2.5 py-1 text-xs font-medium ${
@@ -904,7 +915,9 @@ export default function HomeLandingPage(): React.ReactElement {
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.2 }}
+            style={{ willChange: "transform, opacity" }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
             className="mb-10"
           >
             <SectionBadge label="What's Next" dark={dark} />
@@ -942,8 +955,9 @@ export default function HomeLandingPage(): React.ReactElement {
                 key={card.title}
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
+                viewport={{ once: true, amount: 0.2 }}
+                style={{ willChange: "transform, opacity" }}
+                transition={{ delay: i * 0.1, duration: 0.5, ease: "easeOut" }}
                 className={`relative overflow-hidden rounded-2xl border p-6 ${t.border(dark)} ${dark ? "bg-slate-900/40" : "bg-slate-50"}`}
               >
                 <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium mb-4 ${
@@ -967,7 +981,9 @@ export default function HomeLandingPage(): React.ReactElement {
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, amount: 0.2 }}
+              style={{ willChange: "transform, opacity" }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
               className="flex flex-col gap-6"
             >
               <div>
@@ -990,8 +1006,9 @@ export default function HomeLandingPage(): React.ReactElement {
                     key={i}
                     initial={{ opacity: 0, y: 8 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.07 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    style={{ willChange: "transform, opacity" }}
+                    transition={{ delay: i * 0.05, duration: 0.4, ease: "easeOut" }}
                     className={`flex items-start gap-2 text-sm ${t.textSub(dark)}`}
                   >
                     <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
@@ -1004,7 +1021,9 @@ export default function HomeLandingPage(): React.ReactElement {
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, amount: 0.2 }}
+              style={{ willChange: "transform, opacity" }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
               className={`rounded-2xl ring-1 overflow-hidden shadow-lg ${t.card(dark)}`}
             >
               <div className={`grid grid-cols-3 gap-2 border-b px-6 py-3 text-xs font-bold uppercase tracking-wider ${t.compareHeader(dark)} ${t.compareHeaderTxt(dark)}`}>
@@ -1019,7 +1038,6 @@ export default function HomeLandingPage(): React.ReactElement {
                     label={row.label}
                     oldVal={row.oldVal}
                     newVal={row.newVal}
-                    delay={i * 0.07}
                     dark={dark}
                   />
                 ))}
