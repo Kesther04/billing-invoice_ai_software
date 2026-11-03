@@ -1,147 +1,165 @@
 Product Name: TraqBill
 
+
+
 FRONTEND STRUCTURE
 ```client/
+├── public/
+│   └── logo.svg
+│
 └── src/
     │
     ├── app/
     │   ├── App.tsx
+    │   ├── Home.tsx
+    │   ├── layout.tsx
     │   ├── main.tsx
-    │   ├── router.tsx
-    │   └── layout.tsx
+    │   └── router.tsx
+    │
+    ├── images/
+    │   ├── hero.png
+    │   └── hero4.png
     │
     ├── modules/
     │
-    │   ├── auth/                            # Auth module (was missing)
-    │   │   ├── components/
-    │   │   │   ├── LoginForm.tsx
-    │   │   │   └── RegisterForm.tsx
-    │   │   │
-    │   │   ├── pages/
-    │   │   │   ├── LoginPage.tsx
-    │   │   │   └── RegisterPage.tsx
+    │   ├── auth/
+    │   │   ├── context/
+    │   │   │   └── AuthContext.tsx
     │   │   │
     │   │   ├── hooks/
-    │   │   │   └── useAuth.ts
+    │   │   │   ├── useLogin.ts
+    │   │   │   ├── useLogout.ts
+    │   │   │   ├── useProfile.ts
+    │   │   │   ├── useRegister.ts
+    │   │   │   └── useReset.ts
+    │   │   │
+    │   │   ├── pages/
+    │   │   │   ├── ForgotPassword.tsx
+    │   │   │   ├── Login.tsx
+    │   │   │   ├── ResetPassword.tsx
+    │   │   │   └── SignUp.tsx
     │   │   │
     │   │   ├── api.ts
     │   │   ├── types.ts
     │   │   └── index.ts
     │   │
-    │   ├── billing/                         # Core Feature 1: Smart Invoicing
+    │   ├── billing/                         # Smart Invoicing
     │   │   ├── components/
-    │   │   │   ├── InvoicePromptInput.tsx
-    │   │   │   ├── InvoicePreview.tsx
     │   │   │   ├── InvoiceEditor.tsx
     │   │   │   ├── InvoiceLineItems.tsx
+    │   │   │   ├── InvoicePreview.tsx
+    │   │   │   ├── InvoicePromptInput.tsx
     │   │   │   ├── InvoiceStatusBadge.tsx
-    │   │   │   ├── InvoiceViewReceipt.tsx   # tracks when client opens invoice
-    │   │   │   ├── RecurringInvoiceForm.tsx # recurring invoice setup UI
-    │   │   │   └── PartialPaymentBadge.tsx  # partial/deposit invoice indicator
+    │   │   │   └── PromptHistoryList.tsx
     │   │   │
     │   │   ├── pages/
-    │   │   │   ├── CreateInvoicePage.tsx
+    │   │   │   ├── AiInvoicePage.tsx
     │   │   │   ├── InvoiceDetailsPage.tsx
     │   │   │   └── InvoiceListPage.tsx
     │   │   │
     │   │   ├── hooks/
-    │   │   │   ├── useInvoiceAI.ts
-    │   │   │   └── useInvoiceTracking.ts    # view receipt hook
+    │   │   │   ├── useAI.ts
+    │   │   │   └── useInvoice.ts
     │   │   │
     │   │   ├── api.ts
     │   │   ├── types.ts
     │   │   └── index.ts
     │   │
-    │   ├── revenue-automation/              # Core Feature 2: AI Collection Engine
+    │   ├── revenue-automation/              # Collection Engine
     │   │   ├── components/
     │   │   │   ├── PaymentLinkGenerator.tsx
     │   │   │   ├── PaymentStatusTracker.tsx
-    │   │   │   ├── ReminderScheduler.tsx
     │   │   │   ├── ReminderLog.tsx
-    │   │   │   ├── ReminderTemplateEditor.tsx
-    │   │   │   ├── ClientRiskBadge.tsx      # Low / Medium / High risk label
-    │   │   │   ├── ClientRiskCard.tsx       # risk score breakdown per client
-    │   │   │   └── HighRiskInvoiceAlert.tsx # alert when invoicing a high-risk client
+    │   │   │   ├── ReminderScheduler.tsx
+    │   │   │   └── ReminderTemplateEditor.tsx
     │   │   │
     │   │   ├── pages/
-    │   │   │   ├── AutomationSettingsPage.tsx
-    │   │   │   └── ClientRiskPage.tsx       # full risk scoring view
+    │   │   │   └── AutomationSettingsPage.tsx
     │   │   │
     │   │   ├── hooks/
-    │   │   │   ├── useRevenueAutomation.ts
-    │   │   │   └── useClientRisk.ts         # risk score data hook
+    │   │   │   └── useRevenueAutomation.ts
     │   │   │
     │   │   ├── api.ts
     │   │   ├── types.ts
     │   │   └── index.ts
     │   │
-    │   ├── revenue-intelligence/            # Core Feature 3: Cash Flow Intelligence
+    │   ├── revenue-intelligence/            # Cash Flow Intelligence
     │   │   ├── components/
+    │   │   │   ├── AIInsightsSummary.tsx
+    │   │   │   ├── PendingPaymentsCard.tsx
     │   │   │   ├── RevenueOverviewCard.tsx
     │   │   │   ├── RevenueTrendChart.tsx
-    │   │   │   ├── PendingPaymentsCard.tsx
-    │   │   │   ├── TopClientsCard.tsx
-    │   │   │   ├── AIInsightsSummary.tsx
-    │   │   │   ├── CashFlowForecastCard.tsx # "₦850,000 expected in 14 days"
-    │   │   │   ├── CashShortageAlert.tsx    # shortage warning component
-    │   │   │   └── CollectionRateChart.tsx  # collection rate over time
+    │   │   │   └── TopClientsCard.tsx
     │   │   │
     │   │   ├── pages/
     │   │   │   └── DashboardPage.tsx
     │   │   │
     │   │   ├── hooks/
-    │   │   │   ├── useRevenueAnalytics.ts
-    │   │   │   └── useCashFlowForecast.ts   # forecast data hook
+    │   │   │   └── useRevenueAnalytics.ts
     │   │   │
     │   │   ├── api.ts
     │   │   ├── types.ts
     │   │   └── index.ts
     │   │
-    │   ├── clients/                         # Supporting Domain
-    │   │   ├── components/
-    │   │   │   ├── ClientForm.tsx
-    │   │   │   ├── ClientList.tsx
-    │   │   │   └── ClientDetailsCard.tsx
-    │   │   │
-    │   │   ├── pages/
-    │   │   │   └── ClientsPage.tsx
-    │   │   │
-    │   │   ├── api.ts
-    │   │   ├── types.ts
-    │   │   └── index.ts
+    │   └── clients/
+    │       ├── components/
+    │       │   ├── ClientDetailsCard.tsx
+    │       │   ├── ClientForm.tsx
+    │       │   └── ClientList.tsx
+    │       │
+    │       ├── pages/
+    │       │   └── ClientsPage.tsx
+    │       │
+    │       ├── hooks/
+    │       │   └── useClient.ts
+    │       │
+    │       ├── api.ts
+    │       ├── types.ts
+    │       └── index.ts
     │
     ├── shared/
+    │   ├── api/
+    │   │   └── client.ts                    # used by every module's api.ts
+    │   │
     │   ├── components/
+    │   │   ├── Badge.tsx
     │   │   ├── Button.tsx
-    │   │   ├── Modal.tsx
     │   │   ├── Input.tsx
-    │   │   ├── Table.tsx
     │   │   ├── Loader.tsx
-    │   │   └── Badge.tsx
+    │   │   ├── Logo.tsx
+    │   │   ├── Modal.tsx
+    │   │   ├── Navbar.tsx
+    │   │   ├── Table.tsx
+    │   │   └── TypeWriter.tsx
     │   │
     │   ├── hooks/
-    │   │   ├── useDebounce.ts
-    │   │   └── useOrganization.ts           # active org/tenant context
+    │   │   └── useDebounce.ts               # used (ClientsPage)
     │   │
-    │   ├── utils/
-    │   │   ├── formatCurrency.ts
-    │   │   ├── formatDate.ts
-    │   │   ├── calculateTotals.ts
-    │   │   └── generateInvoiceNumber.ts
+    │   ├── themes/
+    │   │   ├── ThemeContext.tsx
+    │   │   └── ThemeToggle.tsx
     │   │
-    │   └── constants/
-    │       ├── invoiceStatus.ts
-    │       ├── paymentStatus.ts             # was missing on frontend
-    │       └── reminderIntervals.ts
+    │   ├── constants/
+    │   │   ├── API_URL.ts                   # used (shared/api/client.ts)
+    │   │   ├── tokenStore.ts                # used (AuthContext, shared/api/client.ts)
+    │   │   ├── invoiceStatus.ts             # EMPTY — unused
+    │   │   └── reminderIntervals.ts         # EMPTY — unused
+    │   │
+    │   └── utils/
+    │       ├── formatDate.ts                # ONLY ONE IN USE (ClientDetailsCard)
+    │       ├── themeClasses.ts              # used (Navbar, Logo, Home, layout, auth pages, Dashboard, AutomationSettings)
+    │       ├── calculateTotals.ts           # EMPTY — unused
+    │       ├── formatCurrency.ts            # EMPTY — unused
+    │       └── generateInvoiceNumber.ts     # EMPTY — unused
     │
     ├── services/
-    │   └── http.ts
+    │   └── http.ts                          # EMPTY — unused (superseded by shared/api/client.ts)
     │
     ├── styles/
     │   └── index.css
     │
     └── types/
-        └── global.d.ts
+        (empty — no global.d.ts present)
 ```
 
 

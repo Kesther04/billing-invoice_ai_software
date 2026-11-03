@@ -1,5 +1,5 @@
 import axios from "axios";
-import { VITE_API_URL } from "../constants/API_URL";
+import { VITE_API_URL } from "../constants/http";
 import { clearAccessToken, getAccessToken, setAccessToken } from "../constants/tokenStore";
 
 export const apiClient = axios.create({

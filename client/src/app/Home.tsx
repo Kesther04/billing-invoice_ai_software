@@ -18,7 +18,7 @@ import { SoftButton } from "../shared/components/Button";
 import { t } from "../shared/utils/themeClasses";
 import { Link } from "react-router-dom";
 import Logo from "../shared/components/Logo";
-import hero from "../images/hero4.png";
+import hero from "../assets/images/hero4.png";
 
 /* ─────────────────────────────────────────────
    Types
