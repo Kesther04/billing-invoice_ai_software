@@ -5,14 +5,16 @@ import {
   ResponsiveContainer
 } from "recharts";
 import type { RevenueDataPoint } from "../types";
+import { convertAmount, formatCurrency, DEFAULT_CURRENCY } from "../../../shared/utils/formatCurrency";
 
 interface Props {
   dark: boolean;
   data: RevenueDataPoint[];
+  /** Currency the trend figures are recorded in (backend currently stores USD). */
+  sourceCurrency?: string;
+  /** Currency to display the chart in — converted from sourceCurrency. */
+  displayCurrency?: string;
 }
-
-const fmt = (n: number) =>
-  new Intl.NumberFormat("en-US", { notation: "compact", style: "currency", currency: "USD", maximumFractionDigits: 1 }).format(n);
 
 const RANGES = [
   { label: "7d",  days: 7 },
@@ -29,16 +31,32 @@ function CustomTooltip({ active, payload, label, dark }: any) {
         <div key={p.name} className="flex items-center gap-2 mb-1">
           <span className="w-2 h-2 rounded-full" style={{ background: p.color }} />
           <span className={dark ? "text-slate-400" : "text-slate-500"}>{p.name}:</span>
-          <span className="font-medium" style={{ color: p.color }}>{fmt(p.value)}</span>
+          <span className="font-medium" style={{ color: p.color }}>{fmtTooltip(p.value)}</span>
         </div>
       ))}
     </div>
   );
 }
 
-export default function RevenueTrendChart({ dark, data }: Props) {
+// kept module-local so CustomTooltip can use it without a prop drill;
+// mirrors the same formatting fmt() below uses
+function fmtTooltip(n: number) {
+  return new Intl.NumberFormat(undefined, { notation: "compact", maximumFractionDigits: 1 }).format(n);
+}
+
+export default function RevenueTrendChart({ dark, data, sourceCurrency = DEFAULT_CURRENCY, displayCurrency }: Props) {
   const [range, setRange] = useState(30);
-  const sliced = data.slice(-range);
+  const target = displayCurrency ?? sourceCurrency;
+  const fmt = (n: number) =>
+    formatCurrency(n, target, { notation: "compact", maximumFractionDigits: 1 });
+
+  const sliced = data
+    .slice(-range)
+    .map((d) => ({
+      ...d,
+      collected: convertAmount(d.collected, sourceCurrency, target),
+      invoiced: convertAmount(d.invoiced, sourceCurrency, target),
+    }));
 
   const cardBg = dark ? "bg-[#0f1117] border-slate-800" : "bg-white border-slate-200";
   const gridColor = dark ? "#1e2430" : "#f1f5f9";

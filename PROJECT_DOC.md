@@ -140,7 +140,7 @@ FRONTEND STRUCTURE
     │   │   └── ThemeToggle.tsx
     │   │
     │   ├── constants/
-    │   │   ├── API_URL.ts                   # used (shared/api/client.ts)
+    │   │   ├── http.ts                      # used (shared/api/client.ts)
     │   │   ├── tokenStore.ts                # used (AuthContext, shared/api/client.ts)
     │   │   ├── invoiceStatus.ts             # EMPTY — unused
     │   │   └── reminderIntervals.ts         # EMPTY — unused
@@ -152,8 +152,6 @@ FRONTEND STRUCTURE
     │       ├── formatCurrency.ts            # EMPTY — unused
     │       └── generateInvoiceNumber.ts     # EMPTY — unused
     │
-    ├── services/
-    │   └── http.ts                          # EMPTY — unused (superseded by shared/api/client.ts)
     │
     ├── styles/
     │   └── index.css

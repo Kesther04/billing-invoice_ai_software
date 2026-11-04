@@ -1,12 +1,13 @@
 import { motion } from "framer-motion";
 import type { TopClient } from "../types";
+import { formatConverted, DEFAULT_CURRENCY } from "../../../shared/utils/formatCurrency";
 
 interface Props {
   dark: boolean;
   clients: TopClient[];
+  /** Currency to display amounts in — each client's totalBilled is converted from its own currency. */
+  displayCurrency?: string;
 }
-
-const fmt = (n: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(n);
 
 function Avatar({ name, dark }: { name: string; dark: boolean }) {
   const initials = name.split(" ").slice(0, 2).map((w) => w[0]).join("").toUpperCase();
@@ -21,10 +22,13 @@ function Avatar({ name, dark }: { name: string; dark: boolean }) {
   );
 }
 
-export default function TopClientsCard({ dark, clients }: Props) {
+export default function TopClientsCard({ dark, clients, displayCurrency }: Props) {
   const cardBg = dark ? "bg-[#0f1117] border-slate-800" : "bg-white border-slate-200";
   const rowBorder = dark ? "border-slate-800" : "border-slate-100";
   const track = dark ? "bg-slate-800" : "bg-slate-100";
+
+  const fmt = (n: number, currency: string = DEFAULT_CURRENCY) =>
+    formatConverted(n, currency, displayCurrency ?? currency);
 
   return (
     <div className={`rounded-2xl border p-6 ${cardBg}`}>
@@ -60,7 +64,7 @@ export default function TopClientsCard({ dark, clients }: Props) {
               </div>
             </div>
             <div className="text-right shrink-0">
-              <p className={`text-sm font-bold ${dark ? "text-slate-200" : "text-slate-800"}`}>{fmt(c.totalBilled)}</p>
+              <p className={`text-sm font-bold ${dark ? "text-slate-200" : "text-slate-800"}`}>{fmt(c.totalBilled, c.currency)}</p>
               <p className={`text-xs ${dark ? "text-slate-600" : "text-slate-400"}`}>{c.invoiceCount} invoices</p>
             </div>
           </motion.div>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../../shared/themes/ThemeContext";
+import { DEFAULT_CURRENCY } from "../../../shared/utils/formatCurrency";
 import { useAI } from "../hooks/useAI";
 import { invoiceBillingService } from "../api";
 import type { Invoice, LineItem, ParsedInvoiceDraft } from "../types";
@@ -24,7 +25,7 @@ function withDefaults(draft: Partial<ParsedInvoiceDraft>): Partial<Invoice> {
     status: "draft",
     issueDate: today.toISOString().split("T")[0],
     dueDate: due.toISOString().split("T")[0],
-    currency: "USD",
+    currency: DEFAULT_CURRENCY,
     taxRate: 0,
     discountAmount: 0,
     lineItems: draft.lineItems,

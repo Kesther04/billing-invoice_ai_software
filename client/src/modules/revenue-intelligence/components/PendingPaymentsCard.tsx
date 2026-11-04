@@ -1,13 +1,14 @@
 import { motion } from "framer-motion";
 import { AlertTriangle, Clock, CalendarCheck } from "lucide-react";
 import type { PendingPayment } from "../types";
+import { formatCurrency, formatConverted, convertAmount, DEFAULT_CURRENCY } from "../../../shared/utils/formatCurrency";
 
 interface Props {
   dark: boolean;
   payments: PendingPayment[];
+  /** Currency to display amounts in — each payment is converted from its own currency. */
+  displayCurrency?: string;
 }
-
-const fmt = (n: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(n);
 
 const statusConfig = {
   overdue:   { label: (d: number) => `${d}d overdue`,  color: "text-red-400",   bg: "bg-red-400/10",   icon: AlertTriangle },
@@ -15,11 +16,16 @@ const statusConfig = {
   upcoming:  { label: (d: number) => `Due in ${Math.abs(d)}d`, color: "text-sky-400", bg: "bg-sky-400/10", icon: CalendarCheck },
 };
 
-export default function PendingPaymentsCard({ dark, payments }: Props) {
+export default function PendingPaymentsCard({ dark, payments, displayCurrency }: Props) {
   const cardBg = dark ? "bg-[#0f1117] border-slate-800" : "bg-white border-slate-200";
   const rowBorder = dark ? "border-slate-800" : "border-slate-100";
 
-  const total = payments.reduce((s, p) => s + p.amount, 0);
+  const target = displayCurrency ?? payments[0]?.currency ?? DEFAULT_CURRENCY;
+  const fmt = (n: number, currency: string = DEFAULT_CURRENCY) => formatConverted(n, currency, target);
+
+  // Each payment can carry its own currency — convert before summing so the
+  // total isn't adding naira to dollars.
+  const total = payments.reduce((s, p) => s + convertAmount(p.amount, p.currency, target), 0);
   const overdue = payments.filter((p) => p.status === "overdue");
 
   return (
@@ -28,7 +34,7 @@ export default function PendingPaymentsCard({ dark, payments }: Props) {
         <div>
           <h3 className={`text-sm font-semibold ${dark ? "text-slate-200" : "text-slate-800"}`}>Pending Payments</h3>
           <p className={`text-xs mt-0.5 ${dark ? "text-slate-500" : "text-slate-400"}`}>
-            {fmt(total)} outstanding · {overdue.length} overdue
+            {formatCurrency(total, target)} outstanding · {overdue.length} overdue
           </p>
         </div>
         {overdue.length > 0 && (
@@ -59,7 +65,7 @@ export default function PendingPaymentsCard({ dark, payments }: Props) {
                 <p className={`text-xs ${dark ? "text-slate-600" : "text-slate-400"}`}>{p.invoiceNumber}</p>
               </div>
               <div className="text-right shrink-0">
-                <p className={`text-sm font-bold ${dark ? "text-slate-200" : "text-slate-800"}`}>{fmt(p.amount)}</p>
+                <p className={`text-sm font-bold ${dark ? "text-slate-200" : "text-slate-800"}`}>{fmt(p.amount, p.currency)}</p>
                 <p className={`text-xs ${cfg.color}`}>{cfg.label(p.daysOverdue)}</p>
               </div>
             </motion.div>

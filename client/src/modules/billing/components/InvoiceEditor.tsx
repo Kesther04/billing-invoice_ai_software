@@ -2,6 +2,9 @@ import React from "react";
 import { motion } from "framer-motion";
 import type { Invoice, LineItem } from "../types";
 import InvoiceLineItems from "./InvoiceLineItems";
+import CurrencySelect from "../../../shared/currency/currencySelect";
+import { DEFAULT_CURRENCY, formatCurrency } from "../../../shared/utils/formatCurrency";
+
 
 interface Props {
   dark: boolean;
@@ -186,13 +189,13 @@ export default function InvoiceEditor({
             />
           </Field>
           <Field label="Currency" dark={dark}>
-            <Input
-              value={invoice.currency ?? "USD"}
-              onChange={(v) => onUpdate({ currency: v })}
+            <CurrencySelect
+              value={invoice.currency ?? DEFAULT_CURRENCY}
+              onChange={(currency:any) => onUpdate({ currency })}
               dark={dark}
-              placeholder="USD"
             />
           </Field>
+
           <Field label="Tax Rate (%)" dark={dark}>
             <Input
               type="number"
@@ -253,6 +256,7 @@ export default function InvoiceEditor({
         <InvoiceLineItems
           dark={dark}
           items={invoice.lineItems ?? []}
+          currency={invoice.currency ?? DEFAULT_CURRENCY}
           editable
           onUpdate={onUpdateLineItem}
           onAdd={onAddLineItem}
@@ -266,15 +270,15 @@ export default function InvoiceEditor({
           <div className="w-60 space-y-2">
             <div className="flex justify-between text-sm">
               <span className={dark ? "text-zinc-400" : "text-zinc-500"}>Subtotal</span>
-              <span className={dark ? "text-zinc-300" : "text-zinc-700"}>${(invoice.subtotal ?? 0).toFixed(2)}</span>
+              <span className={dark ? "text-zinc-300" : "text-zinc-700"}>{formatCurrency(invoice.subtotal ?? 0, invoice.currency, { maximumFractionDigits: 2 })}</span>
             </div>
             <div className="flex justify-between text-sm items-center">
               <span className={dark ? "text-zinc-400" : "text-zinc-500"}>Tax ({invoice.taxRate ?? 0}%)</span>
-              <span className={dark ? "text-zinc-300" : "text-zinc-700"}>${(invoice.taxAmount ?? 0).toFixed(2)}</span>
+              <span className={dark ? "text-zinc-300" : "text-zinc-700"}>{formatCurrency(invoice.taxAmount ?? 0, invoice.currency, { maximumFractionDigits: 2 })}</span>
             </div>
             <div className={`flex justify-between text-sm font-bold pt-2 border-t ${dark ? "border-zinc-700 text-white" : "border-zinc-200 text-zinc-900"}`}>
               <span>Total</span>
-              <span>${(invoice.total ?? 0).toFixed(2)}</span>
+              <span>{formatCurrency(invoice.total ?? 0, invoice.currency, { maximumFractionDigits: 2 })}</span>
             </div>
           </div>
         </div>

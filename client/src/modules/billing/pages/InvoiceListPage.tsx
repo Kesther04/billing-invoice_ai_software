@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { nanoid } from "nanoid";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../../../shared/themes/ThemeContext";
+import { formatCurrency, DEFAULT_CURRENCY } from "../../../shared/utils/formatCurrency";
 import type { Invoice, InvoiceStatus, LineItem } from "../types";
 import InvoiceEditor from "../components/InvoiceEditor";
 import InvoicePreview from "../components/InvoicePreview";
@@ -33,8 +34,7 @@ const MOCK_INVOICES: Invoice[] = [];
 /* ─────────────────────────────────────────────────────────────────
    HELPERS
 ───────────────────────────────────────────────────────────────── */
-const fmt = (n = 0, c = "USD") =>
-  new Intl.NumberFormat("en-US", { style: "currency", currency: c, maximumFractionDigits: 0 }).format(n);
+const fmt = (n = 0, c: string = DEFAULT_CURRENCY) => formatCurrency(n, c);
 
 function relDate(iso: string) {
   const d = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
@@ -58,7 +58,7 @@ function makeFreshInvoice(): Invoice {
     dueDate:   due.toISOString().split("T")[0],
     lineItems: [{ id: nanoid(), description: "", quantity: 1, unitPrice: 0, total: 0 }],
     subtotal: 0, taxRate: 10, taxAmount: 0, discountAmount: 0, total: 0,
-    currency: "USD", notes: "",
+    currency: DEFAULT_CURRENCY, notes: "",
     createdAt: today.toISOString(), updatedAt: today.toISOString(),
   };
 }

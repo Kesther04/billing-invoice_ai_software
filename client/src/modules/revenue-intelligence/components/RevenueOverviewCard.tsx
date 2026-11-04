@@ -1,15 +1,20 @@
 import { motion } from "framer-motion";
 import { TrendingUp, TrendingDown, DollarSign, Clock, AlertTriangle, CheckCircle2 } from "lucide-react";
 import type { RevenueOverview } from "../types";
+import { formatConverted, DEFAULT_CURRENCY } from "../../../shared/utils/formatCurrency";
 
 interface Props {
   dark: boolean;
   overview: RevenueOverview;
+  /** Currency to display figures in — converted from overview.currency. Defaults to the overview's own currency. */
+  displayCurrency?: string;
 }
 
-const fmt = (n: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(n);
+export default function RevenueOverviewCard({ dark, overview, displayCurrency }: Props) {
+  const sourceCurrency = overview.currency ?? DEFAULT_CURRENCY;
+  const target = displayCurrency ?? sourceCurrency;
+  const fmt = (n: number) => formatConverted(n, sourceCurrency, target);
 
-export default function RevenueOverviewCard({ dark, overview }: Props) {
   const stats = [
     {
       label: "Total Revenue",
