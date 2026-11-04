@@ -12,7 +12,7 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider>
       <CurrencyProvider>
-      <App />
+        <App />
       </CurrencyProvider>
     </ThemeProvider>
   </StrictMode>,
