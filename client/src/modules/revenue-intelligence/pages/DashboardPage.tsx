@@ -28,19 +28,19 @@ export default function DashboardPage() {
 
   return (
     <div className={`min-h-screen transition-colors ${t.bg(dark)}`}>
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-between mb-8"
+          className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8"
         >
           <div>
             <div className="flex items-center gap-2.5 mb-1.5">
               <div className="p-2 rounded-xl bg-gradient-to-b from-emerald-500 to-teal-600 shadow-lg shadow-emerald-600/25">
                 <BarChart2 className="h-5 w-5 text-white" />
               </div>
-              <h1 className={`text-2xl font-bold tracking-tight ${dark ? "text-slate-100" : "text-slate-900"}`}>
+              <h1 className={`text-xl sm:text-2xl font-bold tracking-tight ${dark ? "text-slate-100" : "text-slate-900"}`}>
                 Revenue Intelligence
               </h1>
             </div>
@@ -48,33 +48,33 @@ export default function DashboardPage() {
               Good morning, {firstName}. Here's your revenue snapshot.
             </p>
           </div>
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center justify-between sm:justify-end gap-2.5">
             <CurrencySelect value={currency} onChange={setCurrency} dark={dark} variant="pill" />
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={refresh}
               disabled={loading}
-              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-medium border transition-all ${dark ? "border-slate-700 text-slate-300 hover:border-slate-600" : "border-slate-200 text-slate-600 hover:border-slate-300"} ${loading ? "opacity-50" : ""}`}
+              className={`flex items-center gap-1.5 px-3 sm:px-3.5 py-2 rounded-xl text-xs font-medium border transition-all shrink-0 ${dark ? "border-slate-700 text-slate-300 hover:border-slate-600" : "border-slate-200 text-slate-600 hover:border-slate-300"} ${loading ? "opacity-50" : ""}`}
             >
               <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
-              Refresh
+              <span className="hidden xs:inline sm:inline">Refresh</span>
             </motion.button>
           </div>
         </motion.div>
 
         {loading || !data ? (
-          <div className="space-y-5">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[...Array(4)].map((_, i) => <Skeleton key={i} dark={dark} className="h-28" />)}
+          <div className="space-y-4 sm:space-y-5">
+            <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+              {[...Array(4)].map((_, i) => <Skeleton key={i} dark={dark} className="h-24 sm:h-28" />)}
             </div>
-            <Skeleton dark={dark} className="h-72" />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <Skeleton dark={dark} className="h-64" />
-              <Skeleton dark={dark} className="h-64" />
+            <Skeleton dark={dark} className="h-64 sm:h-72" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+              <Skeleton dark={dark} className="h-56 sm:h-64" />
+              <Skeleton dark={dark} className="h-56 sm:h-64" />
             </div>
           </div>
         ) : (
-          <div className="space-y-5">
+          <div className="space-y-4 sm:space-y-5">
             {/* Overview stats */}
             <RevenueOverviewCard dark={dark} overview={data.overview} displayCurrency={currency} />
 
@@ -84,7 +84,7 @@ export default function DashboardPage() {
             </motion.div> */}
 
             {/* Mid row */}
-            <div className="grid grid-cols-1 md:grid-cols-1 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-1 gap-4 sm:gap-5">
               <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
                 <PendingPaymentsCard dark={dark} payments={data.pending} displayCurrency={currency} />
               </motion.div>
