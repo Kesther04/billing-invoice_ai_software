@@ -50,11 +50,12 @@ export default function InvoiceLineItems({
   }`;
   const rowBorder = dark ? "border-zinc-800" : "border-zinc-100";
   const valueCls = `text-sm ${dark ? "text-zinc-200" : "text-zinc-800"}`;
+  const mutedCls = dark ? "text-zinc-500" : "text-zinc-400";
 
   return (
     <div className="w-full">
-      {/* Header */}
-      <div className={`grid grid-cols-12 gap-3 border-b pb-2 ${rowBorder}`}>
+      {/* Header — table columns only, hidden on small screens */}
+      <div className={`hidden sm:grid grid-cols-12 gap-3 border-b pb-2 ${rowBorder}`}>
         <div className={`col-span-6 ${headerCls}`}>Description</div>
         <div className={`col-span-2 text-right ${headerCls}`}>Qty</div>
         <div className={`col-span-2 text-right ${headerCls}`}>Unit Price</div>
@@ -63,65 +64,132 @@ export default function InvoiceLineItems({
 
       {/* Rows */}
       <AnimatePresence initial={false}>
-        {items.map((item) => (
-          <motion.div
-            key={item.id}
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className={`group grid grid-cols-12 gap-3 py-3 border-b ${rowBorder} items-center`}
-          >
-            <div className="col-span-6 flex items-center gap-2">
-              {editable && onRemove && (
-                <button
-                  onClick={() => onRemove(item.id)}
-                  className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-500 transition-opacity shrink-0 text-xs"
-                >
-                  ✕
-                </button>
-              )}
-              {editable && onUpdate ? (
-                <EditableCell
-                  value={item.description}
-                  onChange={(v) => onUpdate(item.id, { description: v })}
-                  dark={dark}
-                  placeholder="Item description"
-                />
-              ) : (
-                <span className={valueCls}>{item.description}</span>
-              )}
-            </div>
-            <div className="col-span-2 text-right">
-              {editable && onUpdate ? (
-                <EditableCell
-                  value={item.quantity}
-                  onChange={(v) => onUpdate(item.id, { quantity: parseFloat(v) || 0 })}
-                  type="number"
-                  dark={dark}
-                  align="right"
-                />
-              ) : (
-                <span className={valueCls}>{item.quantity}</span>
-              )}
-            </div>
-            <div className="col-span-2 text-right">
-              {editable && onUpdate ? (
-                <EditableCell
-                  value={item.unitPrice}
-                  onChange={(v) => onUpdate(item.id, { unitPrice: parseFloat(v) || 0 })}
-                  type="number"
-                  dark={dark}
-                  align="right"
-                />
-              ) : (
-                <span className={valueCls}>{fmt(item.unitPrice, currency)}</span>
-              )}
-            </div>
-            <div className={`col-span-2 text-right font-medium ${valueCls}`}>
-              { !item.total ? fmt(item.unitPrice * item.quantity, currency) :   fmt(item.total, currency) }
-            </div>
-          </motion.div>
-        ))}
+        {items.map((item) => {
+          const lineTotal = !item.total ? item.unitPrice * item.quantity : item.total;
+          return (
+            <motion.div
+              key={item.id}
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className={`group border-b ${rowBorder} py-3`}
+            >
+              {/* ── Small screens: stacked card ── */}
+              <div className="sm:hidden space-y-2">
+                <div className="flex items-start gap-2">
+                  {editable && onRemove && (
+                    <button
+                      onClick={() => onRemove(item.id)}
+                      className="text-red-400 hover:text-red-500 transition-opacity shrink-0 text-xs mt-1"
+                    >
+                      ✕
+                    </button>
+                  )}
+                  {editable && onUpdate ? (
+                    <div className="flex-1 min-w-0">
+                      <EditableCell
+                        value={item.description}
+                        onChange={(v) => onUpdate(item.id, { description: v })}
+                        dark={dark}
+                        placeholder="Item description"
+                      />
+                    </div>
+                  ) : (
+                    <span className={`${valueCls} flex-1 min-w-0 break-words`}>{item.description}</span>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-3 gap-2 pl-0">
+                  <div>
+                    <div className={`text-[10px] uppercase tracking-wider mb-0.5 ${mutedCls}`}>Qty</div>
+                    {editable && onUpdate ? (
+                      <EditableCell
+                        value={item.quantity}
+                        onChange={(v) => onUpdate(item.id, { quantity: parseFloat(v) || 0 })}
+                        type="number"
+                        dark={dark}
+                        align="left"
+                      />
+                    ) : (
+                      <span className={valueCls}>{item.quantity}</span>
+                    )}
+                  </div>
+                  <div>
+                    <div className={`text-[10px] uppercase tracking-wider mb-0.5 ${mutedCls}`}>Unit Price</div>
+                    {editable && onUpdate ? (
+                      <EditableCell
+                        value={item.unitPrice}
+                        onChange={(v) => onUpdate(item.id, { unitPrice: parseFloat(v) || 0 })}
+                        type="number"
+                        dark={dark}
+                        align="left"
+                      />
+                    ) : (
+                      <span className={`${valueCls} break-words`}>{fmt(item.unitPrice, currency)}</span>
+                    )}
+                  </div>
+                  <div>
+                    <div className={`text-[10px] uppercase tracking-wider mb-0.5 ${mutedCls}`}>Total</div>
+                    <span className={`font-medium ${valueCls} break-words`}>{fmt(lineTotal, currency)}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* ── sm and up: table row ── */}
+              <div className="hidden sm:grid grid-cols-12 gap-3 items-center">
+                <div className="col-span-6 flex items-center gap-2 min-w-0">
+                  {editable && onRemove && (
+                    <button
+                      onClick={() => onRemove(item.id)}
+                      className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-500 transition-opacity shrink-0 text-xs"
+                    >
+                      ✕
+                    </button>
+                  )}
+                  {editable && onUpdate ? (
+                    <EditableCell
+                      value={item.description}
+                      onChange={(v) => onUpdate(item.id, { description: v })}
+                      dark={dark}
+                      placeholder="Item description"
+                    />
+                  ) : (
+                    <span className={`${valueCls} truncate`}>{item.description}</span>
+                  )}
+                </div>
+                <div className="col-span-2 text-right">
+                  {editable && onUpdate ? (
+                    <EditableCell
+                      value={item.quantity}
+                      onChange={(v) => onUpdate(item.id, { quantity: parseFloat(v) || 0 })}
+                      type="number"
+                      dark={dark}
+                      align="right"
+                    />
+                  ) : (
+                    <span className={valueCls}>{item.quantity}</span>
+                  )}
+                </div>
+                <div className="col-span-2 text-right">
+                  {editable && onUpdate ? (
+                    <EditableCell
+                      value={item.unitPrice}
+                      onChange={(v) => onUpdate(item.id, { unitPrice: parseFloat(v) || 0 })}
+                      type="number"
+                      dark={dark}
+                      align="right"
+                    />
+                  ) : (
+                    <span className={`${valueCls} truncate block`}>{fmt(item.unitPrice, currency)}</span>
+                  )}
+                </div>
+                <div className={`col-span-2 text-right font-medium truncate ${valueCls}`}>
+                  {fmt(lineTotal, currency)}
+                </div>
+              </div>
+            </motion.div>
+          );
+        })}
       </AnimatePresence>
 
       {/* Add row */}

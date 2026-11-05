@@ -110,7 +110,7 @@ export default function InvoiceEditor({
   onSave,
   isSaving,
 }: Props) {
-  const section = `rounded-2xl border p-6 mb-4 ${
+  const section = `rounded-2xl border p-4 sm:p-6 mb-4 ${
     dark ? "bg-[#0f1117] border-zinc-800" : "bg-white border-zinc-200"
   }`;
   const heading = `text-sm font-semibold mb-4 ${dark ? "text-zinc-300" : "text-zinc-700"}`;
@@ -124,10 +124,10 @@ export default function InvoiceEditor({
       className="w-full max-w-3xl mx-auto"
     >
       {/* Actions */}
-      <div className="flex items-center justify-between mb-5">
+      <div className="flex items-center justify-between gap-3 mb-5">
         <button
           onClick={onPreview}
-          className={`text-sm flex items-center gap-1.5 ${
+          className={`text-sm flex items-center gap-1.5 shrink-0 ${
             dark ? "text-zinc-500 hover:text-zinc-300" : "text-zinc-400 hover:text-zinc-700"
           } transition-colors`}
         >
@@ -137,7 +137,7 @@ export default function InvoiceEditor({
           whileTap={{ scale: 0.97 }}
           onClick={onSave}
           disabled={isSaving}
-          className="px-5 py-2 rounded-xl text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/25 transition-all disabled:opacity-60"
+          className="px-4 sm:px-5 py-2 rounded-xl text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/25 transition-all disabled:opacity-60 shrink-0"
         >
           {isSaving ? "Saving…" : "Save Invoice"}
         </motion.button>
@@ -146,7 +146,7 @@ export default function InvoiceEditor({
       {/* Meta */}
       <div className={section}>
         <p className={heading}>Invoice Details</p>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field label="Invoice Number" dark={dark}>
             <Input
               value={invoice.invoiceNumber ?? ""}
@@ -209,7 +209,7 @@ export default function InvoiceEditor({
 
       {/* Parties */}
       <div className={section}>
-        <div className="grid grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
           {/* From */}
           <div>
             <p className={heading}>From</p>
@@ -267,7 +267,7 @@ export default function InvoiceEditor({
 
         {/* Totals */}
         <div className="flex justify-end">
-          <div className="w-60 space-y-2">
+          <div className="w-full sm:w-60 space-y-2">
             <div className="flex justify-between text-sm">
               <span className={dark ? "text-zinc-400" : "text-zinc-500"}>Subtotal</span>
               <span className={dark ? "text-zinc-300" : "text-zinc-700"}>{formatCurrency(invoice.subtotal ?? 0, invoice.currency, { maximumFractionDigits: 2 })}</span>

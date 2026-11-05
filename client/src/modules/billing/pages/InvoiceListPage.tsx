@@ -103,7 +103,7 @@ export default function InvoiceListPage() {
       if (invoices) {
         setInvoices(invoices);
       }
-      
+
     } catch (error) {
       console.error(error);
       setInvoices(MOCK_INVOICES);
@@ -179,35 +179,6 @@ export default function InvoiceListPage() {
   /* ── save — same invoiceService used by AiInvoicePage ─────────
      A manually created invoice and an AI-drafted invoice both end up
      here: same endpoint, same shape, no distinction once persisted. */
-  // const handleSave = useCallback(async () => {
-  //   if (!activeInvoice) return;
-  //   setIsSaving(true);
-  //   try {
-  //     let result: Invoice;
-  //     if (view.name === "create") {
-  //       result = await invoiceBillingService.create(activeInvoice);
-  //       setInvoices((prev) => [result, ...prev]);
-  //     } else {
-  //       result = await invoiceBillingService.update(activeInvoice.id, activeInvoice);
-  //       setInvoices((prev) => prev.map((i) => (i.id === result.id ? result : i)));
-  //     }
-  //     setView({ name: "preview", invoice: result });
-  //   } catch {
-  //     // Keep the user on the current view; InvoiceEditor/Preview's
-  //     // Save button returning to non-saving state is enough signal
-  //     // for now — surfacing a toast here is a good follow-up.
-  //   } finally {
-  //     setIsSaving(false);
-  //     setSaved(true);
-  //     setTimeout(() => setSaved(false), 2500);
-  //   }
-  // }, [activeInvoice, view.name]);
-
-  // const {
-  //   createInvoice,
-  //   updateInvoice,
-  // } = useInvoice();
-
   const handleSave = useCallback(async () => {
     if (!activeInvoice) return;
 
@@ -288,10 +259,10 @@ export default function InvoiceListPage() {
   ───────────────────────────────────────────────────────────── */
   return (
     <div className={`min-h-screen ${bg} transition-colors`}>
-      <div className="max-w-3xl mx-auto px-4 py-10">
+      <div className="max-w-3xl mx-auto px-3 sm:px-4 py-6 sm:py-10">
 
         {/* ── Step indicator ── */}
-        <div className="flex items-center justify-center gap-2 mb-10">
+        <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 mb-8 sm:mb-10 text-center">
           {steps.map((s, i) => {
             const isCurrent = s.name === view.name;
             const isPast    = i < steps.findIndex((x) => x.name === view.name);
@@ -323,7 +294,7 @@ export default function InvoiceListPage() {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-emerald-500 text-white text-sm font-medium px-5 py-2.5 rounded-full shadow-xl"
+              className="fixed top-16 sm:top-20 left-1/2 -translate-x-1/2 z-50 bg-emerald-500 text-white text-xs sm:text-sm font-medium px-4 sm:px-5 py-2 sm:py-2.5 rounded-full shadow-xl text-center max-w-[90vw]"
             >
               ✓ Invoice saved successfully
             </motion.div>
@@ -343,14 +314,14 @@ export default function InvoiceListPage() {
               transition={{ duration: 0.3 }}
             >
               {/* Header */}
-              <div className="mb-8 text-center">
+              <div className="mb-6 sm:mb-8 text-center">
                 <div className="inline-flex items-center gap-2 mb-4">
                   <span className={`text-2xl ${dark ? "text-emerald-400" : "text-emerald-600"}`}>✦</span>
                   <span className={`text-xs font-semibold tracking-[0.2em] uppercase ${dark ? "text-emerald-400" : "text-emerald-600"}`}>
                     Billing
                   </span>
                 </div>
-                <h1 className={`text-3xl font-bold tracking-tight mb-2 ${dark ? "text-white" : "text-zinc-900"}`}>
+                <h1 className={`text-2xl sm:text-3xl font-bold tracking-tight mb-2 ${dark ? "text-white" : "text-zinc-900"}`}>
                   Your Invoices
                 </h1>
                 <p className={`text-sm italic ${muted}`}>
@@ -359,12 +330,12 @@ export default function InvoiceListPage() {
               </div>
 
               {/* ── Create new invoice button ── */}
-              <div className="flex items-center justify-center gap-3 mb-8">
+              <div className="flex flex-col md:flex-row items-stretch xs:items-center justify-center gap-3 mb-8">
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => setView({ name: "create", invoice: makeFreshInvoice() })}
-                  className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/25 transition-all"
+                  className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/25 transition-all"
                 >
                   <span>✦</span>
                   Create New Invoice
@@ -373,7 +344,7 @@ export default function InvoiceListPage() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => navigate("/billing/ai")}
-                  className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold border transition-all ${
+                  className={`flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold border transition-all ${
                     dark
                       ? "border-zinc-700 text-zinc-300 hover:border-emerald-500/50"
                       : "border-zinc-200 text-zinc-600 hover:border-emerald-300"
@@ -386,30 +357,30 @@ export default function InvoiceListPage() {
 
               {/* ── Search + filter ── */}
               <div className={`rounded-2xl border mb-4 overflow-hidden ${card}`}>
-                <div className={`flex items-center gap-3 px-4 py-3 border-b ${dark ? "border-zinc-800" : "border-zinc-100"}`}>
+                <div className={`flex items-center gap-3 px-3 sm:px-4 py-3 border-b ${dark ? "border-zinc-800" : "border-zinc-100"}`}>
                   <span className={`text-sm ${muted}`}>⌕</span>
                   <input
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="Search by client, company, or invoice number…"
-                    className={`flex-1 bg-transparent text-sm outline-none ${dark ? "text-zinc-200 placeholder:text-zinc-600" : "text-zinc-800 placeholder:text-zinc-400"}`}
+                    className={`flex-1 min-w-0 bg-transparent text-sm outline-none ${dark ? "text-zinc-200 placeholder:text-zinc-600" : "text-zinc-800 placeholder:text-zinc-400"}`}
                   />
                   {query && (
                     <button
                       onClick={() => setQuery("")}
-                      className={`text-xs ${muted} hover:text-zinc-300 transition-colors`}
+                      className={`text-xs ${muted} hover:text-zinc-300 transition-colors shrink-0`}
                     >
                       ✕
                     </button>
                   )}
                 </div>
 
-                <div className={`flex items-center gap-1 px-3 py-2 ${dark ? "bg-zinc-900/30" : "bg-zinc-50"}`}>
+                <div className={`flex items-center gap-1 px-3 py-2 overflow-x-auto ${dark ? "bg-zinc-900/30" : "bg-zinc-50"}`}>
                   {FILTER_TABS.map((tab) => (
                     <button
                       key={tab.value}
                       onClick={() => setActiveFilter(tab.value)}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
+                      className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
                         activeFilter === tab.value
                           ? "bg-emerald-500 text-white shadow-sm shadow-emerald-500/30"
                           : dark
@@ -420,7 +391,7 @@ export default function InvoiceListPage() {
                       {tab.label}
                     </button>
                   ))}
-                  <span className={`ml-auto text-xs ${muted}`}>
+                  <span className={`ml-auto pl-2 shrink-0 text-xs ${muted}`}>
                     {filtered.length} invoice{filtered.length !== 1 ? "s" : ""}
                   </span>
                 </div>
@@ -444,7 +415,7 @@ export default function InvoiceListPage() {
                       key="empty"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="flex flex-col items-center py-20 gap-4 text-center"
+                      className="flex flex-col items-center py-20 gap-4 text-center px-4"
                     >
                       <span className={`text-4xl ${muted}`}>◎</span>
                       <p className={`text-sm ${muted}`}>
@@ -471,17 +442,17 @@ export default function InvoiceListPage() {
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ delay: i * 0.04, duration: 0.22 }}
                         onClick={() => setView({ name: "preview", invoice: inv })}
-                        className={`group w-full text-left flex items-center gap-4 px-5 py-4 border-b last:border-b-0 transition-all ${
+                        className={`group w-full text-left flex items-center gap-3 sm:gap-4 px-3 sm:px-5 py-4 border-b last:border-b-0 transition-all ${
                           dark
                             ? "border-zinc-800/70 hover:bg-emerald-950/20"
                             : "border-zinc-100 hover:bg-emerald-50/50"
                         }`}
                       >
-                        <div className={`w-0.5 self-stretch rounded-full transition-all ${
+                        <div className={`hidden sm:block w-0.5 self-stretch rounded-full transition-all ${
                           dark ? "bg-zinc-800 group-hover:bg-emerald-500" : "bg-zinc-100 group-hover:bg-emerald-400"
                         }`} />
 
-                        <div className={`shrink-0 w-9 h-9 rounded-xl flex items-center justify-center transition-colors ${
+                        <div className={`shrink-0 w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center transition-colors ${
                           dark
                             ? "bg-zinc-800 group-hover:bg-emerald-500/15"
                             : "bg-zinc-100 group-hover:bg-emerald-100"
@@ -496,7 +467,7 @@ export default function InvoiceListPage() {
                         </div>
 
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-0.5">
+                          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mb-0.5">
                             <span className={`text-sm font-bold font-mono tracking-tight ${strong}`}>
                               {inv.invoiceNumber}
                             </span>
@@ -511,15 +482,15 @@ export default function InvoiceListPage() {
                         </div>
 
                         <div className="text-right shrink-0">
-                          <p className={`text-sm font-bold ${strong}`}>
+                          <p className={`text-xs sm:text-sm font-bold ${strong}`}>
                             {fmt(inv.total, inv.currency)}
                           </p>
-                          <p className={`text-xs ${muted}`}>
+                          <p className={`hidden xs:block text-xs ${muted}`}>
                             Due {new Date(inv.dueDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                           </p>
                         </div>
 
-                        <span className={`text-sm transition-all ${muted} opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5`}>
+                        <span className={`hidden sm:inline text-sm transition-all ${muted} opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5`}>
                           →
                         </span>
                       </motion.button>
@@ -528,7 +499,7 @@ export default function InvoiceListPage() {
                 </AnimatePresence>
 
                 {!isLoading && filtered.length > 0 && (
-                  <div className={`flex justify-between items-center px-5 py-3 border-t text-xs ${dark ? "border-zinc-800 text-zinc-600" : "border-zinc-100 text-zinc-400"}`}>
+                  <div className={`flex flex-col xs:flex-row justify-between xs:items-center gap-1 px-3 sm:px-5 py-3 border-t text-xs ${dark ? "border-zinc-800 text-zinc-600" : "border-zinc-100 text-zinc-400"}`}>
                     <span>{filtered.length} of {invoices.length} invoices</span>
                     <span className={`font-semibold ${dark ? "text-zinc-300" : "text-zinc-700"}`}>
                       {fmt(filtered.reduce((s, i) => s + i.total, 0))} total
@@ -591,14 +562,14 @@ export default function InvoiceListPage() {
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="mb-8 text-center">
+              <div className="mb-6 sm:mb-8 text-center">
                 <div className="inline-flex items-center gap-2 mb-4">
                   <span className={`text-2xl ${dark ? "text-emerald-400" : "text-emerald-600"}`}>✦</span>
                   <span className={`text-xs font-semibold tracking-[0.2em] uppercase ${dark ? "text-emerald-400" : "text-emerald-600"}`}>
                     New Invoice
                   </span>
                 </div>
-                <h1 className={`text-3xl font-bold tracking-tight mb-2 ${dark ? "text-white" : "text-zinc-900"}`}>
+                <h1 className={`text-2xl sm:text-3xl font-bold tracking-tight mb-2 ${dark ? "text-white" : "text-zinc-900"}`}>
                   Create an invoice
                 </h1>
                 <p className={`text-sm italic ${dark ? "text-zinc-400" : "text-zinc-500"}`}>
