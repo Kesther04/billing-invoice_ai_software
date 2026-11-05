@@ -65,76 +65,107 @@ export function ClientsPage() {
     if (selectedClient?.id === client.id) setSelectedClient(null);
   }
 
+  const heading = dark ? "text-white" : "text-slate-900";
+  const subtext = dark ? "text-slate-400" : "text-slate-500";
+
   return (
-    <div className={`min-h-screen px-6 py-8 ${dark ? "bg-slate-950" : "bg-slate-50"}`}>
-      <div className="mx-auto max-w-5xl">
-        <div className="flex items-center justify-between">
-          <h1 className={`text-2xl font-semibold ${dark ? "text-white" : "text-slate-900"}`}>
-            Clients
-          </h1>
+    <div className={`min-h-screen px-6 py-8 lg:px-10 ${dark ? "bg-slate-950" : "bg-slate-50"}`}>
+      <div className="mx-auto max-w-7xl">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className={`text-2xl font-semibold ${heading}`}>Clients</h1>
+            <p className={`mt-1 text-sm ${subtext}`}>
+              {loading ? "Loading clients…" : `${clients.length} client${clients.length === 1 ? "" : "s"} on this page`}
+            </p>
+          </div>
           <SoftButton variant="accent" dark={dark} onClick={() => setModal({ type: "create" })}>
             Add client
           </SoftButton>
         </div>
 
-        <div className="mt-6 max-w-sm">
-          <Input
-            label="Search"
-            value={searchInput}
-            onChange={(e) => {
-              setSearchInput(e.target.value);
-              setPage(1);
-            }}
-            placeholder="Search by name, email or company"
-            dark={dark}
-          />
-        </div>
-
-        <div className="mt-4 grid gap-6 lg:grid-cols-3">
-          <div className="lg:col-span-2">
-            <ClientList
-              clients={clients}
-              loading={loading}
-              error={error}
-              onSelect={(client) => setSelectedClient(client)}
-              onEdit={(client) => setModal({ type: "edit", client })}
-              onDelete={handleDelete}
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="w-full max-w-sm">
+            <Input
+              label="Search"
+              value={searchInput}
+              onChange={(e) => {
+                setSearchInput(e.target.value);
+                setPage(1);
+              }}
+              placeholder="Search by name, email or company"
               dark={dark}
             />
-
-            {totalPages > 1 && (
-              <div className="mt-4 flex items-center justify-center gap-4">
-                <SoftButton
-                  variant="ghost"
-                  dark={dark}
-                  disabled={page <= 1}
-                  onClick={() => setPage((p) => p - 1)}
-                >
-                  Previous
-                </SoftButton>
-                <span className={`text-sm ${dark ? "text-slate-400" : "text-slate-500"}`}>
-                  Page {page} of {totalPages}
-                </span>
-                <SoftButton
-                  variant="ghost"
-                  dark={dark}
-                  disabled={page >= totalPages}
-                  onClick={() => setPage((p) => p + 1)}
-                >
-                  Next
-                </SoftButton>
-              </div>
-            )}
           </div>
 
+          {totalPages > 1 && (
+            <div className="flex items-center gap-3 self-end sm:self-auto">
+              <SoftButton
+                variant="ghost"
+                dark={dark}
+                disabled={page <= 1}
+                onClick={() => setPage((p) => p - 1)}
+                className="px-3 py-1.5 text-xs"
+              >
+                Previous
+              </SoftButton>
+              <span className={`text-xs ${subtext}`}>
+                Page {page} of {totalPages}
+              </span>
+              <SoftButton
+                variant="ghost"
+                dark={dark}
+                disabled={page >= totalPages}
+                onClick={() => setPage((p) => p + 1)}
+                className="px-3 py-1.5 text-xs"
+              >
+                Next
+              </SoftButton>
+            </div>
+          )}
+        </div>
+
+        <div className={`mt-6 grid gap-6 ${selectedClient ? "lg:grid-cols-[1fr_340px]" : "lg:grid-cols-1"}`}>
+          <ClientList
+            clients={clients}
+            loading={loading}
+            error={error}
+            onSelect={(client) => setSelectedClient(client)}
+            onEdit={(client) => setModal({ type: "edit", client })}
+            onDelete={handleDelete}
+            dark={dark}
+          />
+
           {selectedClient && (
-            <ClientDetailsCard
-              client={selectedClient}
-              onEdit={() => setModal({ type: "edit", client: selectedClient })}
-              onDelete={() => handleDelete(selectedClient)}
-              onClose={() => setSelectedClient(null)}
-              dark={dark}
-            />
+            <>
+              {/* Desktop/tablet: inline sticky panel */}
+              <div className="hidden lg:sticky lg:top-8 lg:block lg:self-start">
+                <ClientDetailsCard
+                  client={selectedClient}
+                  onEdit={() => setModal({ type: "edit", client: selectedClient })}
+                  onDelete={() => handleDelete(selectedClient)}
+                  onClose={() => setSelectedClient(null)}
+                  dark={dark}
+                />
+              </div>
+
+              {/* Mobile/tablet: full-screen overlay */}
+              <div className="fixed inset-0 z-40 flex items-end justify-center lg:hidden sm:items-center">
+                <div
+                  className="absolute inset-0 bg-black/50"
+                  onClick={() => setSelectedClient(null)}
+                  aria-hidden="true"
+                />
+                <div className="relative z-10 max-h-[90vh] w-full max-w-md overflow-y-auto sm:mx-4">
+                  <ClientDetailsCard
+                    client={selectedClient}
+                    onEdit={() => setModal({ type: "edit", client: selectedClient })}
+                    onDelete={() => handleDelete(selectedClient)}
+                    onClose={() => setSelectedClient(null)}
+                    dark={dark}
+                  />
+                </div>
+              </div>
+            </>
           )}
         </div>
       </div>
